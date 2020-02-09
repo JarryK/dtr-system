@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/dtr-system?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: 123
+    driver-class-name: com.mysql.jdbc.Driver
+  thymeleaf:
+    prefix:
+      classpath: /templates   # 访问template下的html文件需要配置模板，映射
+      cache: false  # 开发时关闭缓存,不然没法看到实时页面
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+logging:
+  config: classpath:log4j2-spring.xml

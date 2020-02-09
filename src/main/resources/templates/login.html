@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<script>window.contextPath = '${contextPath}';</script>
+<link rel="stylesheet" href="/css/login.css">
+<link rel="stylesheet" href="/css/base.css">
+
+<body>
+<div class="main" id="login-box">
+
+    <div class="loginbox">
+        <h2 class="mb-4 mt-0 text-center">用户登录</h2>
+        <div class="form-group">
+            <input id="userName" type="text" class="form-control reverse" placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+            <input id="userPass" type="password" class="form-control reverse" placeholder="请输入密码">
+        </div>
+        <div class="form-group">
+            <div class="pb_select-wrap">
+                <select class="form-control reverse">
+                    <option value="1" selected>学生</option>
+                    <option value="2">教师</option>
+                    <option value="3">家长</option>
+                    <option value="4">管理员</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn" id="login-btn">登录</button>
+        </div>
+    </div>
+
+</div>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/app.js"></script>
+<script>
+    var login = (function () {
+        var bindEvents = function () {
+            login.el("#login-btn").off('click').on('click', function () {
+                var uName = $.trim(login.el("#userName").val());
+                var uPass = login.el("#userPass").val();
+                $.post("/dtr/check", {
+                    userName: uName,
+                    userPass: uPass
+                }).done(function (response) {
+                    if (!App.checker(response)) {
+                        return;
+                    } else {
+                        App.topAlert("登录成功！");
+                        window.open("/dtr/home", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+                    }
+                });
+            });
+        };
+        return {
+            data: {},
+            el: function (expr) {
+                return $(expr ? expr : 'body');
+            },
+            init: function () {
+                bindEvents();
+                return;
+            },
+            show: function () {
+                login.el().show();
+                return this;
+            },
+            hide: function () {
+                login.el().hide();
+                return this;
+            },
+        }
+    })();
+    $(function () {
+        login.init();
+    })
+</script>
+</body>
+
+</html>
