@@ -93,7 +93,7 @@ var App = function () {
                 cancelButtonColor: '#d33', // 取消按钮的 颜色
                 cancelButtonText: "取消", // 取消按钮的 文字
                 focusCancel: true, // 是否聚焦 取消按钮
-                reverseButtons: true // 是否 反转 两个按钮的位置 默认是  左边 确定  右边 取消
+                reverseButtons: false // 是否 反转 两个按钮的位置 默认是  左边 确定  右边 取消
             }).then(function (isConfirm) {
                 try {
                     //判断 是否 点击的 确定按钮
@@ -188,20 +188,20 @@ var App = function () {
             }
         },
         loginOut:function (uName) {
-            $.post('/dtr/loginOut',{
-                userName:uName
-            }).done(function (data) {
-                if (!App.checker(data)){
-                    return;
-                }else {
-                    App.alert("用户"+uName+"退出成功！",1,"",function () {
-                        window.open("/dtr/login","_self");
-                    });
-                   return;
-                }
-            });
+            App.selectAlert("用户<span style='color: red'>"+uName+"</span>确定退出吗?",'',5,function () {
+                $.post('/dtr/user/loginOut',{
+                    userName:uName
+                }).done(function (data) {
+                    if (!App.checker(data)){
+                        return;
+                    }else {
+                        App.topAlert("退出成功！");
+                            window.open("/dtr/login","_self");
+                        return;
+                    }
+                });
+            })
         },
-
     }
 }();
 $(function () {

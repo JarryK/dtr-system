@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>登录</title>
 </head>
 <script>window.contextPath = '${contextPath}';</script>
 <link rel="stylesheet" href="/css/login.css">
@@ -17,14 +17,14 @@
     <div class="loginbox">
         <h2 class="mb-4 mt-0 text-center">用户登录</h2>
         <div class="form-group">
-            <input id="userName" type="text" class="form-control reverse" placeholder="请输入用户名">
+            <input id="userName" type="text" class="form-control reverse" placeholder="请输入学号/工号/电话号码">
         </div>
         <div class="form-group">
             <input id="userPass" type="password" class="form-control reverse" placeholder="请输入密码">
         </div>
         <div class="form-group">
             <div class="pb_select-wrap">
-                <select class="form-control reverse">
+                <select class="form-control reverse userType">
                     <option value="1" selected>学生</option>
                     <option value="2">教师</option>
                     <option value="3">家长</option>
@@ -44,11 +44,13 @@
     var login = (function () {
         var bindEvents = function () {
             login.el("#login-btn").off('click').on('click', function () {
-                var uName = $.trim(login.el("#userName").val());
+                var uNbr = $.trim(login.el("#userName").val());
                 var uPass = login.el("#userPass").val();
-                $.post("/dtr/check", {
-                    userName: uName,
-                    userPass: uPass
+                var uType = login.el(".userType").val();
+                $.post("/dtr/user/check", {
+                    uNbr: uNbr,
+                    uPass: uPass,
+                    uType: uType
                 }).done(function (response) {
                     if (!App.checker(response)) {
                         return;
