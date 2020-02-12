@@ -1,0 +1,112 @@
+body,
+html {
+    margin: 0 0;
+    padding: 0 0;
+    font-family: "宋体", "Simsun" !important;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+
+
+.main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 1000px;
+    z-index: -10;
+    background:url("/image/login-bg.jpg");
+    background-repeat: no-repeat;
+    /* 背景不重复 */
+    background-position: center 0;
+    /* 图片的位置，居中，靠左对齐。 */
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    /* 让图片随屏幕大小同步缩放，但是有部分可能会被裁切，不过不至于会露白，下面两句是为chrome和opera浏览器作兼容。 */
+
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 42px;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.25;
+    color: #495057;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+    margin-top: 5px;
+    margin-bottom: 20px;
+
+}
+
+.form-control.reverse {
+    background: #f2f2f2;
+    -webkit-transition: .3s all ease;
+    -o-transition: .3s all ease;
+    transition: .3s all ease;
+    border-color: #f2f2f2;
+}
+
+.loginbox {
+    position: relative;
+    width: 370px;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(80%, -80%);
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.loginbox h2 {
+    font-size: 24px;
+    margin-bottom: 40px;
+    opacity: 1;
+    text-align: center;
+}
+
+.loginbox p {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+.loginbox input {
+    /* color: #FFFFFF; */
+    border: none;
+    /* border-bottom: 1px solid #fff; */
+    background: transparent;
+    outline: none;
+    font-size: 16px;
+    width: 100%;
+}
+
+.loginbox button {
+    display: inline-block;
+    width: 100%;
+    height: 2.5rem;
+    border: 1px solid #5f4dee;
+    border-radius: 0.5rem;
+    background-color: #5f4dee;
+    color: #fff;
+    font: 700 0.875rem/0 "Open Sans", sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.loginbox button:hover {
+    color: #5f4dee;
+    background-color: #fff;
+}
