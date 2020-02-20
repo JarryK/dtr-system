@@ -138,6 +138,20 @@
                     $('#checkInput').modal('show')
                 });
                 issue.el('.input-modal-yes').off('click').on('click', function () {
+                    var classTime = issue.el('#settime').val();
+                    var classType = issue.el('#classType').val();
+                    var className = issue.el('#className').val();
+                    var classContent = issue.el('#classContent').val();
+                    $.post('/dtr/user/getUser',{
+
+                    }).done(function (data) {
+                        if (!App.checker(data)){
+                            return;
+                        }else {
+                            issue.setUser(data.user.USER_NAME+"("+data.user.TYPE_NAME+")");
+                            return ;
+                        }
+                    });
                     App.alert("提交成功");
                     $('#checkInput').modal('hide');
                     issue.el('.modal-in').html('');
