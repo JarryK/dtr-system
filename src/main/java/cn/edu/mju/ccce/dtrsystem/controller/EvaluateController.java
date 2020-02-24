@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -38,21 +39,27 @@ public class EvaluateController {
     public Map<String, Object> insert(@RequestBody Map<String, Object> inMap) {
         try {
             String courseName = G.getString(inMap, "courseName");
-            String typeId = G.getString(inMap, "typeId");
+            String typeName = G.getString(inMap, "typeName");
+            int typeId = courseBmo.getCourseIDbyName(typeName);
             String courseDetail = G.getString(inMap, "courseDetail");
-//            String courseStuNbr = G.getString(inMap, "courseStuNbr");
-//            String couresTime = G.getString(inMap, "couresTime");
+            String courseStuNbr = G.getString(inMap, "courseStuNbr");
+//            Date couresTime = G.getString(inMap, "couresTime");
             Course course = new Course();
             course.setCOURSE_NAME(courseName);
-            course.setTYPE_ID(Integer.parseInt(typeId));
+            course.setCOURSE_TYPE_ID(typeId);
+            course.setCOURSE_TYPE_NAME(typeName);
             course.setCOURSE_DETAIL(courseDetail);
-//            course.setCOURSE_STU_NBR(Integer.parseInt(courseStuNbr));
+            course.setCOURSE_STU_NBR(Integer.parseInt(courseStuNbr));
 //            course.setCOURSE_TIME(couresTime);
-            courseBmo.addCourse(course);
+            Map<String,Object> relMap = courseBmo.addCourse(course);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean){
+                return G.page.returnMap(false,"新建失败！");
+            }
             return G.page.returnMap(true,"ok");
         } catch (Exception e) {
             log.error("新建异常：",e);
-            return G.page.returnMap(false,"no");
+            return G.page.returnMap(false,"新建失败！");
 
         }
 

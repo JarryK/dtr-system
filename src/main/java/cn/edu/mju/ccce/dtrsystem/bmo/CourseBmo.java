@@ -55,4 +55,7 @@ public interface CourseBmo {
      * @return
      */
     public Map<String,Object> removeEvaluateCourse (Map<String,Object> inMap);
+
+
+    public int getCourseIDbyName(String courseTypeName);
 }

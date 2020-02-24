@@ -4,12 +4,14 @@ import cn.edu.mju.ccce.dtrsystem.bean.Course;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.IdGenerator;
 import cn.edu.mju.ccce.dtrsystem.dao.CourseDao;
+import cn.edu.mju.ccce.dtrsystem.dao.CourseTypeDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Map;
 
@@ -32,10 +34,15 @@ public class CourseBmoImpl implements CourseBmo {
     @Qualifier("cn.edu.mju.ccce.dtrsystem.dao.CourseDao")
     protected CourseDao courseDao;
 
+    @Autowired
+    @Qualifier("cn.edu.mju.ccce.dtrsystem.dao.CourseTypeDao")
+    protected CourseTypeDao courseTypeDao;
+
     @Override
     public Map<String, Object> addCourse(Course course) {
         try {
-            course.setCOURSE_ID(IdGenerator.genLongId());
+            course.setCOURSE_ID(BigInteger.valueOf(IdGenerator.genLongId()));
+            course.setEVALUATE_NBR(BigInteger.valueOf(IdGenerator.genLongId()));
             course.setCREAT_TIME(new Date());
             courseDao.insertNewCourse(course);
             return G.bmo.returnMap(true, "ok");
@@ -68,5 +75,10 @@ public class CourseBmoImpl implements CourseBmo {
     @Override
     public Map<String, Object> removeEvaluateCourse(Map<String, Object> inMap) {
         return null;
+    }
+
+    @Override
+    public int getCourseIDbyName(String courseTypeName) {
+        return Integer.parseInt(courseTypeDao.selectCourseTypeId(courseTypeName));
     }
 }

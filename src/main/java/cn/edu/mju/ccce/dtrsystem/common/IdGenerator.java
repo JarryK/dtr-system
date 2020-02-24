@@ -13,14 +13,14 @@ import java.util.Random;
  */
 public class IdGenerator {
 
-    public static long genLongId() {
+    public static Long genLongId() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssSSS");
         String timestamp = sdf.format(Calendar.getInstance().getTime());
         int maxLength = String.valueOf(Long.MAX_VALUE).length();
         int genLength = maxLength - timestamp.length();
         String randomNuber = getRandomNuber(genLength);
         String string = timestamp + randomNuber;
-        return Long.parseLong(string);
+        return Long.valueOf(string);
     }
 
     /**

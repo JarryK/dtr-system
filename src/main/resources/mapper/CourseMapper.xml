@@ -4,8 +4,10 @@
     <resultMap id="CourseMap" type="cn.edu.mju.ccce.dtrsystem.bean.Course">
         <result property="COURSE_ID" column="COURSE_ID"/>
         <result property="COURSE_NAME" column="COURSE_NAME"/>
-        <result property="TYPE_ID" column="TYPE_ID"/>
+        <result property="COURSE_TYPE_ID" column="COURSE_TYPE_ID"/>
+        <result property="COURSE_TYPE_NAME" column="COURSE_TYPE_NAME"/>
         <result property="COURSE_DETAIL" column="COURSE_DETAIL"/>
+        <result property="COURSE_TEACHER_NAME" column="COURSE_TEACHER_NAME"/>
         <result property="COURSE_STU_NBR" column="COURSE_STU_NBR"/>
         <result property="COURSE_TIME" column="COURSE_TIME"/>
         <result property="EVALUATE_NBR" column="EVALUATE_NBR"/>
@@ -17,8 +19,10 @@
         <![CDATA[
          COURSE_ID,
          COURSE_NAME,
-         TYPE_ID,
+         COURSE_TYPE_ID,
+         COURSE_TYPE_NAME,
          COURSE_DETAIL,
+         COURSE_TEACHER_NAME,
          COURSE_STU_NBR,
          COURSE_TIME,
          EVALUATE_NBR,
@@ -36,11 +40,17 @@
             <if test="COURSE_NAME != null">
                 COURSE_NAME,
             </if>
-            <if test="TYPE_ID != null">
-                TYPE_ID,
+            <if test="COURSE_TYPE_ID != null">
+                COURSE_TYPE_ID,
+            </if>
+            <if test="COURSE_TYPE_NAME != null">
+                COURSE_TYPE_NAME,
             </if>
             <if test="COURSE_DETAIL != null">
                 COURSE_DETAIL,
+            </if>
+            <if test="COURSE_TEACHER_NAME != null">
+                COURSE_TEACHER_NAME,
             </if>
             <if test="COURSE_STU_NBR != null">
                 COURSE_STU_NBR,
@@ -68,11 +78,17 @@
             <if test="COURSE_NAME != null">
                 #{COURSE_NAME,jdbcType=NUMERIC},
             </if>
-            <if test="TYPE_ID != null">
-                #{TYPE_ID,jdbcType=VARCHAR},
+            <if test="COURSE_TYPE_ID != null">
+                #{COURSE_TYPE_ID,jdbcType=VARCHAR},
+            </if>
+            <if test="COURSE_TYPE_NAME != null">
+                #{COURSE_TYPE_NAME,jdbcType=VARCHAR},
             </if>
             <if test="COURSE_DETAIL != null">
                 #{COURSE_DETAIL,jdbcType=VARCHAR},
+            </if>
+            <if test="COURSE_TEACHER_NAME != null">
+                #{COURSE_TEACHER_NAME,jdbcType=VARCHAR},
             </if>
             <if test="COURSE_STU_NBR != null">
                 #{COURSE_STU_NBR,jdbcType=NUMERIC},

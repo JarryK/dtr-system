@@ -68,11 +68,11 @@
                     data-dismiss="alert" aria-hidden="true">
                     &times;
                 </button>请合理安排时间!</p>
-            <div class="col-md-6 text-xl-center classTime">
+            <div class="col-md-4 text-xl-center classTime">
                 <h5><img src="/images/classTime.png" alt=""> 开始时间</h5>
                 <input class="form-control" id="settime" type="date" />
             </div>
-            <div class="col-md-6 text-xl-center classType">
+            <div class="col-md-4 text-xl-center classType">
                 <h5><img src="/images/classType.png" alt=""> 课程类型</h5>
                 <select class="form-control" name="classType" id="classType">
                     <option value="语文">语文</option>
@@ -81,6 +81,10 @@
                     <option value="物理">物理</option>
                     <option value="化学">化学</option>
                 </select>
+            </div>
+            <div class="col-md-4 text-xl-center stuNbr">
+                <h5><img src="/images/classType.png" alt=""> 课程学生人数</h5>
+                <input class="form-control" name="classType" id="stuNbr" type="number"/>
             </div>
             <div class="col-md-12 className">
                 <h5><img src="/images/className.png" alt=""> 课程名称</h5>
@@ -135,24 +139,28 @@
                     issue.el('.inputType').html(issue.el('#classType').val());
                     issue.el('.inputName').html(issue.el('#className').val());
                     issue.el('.inputContent').html(issue.el('#classContent').val());
-                    $('#checkInput').modal('show')
+                    $('#checkInput').modal('show');
                 });
                 issue.el('.input-modal-yes').off('click').on('click', function () {
                     var classTime = issue.el('#settime').val();
                     var classType = issue.el('#classType').val();
                     var className = issue.el('#className').val();
+                    var stuNbr = issue.el('#stuNbr').val();
                     var classContent = issue.el('#classContent').val();
-                    $.post('/dtr/user/getUser',{
-
+                    $.post('/dtr/eval/insert',{
+                        courseName:className,
+                        typeName:classType,
+                        courseDetail:classContent,
+                        courseStuNbr:stuNbr,
+                        couresTime:classTime
                     }).done(function (data) {
                         if (!App.checker(data)){
                             return;
                         }else {
-                            issue.setUser(data.user.USER_NAME+"("+data.user.TYPE_NAME+")");
+                            App.alert("提交成功");
                             return ;
                         }
                     });
-                    App.alert("提交成功");
                     $('#checkInput').modal('hide');
                     issue.el('.modal-in').html('');
                 });
