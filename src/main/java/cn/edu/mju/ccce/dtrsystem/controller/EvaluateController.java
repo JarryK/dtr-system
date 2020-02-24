@@ -54,12 +54,12 @@ public class EvaluateController {
             Map<String,Object> relMap = courseBmo.addCourse(course);
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean){
-                return G.page.returnMap(false,"新建失败！");
+                return G.page.returnMap(false,"新建失败");
             }
             return G.page.returnMap(true,"ok");
         } catch (Exception e) {
             log.error("新建异常：",e);
-            return G.page.returnMap(false,"新建失败！");
+            return G.page.returnMap(false,"新建异常");
 
         }
 
