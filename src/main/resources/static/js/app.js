@@ -1,6 +1,49 @@
 document.write("<script src='/js/SweetAlert2.js'></script>");
 var App = function () {
-    var bindEvents = function () {
+    var globalSetting = function () {
+        // // json path 工具类
+        // window.JSONPathUtil = jsonpath ? jsonpath : {value:$.noop};
+        // // 禁止浏览器下拉菜单
+        // $('body').on('contextmenu', function(e) { e.preventDefault(); });
+        // //设置各分辨率下字号根值
+        // new function() {
+        //     var _self = this;
+        //     _self.width = 1280; //设置默认最大宽度
+        //     _self.fontSize = 50; //默认字体大小
+        //     _self.widthProportion = function() {
+        //         var p = (document.body && document.body.clientWidth || document.getElementsByTagName("html")[0].offsetWidth) / _self.width;
+        //         return p > 1 ? 1 : p < 0.1 ? 0.1 : p;
+        //     };
+        //     _self.changePage = function() {
+        //         document.getElementsByTagName("html")[0].setAttribute("style", "font-size:" + (_self.widthProportion() * _self.fontSize) + "px!important;overflow:hidden;");
+        //     };
+        //     _self.changePage();
+        //     window.addEventListener('resize', function() {
+        //         _self.changePage();
+        //     }, false);
+        // };
+        // 扩展时间日期格式功能
+        Date.prototype.format = function (fmt) {
+            fmt = (fmt = $.trim(fmt)) === '' ? 'yyyy/MM/dd hh:mm:ss' : fmt;
+            var o = {
+                "M+": this.getMonth() + 1,                 //月份
+                "d+": this.getDate(),                    //日
+                "h+": this.getHours(),                   //小时
+                "m+": this.getMinutes(),                 //分
+                "s+": this.getSeconds(),                 //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds()             //毫秒
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        };
         // 异步ajax报错异常处理
         // $(document).ajaxError(function(event, xhr, settings, thrownError) {
         //     App.topAlert(thrownError?thrownError:xhr.statusText,2);
@@ -26,194 +69,209 @@ var App = function () {
             },
         });
     };
+    // utils工具函数集
+    var utils_functions = (function () {
+        return {
+            loginOut: function (uNbr, uName) {
+                App.selectAlert("用户<span style='color: red'>" + uName + "</span>确定退出吗?", '', 5, function () {
+                    $.post('/dtr/user/loginOut', {
+                        uNbr: uNbr
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            App.topAlert("退出成功！");
+                            window.open("/dtr/login", "_self");
+                            return;
+                        }
+                    });
+                })
+            },
+            getUserMsg: function (callback) {
+                $.post('/dtr/user/getUser').done(function (data) {
+                    if (!App.checker(data)) {
+                        App.alert('访问失败', 2, '请先登录', function () {
+                            window.open("/dtr/login", "_self")
+                        });
+                        return;
+                    } else {
+                        if ($.isFunction(callback)) {
+                            callback(data.user.uNbr, data.user.USER_NAME, data.user.TYPE_NAME);
+                            return;
+                        }
+                    }
+                });
+            },
+        }
+    })();
+    var utils_ui_functions = (function () {
+        return {
+            alertClose: function () {
+                swal.close();
+            },
+            checkAlertType: function (type) {
+                switch (type) {
+                    case 1:
+                        return 'success';
+                    case 2:
+                        return 'error';
+                    case 3:
+                        return 'warning';
+                    case 4:
+                        return 'info';
+                    case 5:
+                        return 'question';
+                    default:
+                        return;
+                }
+            },
+            setDefault: function (item, val) {
+                return this.item = item || val;
+            },
+            alert: function (title = '成功', type = 1, text, callback) {
+                App.setDefault(title, "成功");
+                var icon = this.checkAlertType(type);
+                Swal.fire({
+                    title: title,
+                    text: text,
+                    icon: icon,
+                    confirmButtonText: '确定',
+                    allowEscapeKey: true,
+                    backdrop: `rgba(0,0,0,0.6)`
+                }).then(function (isConfirm) {
+                    try {
+                        //判断 是否 点击的 确定按钮
+                        if (isConfirm.value) {
+                            if ($.isFunction(callback)) {
+                                callback();
+                                return;
+                            }
+                        }
+                    } catch (e) {
+                        alert(e);
+                    }
+                });
+                return;
+            },
+            selectAlert: function (title = '操作提示', text = '确定吗？', type = 3, callback) {
+                var icon = this.checkAlertType(type);
+                Swal.fire({
+                    icon: icon, // 弹框类型
+                    title: title, //标题
+                    text: text, //显示内容
+                    confirmButtonColor: '#3085d6', // 确定按钮的 颜色
+                    confirmButtonText: '确定', // 确定按钮的 文字
+                    showCancelButton: true, // 是否显示取消按钮
+                    cancelButtonColor: '#d33', // 取消按钮的 颜色
+                    cancelButtonText: "取消", // 取消按钮的 文字
+                    focusCancel: true, // 是否聚焦 取消按钮
+                    reverseButtons: false // 是否 反转 两个按钮的位置 默认是  左边 确定  右边 取消
+                }).then(function (isConfirm) {
+                    try {
+                        //判断 是否 点击的 确定按钮
+                        if (isConfirm.value) {
+                            if ($.isFunction(callback)) {
+                                callback();
+                                return;
+                            }
+                            Swal.fire("成功", "点击了确定", "success");
+                        } else {
+
+                        }
+                    } catch (e) {
+                        alert(e);
+                    }
+                });
+            },
+            topAlert: function (title = '操作提示', type = 1, timer = 3000) {
+                var icon = this.checkAlertType(type);
+                Swal.fire({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    //时间进度条
+                    // timerProgressBar:true,
+                    timer: timer, //毫秒
+                    icon: icon,
+                    title: title
+                })
+            }
+            ,
+            msgAlert: function () {
+                Swal.fire({
+                    title: '<strong>记录</strong>',
+                    type: 'info',
+                    html: content, // HTML
+                    focusConfirm: true, //聚焦到确定按钮
+                    showCloseButton: true,//右上角关闭
+                })
+
+            }
+            ,
+            // inputAlert: function () {
+            //     Swal.mixin({
+            //         input: 'text',
+            //         confirmButtonText: 'Next &rarr;',
+            //         showCancelButton: true,
+            //         progressSteps: ['1', '2', '3']
+            //     }).queue([{
+            //         title: 'Question 1',
+            //         text: 'Chaining swal2 modals is easy'
+            //     }, {
+            //         title: 'Question 1',
+            //         text: 'Chaining swal2 modals is easy'
+            //
+            //     }, {
+            //         title: 'Question 1',
+            //         text: 'Chaining swal2 modals is easy'
+            //     }]).then(function(result){
+            //         if (result.value) {
+            //             const answers = JSON.stringify(result.value);
+            //             Swal.fire({
+            //                 title: 'All done!',
+            //                 html: `Your answers:<pre><code>${answers}</code></pre>`,
+            //                 confirmButtonText: 'Lovely!'
+            //             })
+            //         }
+            //     })
+            // },
+            // 检验后端返回的数据成功or失败，并可以控制在屏幕顶部提示
+        }
+    })();
+    var utils_checker = (function () {
+        return {
+            checker: function (_response, _tips) {
+                _tips = _tips === undefined ? true : _tips;
+                if (typeof (_response) !== 'object' || _response == null
+                    || typeof (_response['health']) !== 'object' || _response['health'] == null) {
+                    if (_tips) {
+                        App.topTips('arguments error!');
+                    }
+                    return false;
+                }
+                var health = _response['health'];
+                var _function_tips = function () {
+                    if (_tips) {
+                        App.topAlert(health.message, 2);
+                    }
+                };
+                switch (+health.code) {
+                    case 0:
+                        return true;
+                    default:
+                        _function_tips();
+                        return false;
+                }
+            },
+        }
+    })();
     return {
         init: function () {
             // 初始化全局设置
-            // globalSet();
+            globalSetting($.extend(true, App, utils_functions, utils_ui_functions, utils_checker)); // 全局功能设置
             // 绑定全局事件
-            bindEvents();
+            // bindEvents();
             return this;
-        },
-        alertClose: function () {
-            swal.close();
-        },
-        checkAlertType: function (type) {
-            switch (type) {
-                case 1:
-                    return 'success';
-                case 2:
-                    return 'error';
-                case 3:
-                    return 'warning';
-                case 4:
-                    return 'info';
-                case 5:
-                    return 'question';
-                default:
-                    return;
-            }
-        },
-        setDefault: function (item, val) {
-            return this.item = item || val;
-        },
-        alert: function (title = '成功', type = 1, text, callback) {
-            App.setDefault(title, "成功");
-            var icon = this.checkAlertType(type);
-            Swal.fire({
-                title: title,
-                text: text,
-                icon: icon,
-                confirmButtonText: '确定',
-                allowEscapeKey: true,
-                backdrop: `rgba(0,0,0,0.6)`
-            }).then(function (isConfirm) {
-                try {
-                    //判断 是否 点击的 确定按钮
-                    if (isConfirm.value) {
-                        if ($.isFunction(callback)) {
-                            callback();
-                            return;
-                        }
-                    }
-                } catch (e) {
-                    alert(e);
-                }
-            });
-            return;
-        },
-        selectAlert: function (title = '操作提示', text = '确定吗？', type = 3, callback) {
-            var icon = this.checkAlertType(type);
-            Swal.fire({
-                icon: icon, // 弹框类型
-                title: title, //标题
-                text: text, //显示内容            
-                confirmButtonColor: '#3085d6', // 确定按钮的 颜色
-                confirmButtonText: '确定', // 确定按钮的 文字
-                showCancelButton: true, // 是否显示取消按钮
-                cancelButtonColor: '#d33', // 取消按钮的 颜色
-                cancelButtonText: "取消", // 取消按钮的 文字
-                focusCancel: true, // 是否聚焦 取消按钮
-                reverseButtons: false // 是否 反转 两个按钮的位置 默认是  左边 确定  右边 取消
-            }).then(function (isConfirm) {
-                try {
-                    //判断 是否 点击的 确定按钮
-                    if (isConfirm.value) {
-                        if ($.isFunction(callback)) {
-                            callback();
-                            return;
-                        }
-                        Swal.fire("成功", "点击了确定", "success");
-                    } else {
-
-                    }
-                } catch (e) {
-                    alert(e);
-                }
-            });
-        },
-        topAlert: function (title = '操作提示', type = 1, timer = 3000) {
-            var icon = this.checkAlertType(type);
-            Swal.fire({
-                toast: true,
-                position: 'top',
-                showConfirmButton: false,
-                //时间进度条
-                // timerProgressBar:true,
-                timer: timer, //毫秒
-                icon: icon,
-                title: title
-            })
-        }
-        ,
-        msgAlert: function () {
-            Swal.fire({
-                title: '<strong>记录</strong>',
-                type: 'info',
-                html: content, // HTML
-                focusConfirm: true, //聚焦到确定按钮
-                showCloseButton: true,//右上角关闭
-            })
-
-        }
-        ,
-        // inputAlert: function () {
-        //     Swal.mixin({
-        //         input: 'text',
-        //         confirmButtonText: 'Next &rarr;',
-        //         showCancelButton: true,
-        //         progressSteps: ['1', '2', '3']
-        //     }).queue([{
-        //         title: 'Question 1',
-        //         text: 'Chaining swal2 modals is easy'
-        //     }, {
-        //         title: 'Question 1',
-        //         text: 'Chaining swal2 modals is easy'
-        //
-        //     }, {
-        //         title: 'Question 1',
-        //         text: 'Chaining swal2 modals is easy'
-        //     }]).then(function(result){
-        //         if (result.value) {
-        //             const answers = JSON.stringify(result.value);
-        //             Swal.fire({
-        //                 title: 'All done!',
-        //                 html: `Your answers:<pre><code>${answers}</code></pre>`,
-        //                 confirmButtonText: 'Lovely!'
-        //             })
-        //         }
-        //     })
-        // },
-        // 检验后端返回的数据成功or失败，并可以控制在屏幕顶部提示
-        checker: function (_response, _tips) {
-            _tips = _tips === undefined ? true : _tips;
-            if (typeof (_response) !== 'object' || _response == null
-                || typeof (_response['health']) !== 'object' || _response['health'] == null) {
-                if (_tips) {
-                    App.topTips('arguments error!');
-                }
-                return false;
-            }
-            var health = _response['health'];
-            var _function_tips = function () {
-                if (_tips) {
-                    App.topAlert(health.message, 2);
-                }
-            };
-            switch (+health.code) {
-                case 0:
-                    return true;
-                default:
-                    _function_tips();
-                    return false;
-            }
-        },
-        loginOut:function (uNbr,uName) {
-            App.selectAlert("用户<span style='color: red'>"+uName+"</span>确定退出吗?",'',5,function () {
-                $.post('/dtr/user/loginOut',{
-                    uNbr:uNbr
-                }).done(function (data) {
-                    if (!App.checker(data)){
-                        return;
-                    }else {
-                        App.topAlert("退出成功！");
-                            window.open("/dtr/login","_self");
-                        return;
-                    }
-                });
-            })
-        },
-        getUserMsg:function (callback) {
-            $.post('/dtr/user/getUser').done(function (data) {
-                if (!App.checker(data)){
-                    App.alert('访问失败',2,'请先登录',function () {window.open("/dtr/login","_self")});
-                    return;
-                }else {
-                    if ($.isFunction(callback)) {
-                        callback(data.user.uNbr,data.user.USER_NAME,data.user.TYPE_NAME);
-                        return;
-                    }
-                }
-            });
         },
     }
 }();
