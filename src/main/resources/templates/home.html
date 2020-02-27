@@ -12,6 +12,7 @@
 </head>
 
 <body>
+<#include "header.html"/>
 <header class="header shadow-sm rounded">
     <div class="top-menu">
         <ul class="nav justify-content-end">
@@ -160,6 +161,11 @@
 <script>
     var home = (function () {
         var bindEvents = function () {
+            App.getUserMsg(function (uNbr,uName,type) {
+                home.el('#userMsg').data("uNbr",uNbr);
+                home.el('.userName').html(uName+"("+type+")");
+                home.el('#userMsg').data("uName",uName);
+            });
             $(window).on('scroll', function () {
                 var scrollTop = $(window).scrollTop();
                 if (scrollTop >= 420) {
@@ -183,10 +189,10 @@
                 window.open('/dtr/history', "_blank");
             });
             home.el("#userLoginOut").off('click').on('click',function () {
-                var uname = home.el('#userMsg').data('uname');
-                App.loginOut(uname);
+                var uName = home.el('#userMsg').data('uName');
+                var uNbr = home.el('#userMsg').data('uNbr');
+                App.loginOut(uNbr,uName);
             });
-            home.getUserMsg();
         };
         return {
             data:{},
@@ -196,21 +202,6 @@
             init: function () {
                 bindEvents();
                 return this
-            },
-            getUserMsg:function () {
-                $.post('/dtr/user/getUser').done(function (data) {
-                    if (!App.checker(data)){
-                        window.open("/dtr/login","_self");
-                        return;
-                    }else {
-                        home.setUser(data.user.USER_NAME+"("+data.user.TYPE_NAME+")");
-                       return ;
-                    }
-                });
-            },
-            setUser:function (uName) {
-                home.el('.userName').html(uName);
-                home.el('#userMsg').data("uname",uName);
             },
         }
     })();

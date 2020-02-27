@@ -2,12 +2,14 @@ package cn.edu.mju.ccce.dtrsystem.controller;
 
 import cn.edu.mju.ccce.dtrsystem.bmo.LoginBmoImpl;
 import cn.edu.mju.ccce.dtrsystem.common.G;
+import cn.edu.mju.ccce.dtrsystem.common.MapTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.util.MapUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -38,16 +40,15 @@ public class LoginController {
     @ResponseBody
     public Map<String, Object> check(@RequestBody Map<String, Object> inMap, HttpSession session) {
         Map<String, Object> returnMap = new HashMap<>();
-        String unbr = G.getString(inMap, "uNbr");
-        String upass = G.getString(inMap, "uPass");
-        String utype = G.getString(inMap, "uType");
+        String unbr = MapTool.getString(inMap, "uNbr");
+        String upass = MapTool.getString(inMap, "uPass");
+        String utype = MapTool.getString(inMap, "uType");
         try {
             unbr.substring(1); // 取1个串，探测非空
             upass.substring(1); // 取1个串，探测非空
             if (utype.length() <= 0) {
                 utype.substring(1);
             }
-            ;
         } catch (Exception e) {
             return G.page.returnMap(false, "输入信息错误！");
         }
@@ -58,11 +59,12 @@ public class LoginController {
             userMap.put("userType", utype);
             Map<String, Object> relMap = loginBmo.chackLogin(userMap);
             Boolean relMapBoolean = G.bmo.returnMapBool(relMap);
-            Map<String, Object> userMsgMap = G.getMap(relMap, "msg");
+            Map<String, Object> userMsgMap = MapTool.getMap(relMap, "msg");
             if (!relMapBoolean) {
                 return G.page.returnMap(false, "用户名或密码错误！");
             }
-            session.setAttribute("user", userMsgMap);
+            userMsgMap.put("uNbr",unbr);
+            session.setAttribute(session.getId(), userMsgMap);
             returnMap = G.page.returnMap(true, "登录成功！");
             returnMap.put("userMsg", userMsgMap);
             return returnMap;
@@ -76,7 +78,7 @@ public class LoginController {
     @ResponseBody
     public Map<String, Object> getUser(HttpSession session) {
         try {
-            Map<String, Object> userMap = (Map<String, Object>) session.getAttribute("user");
+            Map<String, Object> userMap = (Map<String, Object>) session.getAttribute(session.getId());
             if (userMap.isEmpty()) {
                 return G.page.returnMap(false, "用户未登录");
             }
@@ -93,9 +95,19 @@ public class LoginController {
     @ResponseBody
     public Map<String, Object> loginOut(@RequestBody Map<String, Object> inMap, HttpSession session) {
         try {
-            String userName = G.getString(inMap, "userName");
-            session.removeAttribute(userName);
+            String loginOutUserNbr = MapTool.getString(inMap, "uNbr");
+            String sessionID = session.getId();
+            Map<String,Object> uMsg= (Map<String,Object>) session.getAttribute(sessionID);
+            if (uMsg.isEmpty()){
+                return G.page.returnMap(false,"用户已退出");
+            }
+            String userNbr = MapTool.getString(uMsg,"uNbr");
+            if (!userNbr.equals(loginOutUserNbr)){
+                return G.page.returnMap(false,"退出异常");
+            }
+            session.removeAttribute(sessionID);
             return G.page.returnMap(true, "ok");
+
         } catch (Exception e) {
             return G.page.returnMap(false, "退出失败");
         }

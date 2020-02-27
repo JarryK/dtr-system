@@ -187,10 +187,10 @@ var App = function () {
                     return false;
             }
         },
-        loginOut:function (uName) {
+        loginOut:function (uNbr,uName) {
             App.selectAlert("用户<span style='color: red'>"+uName+"</span>确定退出吗?",'',5,function () {
                 $.post('/dtr/user/loginOut',{
-                    userName:uName
+                    uNbr:uNbr
                 }).done(function (data) {
                     if (!App.checker(data)){
                         return;
@@ -201,6 +201,19 @@ var App = function () {
                     }
                 });
             })
+        },
+        getUserMsg:function (callback) {
+            $.post('/dtr/user/getUser').done(function (data) {
+                if (!App.checker(data)){
+                    App.alert('访问失败',2,'请先登录',function () {window.open("/dtr/login","_self")});
+                    return;
+                }else {
+                    if ($.isFunction(callback)) {
+                        callback(data.user.uNbr,data.user.USER_NAME,data.user.TYPE_NAME);
+                        return;
+                    }
+                }
+            });
         },
     }
 }();
