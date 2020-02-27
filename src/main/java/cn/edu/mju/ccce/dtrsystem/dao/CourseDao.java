@@ -3,6 +3,8 @@ package cn.edu.mju.ccce.dtrsystem.dao;
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <b>项目名称：</b>dtr-system<br>
  * <b>类名称：</b>cn.edu.mju.ccce.dtrsystem.dao.CourseDao<br>
@@ -36,5 +38,7 @@ public interface CourseDao {
      * @return
      */
     public void removeCourseByCourseId(String CourseId);
+
+    public List<Course> selectCourseList();
 
 }

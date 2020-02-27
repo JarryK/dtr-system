@@ -2,6 +2,7 @@ package cn.edu.mju.ccce.dtrsystem.bmo;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,19 +44,16 @@ public interface CourseBmo {
     public Map<String,Object> upDateCourse (Map<String,Object> inMap);
 
     /**
-     * 增加课程评价
-     * @param inMap
+     * 获取课程类型id
+     * @param courseTypeName
      * @return
      */
-    public Map<String,Object> addEvaluateCourse (Map<String,Object> inMap);
+    public int getCourseIDbyName(String courseTypeName);
 
     /**
-     * 删除课程评价
-     * @param inMap
+     * 根据获取可预约课程列表
+     * @param
      * @return
      */
-    public Map<String,Object> removeEvaluateCourse (Map<String,Object> inMap);
-
-
-    public int getCourseIDbyName(String courseTypeName);
+    public Map<String,Object> getCanReservationCourseList();
 }

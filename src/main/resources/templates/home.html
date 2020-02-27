@@ -12,7 +12,6 @@
 </head>
 
 <body>
-<#include "header.html"/>
 <header class="header shadow-sm rounded">
     <div class="top-menu">
         <ul class="nav justify-content-end">
@@ -177,16 +176,16 @@
                 }
             });
             home.el("#goto-issue").off('click').on('click', function () {
-                window.open('/dtr/issue', "_blank");
+                App.goIssueByNewPage();
             });
             home.el("#goto-reservation").off('click').on('click', function () {
-                window.open('/dtr/reservation', "_blank");
+                App.goReservationByNewPage();
             });
             home.el("#goto-evaluate").off('click').on('click', function () {
-                window.open('/dtr/evaluate', "_blank");
+                App.goEvaluateByNewPage();
             });
             home.el("#goto-history").off('click').on('click', function () {
-                window.open('/dtr/history', "_blank");
+                App.goHistoryByNewPage();
             });
             home.el("#userLoginOut").off('click').on('click',function () {
                 var uName = home.el('#userMsg').data('uName');

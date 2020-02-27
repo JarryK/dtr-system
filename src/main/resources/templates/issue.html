@@ -6,9 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>发布课程</title>
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
-    <link rel="stylesheet" href="/css/issue.css">
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/fonts/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/issue.css">
+    <link rel="stylesheet" type="text/css" href="/js/datepicker/foundation.min.css">
+    <link rel="stylesheet" type="text/css" href="/js/datepicker/foundation-datepicker.css">
+
 </head>
 
 <body>
@@ -46,7 +50,7 @@
                         <div class="dropdown-menu" aria-labelledby="userDropdown">
                             <a class="dropdown-item" href="#">个人信息</a>
                             <a class="dropdown-item" href="#">。。。</a>
-                            <a class="dropdown-item" href="#">退出</a>
+                            <a class="dropdown-item" id="loginOut" href="#">退出</a>
                         </div>
                     </li>
                     <li class="nav-item"><a href="#">帮助</a></li>
@@ -70,7 +74,7 @@
                 </button>请合理安排时间!</p>
             <div class="col-md-4 text-xl-center classTime">
                 <h5><img src="/images/classTime.png" alt=""> 开始时间</h5>
-                <input class="form-control" id="settime" type="date" />
+                <input class="form-control" id="settime" type="text" />
             </div>
             <div class="col-md-4 text-xl-center classType">
                 <h5><img src="/images/classType.png" alt=""> 课程类型</h5>
@@ -117,6 +121,7 @@
                     <p>课程类型：<span class="inputType modal-in"></span></p>
                     <p>课程名称：<span class="inputName modal-in"></span></p>
                     <p>课程内容：<span class="inputContent modal-in"></span></p>
+                    <p>课程最大人数：<span class="inputStuNbr modal-in"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary input-modal-no" data-dismiss="modal">取消提交</button>
@@ -133,12 +138,25 @@
     <script>
         var issue = (function () {
             var bindEvents = function () {
+                App.getUserMsg( function (uNbr,uName,uType) {
+                    issue.el('.userName').html(uName+'('+uType+')');
+                    issue.el('#userMsg').data("uName",uName);
+                    issue.el('#userMsg').data("uNbr",uNbr);
+                    issue.el('#userMsg').data("uType",uType);
+                });
+                App.setInputBoxForTime('#settime');
                 issue.el("[data-toggle='tooltip']").tooltip();
-                issue.el('#commitClassMsg').off('clicl').on('click', function () {
-                    issue.el('.inputTIme').html(issue.el('#settime').val());
-                    issue.el('.inputType').html(issue.el('#classType').val());
-                    issue.el('.inputName').html(issue.el('#className').val());
-                    issue.el('.inputContent').html(issue.el('#classContent').val());
+                issue.el('#commitClassMsg').off('click').on('click', function () {
+                    var time = issue.el('#settime').val();
+                    var type = issue.el('#classType').val();
+                    var name = issue.el('#className').val();
+                    var nbr = issue.el('#stuNbr').val();
+                    var cont = issue.el('#classContent').val();
+                    issue.el('.inputTIme').html();
+                    issue.el('.inputType').html();
+                    issue.el('.inputName').html();
+                    issue.el('.inputStuNbr').html();
+                    issue.el('.inputContent').html();
                     $('#checkInput').modal('show');
                 });
                 issue.el('.input-modal-yes').off('click').on('click', function () {
@@ -164,7 +182,11 @@
                     $('#checkInput').modal('hide');
                     issue.el('.modal-in').html('');
                 });
-                issue.getUserMsg();
+                issue.el('#loginOut').off('click').on('click', function () {
+                    var uName = home.el('#userMsg').data('uName');
+                    var uNbr = home.el('#userMsg').data('uNbr');
+                    App.loginOut(uNbr, uName);
+                });
             };
             return {
                 el: function (expr) {
@@ -173,21 +195,6 @@
                 init: function () {
                     bindEvents();
                     return this
-                },
-                getUserMsg:function () {
-                    $.post('/dtr/user/getUser').done(function (data) {
-                        if (!App.checker(data)){
-                            window.open("/dtr/login","_self");
-                            return;
-                        }else {
-                            issue.setUser(data.user.USER_NAME+"("+data.user.TYPE_NAME+")");
-                            return ;
-                        }
-                    });
-                },
-                setUser:function (uName) {
-                    issue.el('.userName').html(uName);
-                    issue.el('#userMsg').data("uname",uName);
                 },
             }
         })();

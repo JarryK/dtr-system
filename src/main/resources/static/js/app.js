@@ -1,27 +1,9 @@
 document.write("<script src='/js/SweetAlert2.js'></script>");
+document.write("<script src='/js/template.js'></script>");
+document.write("<script src='/js/datepicker/foundation-datepicker.min.js'></script>");
+document.write("<script src='/js/datepicker/locales/foundation-datepicker.zh-CN.js'></script>");
 var App = function () {
     var globalSetting = function () {
-        // // json path 工具类
-        // window.JSONPathUtil = jsonpath ? jsonpath : {value:$.noop};
-        // // 禁止浏览器下拉菜单
-        // $('body').on('contextmenu', function(e) { e.preventDefault(); });
-        // //设置各分辨率下字号根值
-        // new function() {
-        //     var _self = this;
-        //     _self.width = 1280; //设置默认最大宽度
-        //     _self.fontSize = 50; //默认字体大小
-        //     _self.widthProportion = function() {
-        //         var p = (document.body && document.body.clientWidth || document.getElementsByTagName("html")[0].offsetWidth) / _self.width;
-        //         return p > 1 ? 1 : p < 0.1 ? 0.1 : p;
-        //     };
-        //     _self.changePage = function() {
-        //         document.getElementsByTagName("html")[0].setAttribute("style", "font-size:" + (_self.widthProportion() * _self.fontSize) + "px!important;overflow:hidden;");
-        //     };
-        //     _self.changePage();
-        //     window.addEventListener('resize', function() {
-        //         _self.changePage();
-        //     }, false);
-        // };
         // 扩展时间日期格式功能
         Date.prototype.format = function (fmt) {
             fmt = (fmt = $.trim(fmt)) === '' ? 'yyyy/MM/dd hh:mm:ss' : fmt;
@@ -69,6 +51,58 @@ var App = function () {
             },
         });
     };
+    //page_turn页面跳转函数集
+    var page_turn_functions = (function () {
+        return {
+            //在自身窗口打开
+            goLoginBySelf: function () {
+                window.open("/dtr/login", "_self");
+            },
+            goHomeBySelf: function () {
+                window.open("/dtr/home", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+            },
+            goIssueBySelf: function () {
+                App.getUserMsg(function (uNbr, uName, uType) {
+                    if (uType == '教师') {
+                        window.open('/dtr/issue', "_self");
+                    } else {
+                        App.alert('错误', 2, '没有权限');
+                    }
+                });
+            },
+            goReservationBySelf: function () {
+                window.open('/dtr/reservation', "_self");
+            },
+            goEvaluateBySelf: function () {
+                window.open('/dtr/evaluate', "_self");
+            },
+            goHistoryBySelf: function () {
+                window.open('/dtr/history', "_self");
+            },
+            //新窗口打开
+            goHomeByNewPage: function () {
+                window.open('/dtr/home', "_blank");
+            },
+            goIssueByNewPage: function () {
+                App.getUserMsg(function (uNbr, uName, uType) {
+                    if (uType == '教师') {
+                        window.open('/dtr/issue', "_self");
+                    } else {
+                        App.alert('错误', 2, '没有权限');
+                    }
+                });
+            },
+            goReservationByNewPage: function () {
+                window.open('/dtr/reservation', "_blank");
+            },
+            goEvaluateByNewPage: function () {
+                window.open('/dtr/evaluate', "_blank");
+            },
+            goHistoryByNewPage: function () {
+                window.open('/dtr/history', "_blank");
+            }
+        }
+    })();
     // utils工具函数集
     var utils_functions = (function () {
         return {
@@ -91,7 +125,7 @@ var App = function () {
                 $.post('/dtr/user/getUser').done(function (data) {
                     if (!App.checker(data)) {
                         App.alert('访问失败', 2, '请先登录', function () {
-                            window.open("/dtr/login", "_self")
+                            App.goLoginBySelf();
                         });
                         return;
                     } else {
@@ -104,6 +138,7 @@ var App = function () {
             },
         }
     })();
+    // utils常用ui函数集
     var utils_ui_functions = (function () {
         return {
             alertClose: function () {
@@ -195,8 +230,7 @@ var App = function () {
                     icon: icon,
                     title: title
                 })
-            }
-            ,
+            },
             msgAlert: function () {
                 Swal.fire({
                     title: '<strong>记录</strong>',
@@ -206,8 +240,7 @@ var App = function () {
                     showCloseButton: true,//右上角关闭
                 })
 
-            }
-            ,
+            },
             // inputAlert: function () {
             //     Swal.mixin({
             //         input: 'text',
@@ -236,8 +269,22 @@ var App = function () {
             //     })
             // },
             // 检验后端返回的数据成功or失败，并可以控制在屏幕顶部提示
+            setInputBoxForTime:function (_id_or_class) {
+                $(_id_or_class).fdatepicker({
+                    todayHighlight:true,
+                    todayBtn: 'linked',
+                    showOtherMonths: true,
+                    keyboardNavigation:true,
+                    format: 'yyyy-mm-dd hh:ii',
+                    pickTime: true,
+                    minDate:0,
+                    maxDate: 30,
+                    language:'zh-CN'
+                });
+            },
         }
     })();
+    // utils检验函数集
     var utils_checker = (function () {
         return {
             checker: function (_response, _tips) {
@@ -268,7 +315,7 @@ var App = function () {
     return {
         init: function () {
             // 初始化全局设置
-            globalSetting($.extend(true, App, utils_functions, utils_ui_functions, utils_checker)); // 全局功能设置
+            globalSetting($.extend(true, App, utils_functions, utils_ui_functions, utils_checker, page_turn_functions)); // 全局功能设置
             // 绑定全局事件
             // bindEvents();
             return this;

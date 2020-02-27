@@ -3,6 +3,7 @@ package cn.edu.mju.ccce.dtrsystem.controller;
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
+import cn.edu.mju.ccce.dtrsystem.common.MapTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -38,12 +39,12 @@ public class EvaluateController {
     @ResponseBody
     public Map<String, Object> insert(@RequestBody Map<String, Object> inMap) {
         try {
-            String courseName = G.getString(inMap, "courseName");
-            String typeName = G.getString(inMap, "typeName");
+            String courseName = MapTool.getString(inMap, "courseName");
+            String typeName = MapTool.getString(inMap, "typeName");
             int typeId = courseBmo.getCourseIDbyName(typeName);
-            String courseDetail = G.getString(inMap, "courseDetail");
-            String courseStuNbr = G.getString(inMap, "courseStuNbr");
-//            Date couresTime = G.getString(inMap, "couresTime");
+            String courseDetail = MapTool.getString(inMap, "courseDetail");
+            String courseStuNbr = MapTool.getString(inMap, "courseStuNbr");
+//            Date couresTime = MapTool.getString(inMap, "couresTime");
             Course course = new Course();
             course.setCOURSE_NAME(courseName);
             course.setCOURSE_TYPE_ID(typeId);
