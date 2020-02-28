@@ -1,7 +1,5 @@
 document.write("<script src='/js/SweetAlert2.js'></script>");
 document.write("<script src='/js/template.js'></script>");
-document.write("<script src='/js/datepicker/foundation-datepicker.min.js'></script>");
-document.write("<script src='/js/datepicker/locales/foundation-datepicker.zh-CN.js'></script>");
 var App = function () {
     var globalSetting = function () {
         // 扩展时间日期格式功能
@@ -125,7 +123,7 @@ var App = function () {
                 $.post('/dtr/user/getUser').done(function (data) {
                     if (!App.checker(data)) {
                         App.alert('访问失败', 2, '请先登录', function () {
-                            App.goLoginBySelf();
+                            App.goLoginBySelf()
                         });
                         return;
                     } else {
@@ -163,7 +161,7 @@ var App = function () {
             setDefault: function (item, val) {
                 return this.item = item || val;
             },
-            alert: function (title = '成功', type = 1, text, callback) {
+            alert: function (title = '成功',  text, type = 1,callback) {
                 App.setDefault(title, "成功");
                 var icon = this.checkAlertType(type);
                 Swal.fire({
@@ -269,16 +267,18 @@ var App = function () {
             //     })
             // },
             // 检验后端返回的数据成功or失败，并可以控制在屏幕顶部提示
-            setInputBoxForTime:function (_id_or_class) {
-                $(_id_or_class).fdatepicker({
-                    todayHighlight:true,
-                    todayBtn: 'linked',
-                    showOtherMonths: true,
-                    keyboardNavigation:true,
+
+            // 设置时间输入框
+            setInputBoxForTime: function (_id_or_class) {
+                $(_id_or_class).datetimepicker({
+                    bootcssVer:4,
                     format: 'yyyy-mm-dd hh:ii',
-                    pickTime: true,
-                    minDate:0,
-                    maxDate: 30,
+                    todayBtn: 'linked',
+                    todayHighlight:true,
+                    autoclose:true,
+                    Integer:1,
+                    startDate:new Date(),
+                    // endDate
                     language:'zh-CN'
                 });
             },

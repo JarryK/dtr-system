@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -37,30 +40,50 @@ public class EvaluateController {
 
     @RequestMapping("/insert")
     @ResponseBody
-    public Map<String, Object> insert(@RequestBody Map<String, Object> inMap) {
+    public Map<String, Object> insert(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String courseName = MapTool.getString(inMap, "courseName");
+        String typeName = MapTool.getString(inMap, "typeName");
+        String courseDetail = MapTool.getString(inMap, "courseDetail");
+        String courseStuNbr = MapTool.getString(inMap, "courseStuNbr");
         try {
-            String courseName = MapTool.getString(inMap, "courseName");
-            String typeName = MapTool.getString(inMap, "typeName");
+            courseName.substring(1);//探测非空
+            typeName.substring(1);
+            courseDetail.substring(1);
+            courseStuNbr.substring(1);
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空！");
+        }
+        try {
             int typeId = courseBmo.getCourseIDbyName(typeName);
-            String courseDetail = MapTool.getString(inMap, "courseDetail");
-            String courseStuNbr = MapTool.getString(inMap, "courseStuNbr");
-//            Date couresTime = MapTool.getString(inMap, "couresTime");
+            //给定输出格式
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date courseTime = null;
+            try {
+                courseTime = format.parse(MapTool.getString(inMap, "courseTime"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String sessionID = httpSession.getId();
+            Map<String,Object> uMgs = (Map<String, Object>) httpSession.getAttribute(sessionID);
+            //session里面最好改成用户类,不过比较懒  先放着
+            String uName = MapTool.getString(uMgs,"USER_NAME");
             Course course = new Course();
             course.setCOURSE_NAME(courseName);
             course.setCOURSE_TYPE_ID(typeId);
             course.setCOURSE_TYPE_NAME(typeName);
             course.setCOURSE_DETAIL(courseDetail);
             course.setCOURSE_STU_NBR(Integer.parseInt(courseStuNbr));
-//            course.setCOURSE_TIME(couresTime);
-            Map<String,Object> relMap = courseBmo.addCourse(course);
+            course.setCOURSE_TIME(courseTime);
+            course.setCOURSE_TEACHER_NAME(uName);
+            Map<String, Object> relMap = courseBmo.addCourse(course);
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
-            if (!relMapBoolean){
-                return G.page.returnMap(false,"新建失败");
+            if (!relMapBoolean) {
+                return G.page.returnMap(false, "新建失败");
             }
-            return G.page.returnMap(true,"ok");
+            return G.page.returnMap(true, "ok");
         } catch (Exception e) {
-            log.error("新建异常：",e);
-            return G.page.returnMap(false,"新建异常");
+            log.error("新建异常：", e);
+            return G.page.returnMap(false, "新建异常");
 
         }
 
