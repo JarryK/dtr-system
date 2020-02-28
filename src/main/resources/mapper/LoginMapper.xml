@@ -3,9 +3,9 @@
 <mapper namespace="cn.edu.mju.ccce.dtrsystem.dao.LoginDao">
 
     <select id="selcetUser" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT USER_NAME,USER_SEX,CLASS_ID
-        FROM user
-        WHERE USER_NAME =#{userName,jdbcType=VARCHAR} AND USER_PASS = #{userPass,jdbcType=VARCHAR} AND USER_STATUS = 0
+        SELECT USER_NAME,USER_SEX,TYPE_NAME
+        FROM user,user_type
+        WHERE USER_NBR =#{userNbr,jdbcType=VARCHAR} AND USER_PASS = #{userPass,jdbcType=VARCHAR} AND user.TYPE_ID = user_type.TYPE_ID AND user.TYPE_ID = #{userType,jdbcType=VARCHAR} AND USER_STATUS = 0
     </select>
 
 </mapper>

@@ -39,7 +39,7 @@ ul {
 }
 
 .nav-item a {
-    color: rgba(0, 0, 0, 0.5) !important;
+    color: rgba(0, 0, 0, 0.5);
 }
 
 
@@ -63,6 +63,7 @@ ul {
     margin-top: 4.5rem;
     background-color: #ffffff;
     border-radius: 0.5rem;
+    margin-bottom: 5rem;
 }
 .breadcrumb.function{
     background-color: #ffffff !important;

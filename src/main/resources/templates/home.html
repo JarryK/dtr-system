@@ -18,16 +18,20 @@
             <li class="nav-item dropdownnav-item">
                 <a class="nav-link" id="userDropdown" data-toggle="dropdown" aria-haspopup="true"
                    aria-expanded="false">
-                    <span class="glyphicon glyphicon-user userName header-font">用户</span>
+                    <span class="glyphicon glyphicon-user userName header-font">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...
+                    </span>
                 </a>
                 <div class="dropdown-menu" id="userMsg" aria-labelledby="userDropdown">
-                    <a class="dropdown-item userName" id="userName" href="#">个人信息</a>
-                    <a class="dropdown-item" id="user" href="#">。。。</a>
-                    <a class="dropdown-item" id="userLoginOut" href="#">退出</a>
+                    <a class="dropdown-item userName" id="userName" href="#">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...
+                    </a>
+                    <a class="dropdown-item " id="user" href="#">个人中心</a>
+                    <a class="dropdown-item " id="userLoginOut" href="#">退出</a>
                 </div>
             </li>
-            <li class="nav-item"><a class="nav-link header-font">帮助</a></li>
-            <li class="nav-item"><a class="nav-link header-font" cherf="#about">关于我们</a></li>
+            <li class="nav-item header"><a class="nav-link header-font">帮助</a></li>
+            <li class="nav-item header"><a class="nav-link header-font" cherf="#about">关于我们</a></li>
         </ul>
     </div>
 </header>
@@ -156,6 +160,11 @@
 <script>
     var home = (function () {
         var bindEvents = function () {
+            App.getUserMsg(function (uNbr,uName,type) {
+                home.el('#userMsg').data("uNbr",uNbr);
+                home.el('.userName').html(uName+"("+type+")");
+                home.el('#userMsg').data("uName",uName);
+            });
             $(window).on('scroll', function () {
                 var scrollTop = $(window).scrollTop();
                 if (scrollTop >= 420) {
@@ -167,22 +176,22 @@
                 }
             });
             home.el("#goto-issue").off('click').on('click', function () {
-                window.open('/dtr/issue', "_blank");
+                App.goIssueByNewPage();
             });
             home.el("#goto-reservation").off('click').on('click', function () {
-                window.open('/dtr/reservation', "_blank");
+                App.goReservationByNewPage();
             });
             home.el("#goto-evaluate").off('click').on('click', function () {
-                window.open('/dtr/evaluate', "_blank");
+                App.goEvaluateByNewPage();
             });
             home.el("#goto-history").off('click').on('click', function () {
-                window.open('/dtr/history', "_blank");
+                App.goHistoryByNewPage();
             });
             home.el("#userLoginOut").off('click').on('click',function () {
-                var uname = home.el('#userMsg').data('uname');
-                App.loginOut(uname);
+                var uName = home.el('#userMsg').data('uName');
+                var uNbr = home.el('#userMsg').data('uNbr');
+                App.loginOut(uNbr,uName);
             });
-            home.getUserMsg();
         };
         return {
             data:{},
@@ -192,21 +201,6 @@
             init: function () {
                 bindEvents();
                 return this
-            },
-            getUserMsg:function () {
-                $.post('/dtr/getUser').done(function (data) {
-                    if (!App.checker(data)){
-                        window.open("/dtr/login","_self");
-                        return;
-                    }else {
-                        home.setUser(data.user.userName);
-                       return ;
-                    }
-                });
-            },
-            setUser:function (uName) {
-                home.el('.userName').html(uName);
-                home.el('#userMsg').data("uname",uName);
             },
         }
     })();
