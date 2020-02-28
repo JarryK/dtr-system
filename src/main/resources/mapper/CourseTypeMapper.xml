@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.mju.ccce.dtrsystem.dao.CourseTypeDao">
+
+    <select id="selectCourseTypeId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT COURSE_TYPE_ID
+        FROM course_type
+        WHERE COURSE_TYPE_NAME=#{courseTypeName,jdbcType=VARCHAR} AND COURSE_TYPE_STATUS = 0
+    </select>
+
+</mapper>

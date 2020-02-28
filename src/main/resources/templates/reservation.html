@@ -111,7 +111,7 @@
                             <th scope="col">名称</th>
                             <th scope="col">老师</th>
                             <th scope="col">预约人数</th>
-                            <th scope="col">地点</th>
+                            <!--<th scope="col">地点</th>-->
                             <th scope="col">操作</th>
                         </tr>
                     </thead>
@@ -128,7 +128,7 @@
                             <th>时间</th>
                             <th>类型</th>
                             <th>老师</th>
-                            <th>地点</th>
+                            <!--<th>地点</th>-->
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -146,7 +146,7 @@
                             <th>时间</th>
                             <th>类型</th>
                             <th>老师</th>
-                            <th>地点</th>
+                            <!--<th>地点</th>-->
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -192,15 +192,15 @@
     <!-- 模态框结束 -->
 
     <script type="text/html" id="rese-class-msg-art">
-        {{ if classList && classList.length>0 }}{{each classList}}
+        {{ if courseList && courseList.length>0 }}{{each courseList}}
         <tr>
-            <th class="align-middle" scope="row">{{$value.index}}</th>
-            <td class="align-middle">{{$value.time}}</td>
-            <td class="align-middle">{{$value.type}}</td>
-            <td class="align-middle">{{$value.name}}</td>
-            <td class="align-middle">{{$value.teacherName}}</td>
-            <td class="align-middle">{{$value.number}}</td>
-            <td class="align-middle">{{$value.place}}</td>
+            <th class="align-middle" scope="row">{{$value.COURSE_ID}}</th>
+            <td class="align-middle">{{$value.COURSE_TIME}}</td>
+            <td class="align-middle">{{$value.COURSE_TYPE_NAME}}</td>
+            <td class="align-middle">{{$value.COURSE_NAME}}</td>
+            <td class="align-middle">{{$value.COURSE_TEACHER_NAME}}</td>
+            <td class="align-middle">{{$value.COURSE_STU_NBR}}</td>
+            <!--<td class="align-middle">{{$value.place}}</td>-->
             <td class="align-middle">
                 <p><a href="#" class="detailed text-decoration-none font-italic" data-index="{{$value.index}}">详情</a>
                 </p>
@@ -250,7 +250,6 @@
     <script src="/js/bootstrap/popper.min.js"></script>
     <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
     <script src="/js/app.js"></script>
-    <script src="/js/template.js"></script>
     <script>
         var reservation = (function () {
             var bindEvents = function () {
@@ -324,7 +323,7 @@
                         "number": "5",
                     }];
                     reservation.el("#rese-class-msg-container").html(template('rese-class-msg-art', {
-                        classList: classList
+                        courseList: classList
                     }));
                     reservation.el("#rese-class-historyMsg-container").html(template(
                         'rese-class-historyMsg-art', {

@@ -159,7 +159,7 @@ public class G {
          * @return
          */
         public static boolean returnMapBool(Map<String, Object> returnMap) {
-            return "0".equals(getString(returnMap,"resultCode"));
+            return "0".equals(MapTool.getString(returnMap,"resultCode"));
         }
 
         /**
@@ -386,37 +386,4 @@ public class G {
         }
     }
 
-    /**
-     * 获得Map指定key的value  String类型返回
-     *
-     * @param map
-     * @param key
-     * @return
-     */
-    public static String getString(Map map, Object key) {
-        if (map != null) {
-            Object answer = map.get(key);
-            if (answer != null) {
-                return answer.toString();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 获得Map中的Map
-     *
-     * @param map
-     * @param key
-     * @return
-     */
-    public static Map getMap(Map map, Object key) {
-        if (map != null) {
-            Object answer = map.get(key);
-            if (answer != null && answer instanceof Map) {
-                return (Map) answer;
-            }
-        }
-        return null;
-    }
 }
