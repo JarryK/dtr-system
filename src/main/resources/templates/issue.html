@@ -16,213 +16,234 @@
 </head>
 
 <body>
-    <div class="navbar navbar-expand-lg navbar-light bg-light ">
-        <h3 class="navbar-brand">诊断辅导预约系统</h3>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+<div class="navbar navbar-expand-lg navbar-light bg-light ">
+    <h3 class="navbar-brand">诊断辅导预约系统</h3>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">主页 </a>
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="#">主页 </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">发布课程</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">预约课程</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">评价系统</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">历史信息</a>
+            </li>
+        </ul>
+        <div class="form-inline my-2 my-lg-0">
+            <ul class="navbar-nav top-user">
+                <li class="dropdown  nav-item">
+                    <a id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user userName">用户</span>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">个人信息</a>
+                        <a class="dropdown-item" href="#">。。。</a>
+                        <a class="dropdown-item" id="loginOut" href="#">退出</a>
+                    </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">发布课程</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">预约课程</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">评价系统</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">历史信息</a>
-                </li>
+                <li class="nav-item"><a href="#">帮助</a></li>
+                <li class="nav-item"><a herf="#about">关于我们</a></li>
             </ul>
-            <div class="form-inline my-2 my-lg-0">
-                <ul class="navbar-nav top-user">
-                    <li class="dropdown  nav-item">
-                        <a id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-user userName">用户</span>
-                            <span class="caret"></span>
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">个人信息</a>
-                            <a class="dropdown-item" href="#">。。。</a>
-                            <a class="dropdown-item" id="loginOut" href="#">退出</a>
-                        </div>
-                    </li>
-                    <li class="nav-item"><a href="#">帮助</a></li>
-                    <li class="nav-item"><a herf="#about">关于我们</a></li>
-                </ul>
-            </div>
         </div>
     </div>
-    <div class="container function">
-        <nav aria-label="breadcrumb function">
-            <ol class="breadcrumb function">
-                <li class="breadcrumb-item " aria-current="page">主页</li>
-                <li class="breadcrumb-item active" aria-current="page">发布课程</li>
-            </ol>
-        </nav>
-        <hr>
-        <div class="row">
-            <!--<p class="alert alert-warning col-md-12 text-xl-center" role="alert"><button type="button" class="close"-->
-                    <!--data-dismiss="alert" aria-hidden="true">-->
-                    <!--&times;-->
-                <!--</button>请合理安排时间!</p>-->
-            <div class="col-md-4 text-xl-center classTime">
-                <h5><img src="/images/classTime.png" alt=""> 开始时间</h5>
-                <input class="form-control" id="settime" type="text" readonly="readonly"/>
-            </div>
-            <div class="col-md-4 text-xl-center classType">
-                <h5><img src="/images/classType.png" alt=""> 课程类型</h5>
-                <select class="form-control" name="classType" id="classType">
-                    <option value="语文">语文</option>
-                    <option value="数学">数学</option>
-                    <option value="英语">英语</option>
-                    <option value="物理">物理</option>
-                    <option value="化学">化学</option>
-                </select>
-            </div>
-            <div class="col-md-4 text-xl-center stuNbr">
-                <h5><img src="/images/classType.png" alt=""> 课程学生人数</h5>
-                <input class="form-control" name="classType" id="stuNbr" type="number"/>
-            </div>
-            <div class="col-md-12 className">
-                <h5><img src="/images/className.png" alt=""> 课程名称</h5>
-                <input class="form-control" id="className" type="" />
-            </div>
-            <div class="col-md-12 classContent">
-                <h5><img src="/images/classContent.png" alt=""> 课程内容</h5>
-                <textarea class="form-control" id="classContent" cols="30" rows="7" style="resize:none"></textarea>
-            </div>
+</div>
+<div class="container function">
+    <nav aria-label="breadcrumb function">
+        <ol class="breadcrumb function">
+            <li class="breadcrumb-item " aria-current="page">主页</li>
+            <li class="breadcrumb-item active" aria-current="page">发布课程</li>
+        </ol>
+    </nav>
+    <hr>
+    <div class="row">
+        <!--<p class="alert alert-warning col-md-12 text-xl-center" role="alert"><button type="button" class="close"-->
+        <!--data-dismiss="alert" aria-hidden="true">-->
+        <!--&times;-->
+        <!--</button>请合理安排时间!</p>-->
+        <div class="col-md-4 text-xl-center classTime">
+            <h5><img src="/images/classTime.png" alt=""> 开始时间</h5>
+            <input class="form-control" id="settime" type="text" readonly="readonly"/>
         </div>
-        <div class="col-md-12 text-right">
-            <button class="btn btn-secondary" id="commitClassMsg" data-toggle="tooltip" data-placement="top"
-                title="请您务必核实输入！">提交</button>
+        <div class="col-md-4 text-xl-center classType">
+            <h5><img src="/images/classType.png" alt=""> 课程类型</h5>
+            <select class="form-control" name="classType" id="classType">
+                <option value="语文">语文</option>
+                <option value="数学">数学</option>
+                <option value="英语">英语</option>
+                <option value="物理">物理</option>
+                <option value="化学">化学</option>
+            </select>
+        </div>
+        <div class="col-md-4 text-xl-center stuNbr">
+            <h5><img src="/images/classType.png" alt=""> 课程学生人数</h5>
+            <input class="form-control" name="classType" id="stuNbr" type="number"/>
+        </div>
+        <div class="col-md-12 className">
+            <h5><img src="/images/className.png" alt=""> 课程名称</h5>
+            <input class="form-control" id="className" type=""/>
+        </div>
+        <div class="col-md-12 classContent">
+            <h5><img src="/images/classContent.png" alt=""> 课程内容</h5>
+            <textarea class="form-control" id="classContent" cols="30" rows="7" style="resize:none"></textarea>
         </div>
     </div>
+    <div class="col-md-12 text-right">
+        <button class="btn btn-secondary" id="commitClassMsg" data-toggle="tooltip" data-placement="top"
+                title="请您务必核实输入！">提交
+        </button>
+    </div>
+</div>
 
-    <!-- 模态框开始 -->
-    <div class="modal fade" id="checkInput" tabindex="-1" role="dialog" aria-labelledby="checkInputTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="checkInputTitle">检查信息</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>开始时间：<span class="inputTIme modal-in"></span></p>
-                    <p>课程类型：<span class="inputType modal-in"></span></p>
-                    <p>课程名称：<span class="inputName modal-in"></span></p>
-                    <p>课程内容：<span class="inputContent modal-in"></span></p>
-                    <p>课程最大人数：<span class="inputStuNbr modal-in"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary input-modal-no" data-dismiss="modal">取消提交</button>
-                    <button type="button" class="btn btn-primary input-modal-yes">确定提交</button>
-                </div>
+<!-- 模态框开始 -->
+<div class="modal fade" id="checkInput" tabindex="-1" role="dialog" aria-labelledby="checkInputTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkInputTitle">检查信息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>开始时间：<span class="inputTIme modal-in"></span></p>
+                <p>课程类型：<span class="inputType modal-in"></span></p>
+                <p>课程名称：<span class="inputName modal-in"></span></p>
+                <p>课程内容：<span class="inputContent modal-in"></span></p>
+                <p>课程最大人数：<span class="inputStuNbr modal-in"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary input-modal-no" data-dismiss="modal">取消提交</button>
+                <button type="button" class="btn btn-primary input-modal-yes">确定提交</button>
             </div>
         </div>
     </div>
-    <!-- 模态框结束 -->
-    <script src="/js/jquery-3.1.1.min.js"></script>
-    <script src="/js/bootstrap/popper.min.js"></script>
-    <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
-    <script src="/js/bootstrap/datepicker/bootstrap-datetimepicker.min.js"></script>
-    <script src="/js/bootstrap/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-    <script src="/js/app.js"></script>
-    <script>
-        var issue = (function () {
-            var bindEvents = function () {
-                App.getUserMsg( function (uNbr,uName,uType) {
-                    issue.el('.userName').html(uName+'('+uType+')');
-                    issue.el('#userMsg').data("uName",uName);
-                    issue.el('#userMsg').data("uNbr",uNbr);
-                    issue.el('#userMsg').data("uType",uType);
-                });
-                App.setInputBoxForTime('#settime');
-                issue.el("[data-toggle='tooltip']").tooltip();
-                issue.el('#commitClassMsg').off('click').on('click', function () {
-                    var time = issue.el('#settime').val();
-                    if (time == ''){App.alert('错误','课程时间不能为空！',2);return;}
-                    var type = issue.el('#classType').val();
-                    if (type == ''){App.alert('错误','课程类型不能为空！',2);return;}
-                    var name = issue.el('#className').val();
-                    if (name == ''){App.alert('错误','课程名称不能为空！',2);return;}
-                    var nbr = issue.el('#stuNbr').val();
-                    if (nbr == ''){App.alert('错误','课程最大人数不能为空！',2);return;}
-                    var cont = issue.el('#classContent').val();
-                    if (cont == ''){App.alert('错误','课程内容不能为空！',2);return;}
-                    issue.el('.inputTIme').html(time);
-                    issue.el('.inputType').html(type);
-                    issue.el('.inputName').html(name);
-                    issue.el('.inputStuNbr').html(nbr);
-                    issue.el('.inputContent').html(cont);
-                    $('#checkInput').modal('show');
-                });
-                issue.el('.input-modal-yes').off('click').on('click', function () {
-                    var classTime = issue.el('#settime').val()+':00';
-                    var classType = issue.el('#classType').val();
-                    var className = issue.el('#className').val();
-                    var stuNbr = issue.el('#stuNbr').val();
-                    var classContent = issue.el('#classContent').val();
-                    $.post('/dtr/eval/insert',{
-                        courseName:className,
-                        typeName:classType,
-                        courseDetail:classContent,
-                        courseStuNbr:stuNbr,
-                        courseTime:classTime
-                    }).done(function (data) {
-                        if (!App.checker(data)){
-                            return;
-                        }else {
-                            App.alert("提交成功",'','',function () {
-                                issue.inputClear();
-                            });
-                            return ;
-                        }
-                    });
-                    $('#checkInput').modal('hide');
-                    issue.el('.modal-in').html('');
-                });
-                issue.el('#loginOut').off('click').on('click', function () {
-                    var uName = home.el('#userMsg').data('uName');
-                    var uNbr = home.el('#userMsg').data('uNbr');
-                    App.loginOut(uNbr, uName);
-                });
-            };
-            return {
-                el: function (expr) {
-                    return $(expr ? expr : 'body');
-                },
-                init: function () {
-                    bindEvents();
-                    return this
-                },
-                inputClear:function () {
-                    issue.el('#settime').val('');
-                    issue.el('#classType').val('语文');
-                    issue.el('#className').val('');
-                    issue.el('#stuNbr').val('');
-                    issue.el('#classContent').val('');
-                    issue.el('.inputTIme').html('');
-                    issue.el('.inputType').html('');
-                    issue.el('.inputName').html('');
-                    issue.el('.inputStuNbr').html('');
-                    issue.el('.inputContent').html('');
+</div>
+<!-- 模态框结束 -->
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
+<script src="/js/bootstrap/datepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="/js/bootstrap/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/js/app.js"></script>
+<script>
+    var issue = (function () {
+        var bindEvents = function () {
+            App.getUserMsg(function (uNbr, uName, uType) {
+                if (App.isTeacher(uType)) {
+                    App.alert("错误", "当前用户无权限", 2, function () {
+                        App.goHomeBySelf();
+                    })
                 }
+                issue.el('.userName').html(uName + '(' + uType + ')');
+                issue.el('#userMsg').data("uName", uName);
+                issue.el('#userMsg').data("uNbr", uNbr);
+                issue.el('#userMsg').data("uType", uType);
+            });
+            App.setInputBoxForTime('#settime');
+            issue.el("[data-toggle='tooltip']").tooltip();
+            issue.el('#commitClassMsg').off('click').on('click', function () {
+                var time = issue.el('#settime').val();
+                if (time == '') {
+                    App.alert('错误', '课程时间不能为空！', 2);
+                    return;
+                }
+                var type = issue.el('#classType').val();
+                if (type == '') {
+                    App.alert('错误', '课程类型不能为空！', 2);
+                    return;
+                }
+                var name = issue.el('#className').val();
+                if (name == '') {
+                    App.alert('错误', '课程名称不能为空！', 2);
+                    return;
+                }
+                var nbr = issue.el('#stuNbr').val();
+                if (nbr == '') {
+                    App.alert('错误', '课程最大人数不能为空！', 2);
+                    return;
+                }
+                var cont = issue.el('#classContent').val();
+                if (cont == '') {
+                    App.alert('错误', '课程内容不能为空！', 2);
+                    return;
+                }
+                issue.el('.inputTIme').html(time);
+                issue.el('.inputType').html(type);
+                issue.el('.inputName').html(name);
+                issue.el('.inputStuNbr').html(nbr);
+                issue.el('.inputContent').html(cont);
+                $('#checkInput').modal('show');
+            });
+            issue.el('.input-modal-yes').off('click').on('click', function () {
+                var classTime = issue.el('#settime').val() + ':00';
+                var classType = issue.el('#classType').val();
+                var className = issue.el('#className').val();
+                var stuNbr = issue.el('#stuNbr').val();
+                var classContent = issue.el('#classContent').val();
+                $.post('/dtr/eval/insert', {
+                    courseName: className,
+                    typeName: classType,
+                    courseDetail: classContent,
+                    courseStuNbr: stuNbr,
+                    courseTime: classTime
+                }).done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        App.alert("提交成功", '', '', function () {
+                            issue.inputClear();
+                        });
+                        return;
+                    }
+                });
+                $('#checkInput').modal('hide');
+                issue.el('.modal-in').html('');
+            });
+            issue.el('#loginOut').off('click').on('click', function () {
+                var uName = home.el('#userMsg').data('uName');
+                var uNbr = home.el('#userMsg').data('uNbr');
+                App.loginOut(uNbr, uName);
+            });
+        };
+        return {
+            el: function (expr) {
+                return $(expr ? expr : 'body');
+            },
+            init: function () {
+                bindEvents();
+                return this
+            },
+            inputClear: function () {
+                issue.el('#settime').val('');
+                issue.el('#classType').val('语文');
+                issue.el('#className').val('');
+                issue.el('#stuNbr').val('');
+                issue.el('#classContent').val('');
+                issue.el('.inputTIme').html('');
+                issue.el('.inputType').html('');
+                issue.el('.inputName').html('');
+                issue.el('.inputStuNbr').html('');
+                issue.el('.inputContent').html('');
             }
-        })();
-        $(function () {
-            issue.init();
-        })
-    </script>
+        }
+    })();
+    $(function () {
+        issue.init();
+    })
+</script>
 </body>
 
 </html>
