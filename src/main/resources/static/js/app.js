@@ -61,7 +61,7 @@ var App = function () {
             },
             goIssueBySelf: function () {
                 App.getUserMsg(function (uNbr, uName, uType) {
-                    if (uType == '教师') {
+                    if (App.isTeacher(uType)) {
                         window.open('/dtr/issue', "_self");
                     } else {
                         App.alert('错误', 2, '没有权限');
@@ -83,7 +83,7 @@ var App = function () {
             },
             goIssueByNewPage: function () {
                 App.getUserMsg(function (uNbr, uName, uType) {
-                    if (uType == '教师') {
+                    if (App.isTeacher(uType)) {
                         window.open('/dtr/issue', "_self");
                     } else {
                         App.alert('错误', 2, '没有权限');
@@ -310,6 +310,9 @@ var App = function () {
                         return false;
                 }
             },
+            isTeacher:function (type) {
+                return type == '教师';
+            }
         }
     })();
     return {

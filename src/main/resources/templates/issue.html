@@ -142,7 +142,7 @@
     var issue = (function () {
         var bindEvents = function () {
             App.getUserMsg(function (uNbr, uName, uType) {
-                if (uType != '教师') {
+                if (App.isTeacher(uType)) {
                     App.alert("错误", "当前用户无权限", 2, function () {
                         App.goHomeBySelf();
                     })
