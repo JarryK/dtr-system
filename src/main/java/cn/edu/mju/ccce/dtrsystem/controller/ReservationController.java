@@ -6,7 +6,6 @@ import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.PascalNameFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.Map;
  * <b>创建时间：</b>2020-02-25 22:15<br>
  */
 @Controller
-@RequestMapping("/dtr/reser")
+@RequestMapping("/dtr/rese")
 public class ReservationController {
 
     /**
@@ -39,9 +39,13 @@ public class ReservationController {
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.CourseBmoImpl")
     private CourseBmo courseBmo;
 
+    /**
+     * 获取可预约课程列表
+     * @return
+     */
     @RequestMapping("/getList")
     @ResponseBody
-    public Map<String, Object> getCourseList(@RequestBody Map<String, Object> inMap) {
+    public Map<String, Object> getCourseList() {
         try {
             Map<String, Object> returnMap = new HashMap<>();
             Map<String, Object> courseListMap = courseBmo.getCanReservationCourseList();
@@ -56,15 +60,27 @@ public class ReservationController {
                 returnMap = G.page.returnMap(false, "可预约列表为空");
                 return returnMap;
             }
-            JSONArray courseListFormat = JSONArray.parseArray(JSON.toJSONString(courseList,new PascalNameFilter()));
+            JSONArray courseListFormat = JSONArray.parseArray(JSON.toJSONString(courseList, new PascalNameFilter()));
             returnMap = G.page.returnMap(true, "ok");
-            returnMap.put("courseList",courseListFormat );
+            returnMap.put("courseList", courseListFormat);
             return returnMap;
         } catch (Exception e) {
-            log.error("获取可预约课程列表异常：",e);
-            return G.page.returnMap(false,"获取可预约课程列表异常");
+            log.error("获取可预约课程列表异常：", e);
+            return G.page.returnMap(false, "获取可预约课程列表异常");
 
         }
+    }
+
+    /**
+     * 预约课程
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("/reseCourse")
+    @ResponseBody
+    public Map<String, Object> reserCourse(@RequestBody Map<String,Object> inMap, HttpSession httpSession){
+        return null;
     }
 
 }

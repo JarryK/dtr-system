@@ -134,6 +134,9 @@ var App = function () {
                     }
                 });
             },
+            formatDateString:function (value) {
+            return new Date(value).format('yyyy-MM-dd hh:mm:ss');
+            },
         }
     })();
     // utils常用ui函数集
