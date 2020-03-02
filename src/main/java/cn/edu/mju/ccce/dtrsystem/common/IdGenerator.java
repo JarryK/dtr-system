@@ -18,8 +18,8 @@ public class IdGenerator {
         String timestamp = sdf.format(Calendar.getInstance().getTime());
         int maxLength = String.valueOf(Long.MAX_VALUE).length();
         int genLength = maxLength - timestamp.length();
-        String randomNuber = getRandomNuber(genLength);
-        String string = timestamp + randomNuber;
+        String randomNumber = getRandomNumber(genLength);
+        String string = timestamp + randomNumber;
         return Long.valueOf(string);
     }
 
@@ -29,7 +29,7 @@ public class IdGenerator {
      * @param m 位数
      * @return String
      */
-    public static String getRandomNuber(int m) {
+    public static String getRandomNumber(int m) {
         Random rd = new Random();
         int number = 1;
         for (int i = 0; i < m; i++) {

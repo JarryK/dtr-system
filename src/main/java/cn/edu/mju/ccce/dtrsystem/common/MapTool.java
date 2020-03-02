@@ -6,7 +6,7 @@ import java.util.Map;
  * <b>项目名称：</b>dtr-system<br>
  * <b>类名称：</b>cn.edu.mju.ccce.dtrsystem.common.MapTool<br>
  * <b>创建人：</b>yuks<br>
- * <b>类描述：</b><br>
+ * <b>类描述：</b>Map获取工具类<br>
  * <b>创建时间：</b>2020-02-26 13:15<br>
  */
 public class MapTool {
