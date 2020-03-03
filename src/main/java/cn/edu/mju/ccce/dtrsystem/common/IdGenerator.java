@@ -14,7 +14,7 @@ import java.util.Random;
 public class IdGenerator {
 
     public static Long genLongId() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssSSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
         String timestamp = sdf.format(Calendar.getInstance().getTime());
         int maxLength = String.valueOf(Long.MAX_VALUE).length();
         int genLength = maxLength - timestamp.length();
