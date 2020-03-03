@@ -21,18 +21,15 @@ public class PageController {
 
     @RequestMapping(value = {"","/", "/home", "home.html"})
     public String home(HttpSession session) {
-        Object user = session.getAttribute("user");
-//        @RequestBody Map<String, Object> inMap
-//        if (inMap.isEmpty()){
-//            return "login";
-//        }else {
-//            return "home";
-//        }
+        Map<String,Object> user = (Map<String, Object>) session.getAttribute(session.getId());
+        if (user.isEmpty()){
+            return "login";
+        }
         return "home";
     }
 
     @RequestMapping("login")
-    public String login(HttpSession session) {
+    public String login() {
         return "login";
     }
 
