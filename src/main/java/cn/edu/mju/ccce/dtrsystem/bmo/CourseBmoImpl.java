@@ -54,6 +54,44 @@ public class CourseBmoImpl implements CourseBmo {
     }
 
     @Override
+    public int getCourseIDbyName(String courseTypeName) {
+        return Integer.parseInt(courseTypeDao.selectCourseTypeId(courseTypeName));
+    }
+
+    @Override
+    public Map<String,Object> getCanReservationCourseList() {
+        try{
+            List<Course> courseList= courseDao.selectCourseList();
+            if (courseList.isEmpty()){
+                return G.bmo.returnMap(false,"查询为空！");
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("courseList",courseList);
+            return returnMap;
+        }catch (Exception e){
+            log.error("查询可预约课程列表异常:",e);
+            return G.bmo.returnMap(false, "查询异常！");
+        }
+    }
+
+    @Override
+    public Map<String, Object> getCourseDetByID(String courseID) {
+        try{
+            Course course = courseDao.selectCourseByID(courseID);
+            String courseDet = course.getCOURSE_DETAIL();
+            if (courseDet.isEmpty()){
+                return G.bmo.returnMap(false,"查询为空！");
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("courseDet",course);
+            return returnMap;
+        }catch (Exception e){
+            log.error("查询课程详细异常:",e);
+            return G.bmo.returnMap(false, "查询异常！");
+        }
+
+    }
+    @Override
     public Map<String, Object> removeCourse(Map<String, Object> inMap) {
         return null;
     }
@@ -76,24 +114,4 @@ public class CourseBmoImpl implements CourseBmo {
         return null;
     }
 
-    @Override
-    public int getCourseIDbyName(String courseTypeName) {
-        return Integer.parseInt(courseTypeDao.selectCourseTypeId(courseTypeName));
-    }
-
-    @Override
-    public Map<String,Object> getCanReservationCourseList() {
-        try{
-            List<Course> courseList= courseDao.selectCourseList();
-            if (courseList.isEmpty()){
-                return G.bmo.returnMap(false,"查询为空！");
-            }
-            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
-            returnMap.put("courseList",courseList);
-            return returnMap;
-        }catch (Exception e){
-
-        }
-        return null;
-    }
 }

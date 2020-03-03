@@ -23,6 +23,28 @@ public interface CourseBmo {
     public  Map<String, Object> addCourse(Course course);
 
     /**
+     * 获取课程类型id
+     * 特殊,不用检测
+     * @param courseTypeName
+     * @return
+     */
+    public int getCourseIDbyName(String courseTypeName);
+
+    /**
+     * 根据获取可预约课程列表
+     * @param
+     * @return
+     */
+    public Map<String,Object> getCanReservationCourseList();
+
+    /**
+     * 根据课程ID获得课程全部信息
+     * @param courseID
+     * @return
+     */
+    public Map<String,Object> getCourseDetByID(String courseID);
+
+    /**
      * 删除课程
      * @param inMap
      * @return
@@ -42,18 +64,4 @@ public interface CourseBmo {
      * @return
      */
     public Map<String,Object> upDateCourse (Map<String,Object> inMap);
-
-    /**
-     * 获取课程类型id
-     * @param courseTypeName
-     * @return
-     */
-    public int getCourseIDbyName(String courseTypeName);
-
-    /**
-     * 根据获取可预约课程列表
-     * @param
-     * @return
-     */
-    public Map<String,Object> getCanReservationCourseList();
 }

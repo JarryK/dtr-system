@@ -97,7 +97,7 @@
                 #{COURSE_TIME,jdbcType=TIMESTAMP},
             </if>
             <if test="EVALUATE_NBR != null">
-                #{EVALUATE_NBR,jdbcType=TIMESTAMP},
+                #{EVALUATE_NBR,jdbcType=NUMERIC},
             </if>
             <if test="COURSE_STATUS != null">
                 #{COURSE_STATUS,jdbcType=TIMESTAMP},
@@ -115,5 +115,11 @@
         SELECT <include refid="sl_Course" />
         FROM COURSE
         WHERE COURSE_STATUS ='0'
+    </select>
+
+    <select id="selectCourseByID" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
+        SELECT <include refid="sl_Course" />
+        FROM COURSE
+        WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND COURSE_STATUS ='0'
     </select>
 </mapper>

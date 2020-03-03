@@ -14,7 +14,6 @@ import java.util.List;
  */
 @Service("cn.edu.mju.ccce.dtrsystem.dao.CourseDao")
 public interface CourseDao {
-//    public
 
     /**
      * 插入一条新的课程信息
@@ -23,6 +22,21 @@ public interface CourseDao {
      * @return
      */
     public void insertNewCourse(Course course);
+
+    /**
+     * 获取可预约课程列表
+     *
+     * @return
+     */
+    public List<Course> selectCourseList();
+
+    /**
+     * 通过课程ID查找课程信息
+     *
+     * @param courseID
+     * @return
+     */
+    public Course selectCourseByID(String courseID);
 
     /**
      * 更新指定课程的数据
@@ -38,7 +52,4 @@ public interface CourseDao {
      * @return
      */
     public void removeCourseByCourseId(String CourseId);
-
-    public List<Course> selectCourseList();
-
 }

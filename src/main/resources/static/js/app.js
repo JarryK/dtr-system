@@ -122,7 +122,7 @@ var App = function () {
             getUserMsg: function (callback) {
                 $.post('/dtr/user/getUser').done(function (data) {
                     if (!App.checker(data)) {
-                        App.alert('访问失败', 2, '请先登录', function () {
+                        App.alert('访问失败', '请先登录', 2, function () {
                             App.goLoginBySelf()
                         });
                         return;
