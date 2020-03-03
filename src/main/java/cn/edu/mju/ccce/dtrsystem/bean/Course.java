@@ -15,18 +15,19 @@ import java.util.Date;
 public class Course implements Serializable {
 
     private static final long serialVersionUID = 8068995269823104033L;
-    private BigInteger COURSE_ID;//表ID
-    private String COURSE_NAME;//课程名
-    private int COURSE_TYPE_ID;//类型id
-    private String COURSE_TYPE_NAME;//类型名
-    private String COURSE_DETAIL;//发布课程内容
-    private String COURSE_TEACHER_NAME;//任课老师名
-    private int COURSE_STU_NBR;//课程学生限制人数
-    private Date COURSE_TIME;//发布课程时间
-    private BigInteger EVALUATE_NBR;//评价nbr
-    private int COURSE_STATUS = 0;//发布状态 0=可以预约 1=已结束预约 2=异常
-    private Date CREAT_TIME;//创建时间
-    private Date UPDATE_TIME = new Date();//更新时间
+    private BigInteger COURSE_ID;// bigint(20) NOT NULL COMMENT '表ID'
+    private String COURSE_NAME;// varchar(64) DEFAULT NULL COMMENT '课程名',
+    private int COURSE_TYPE_ID;// int(2) NOT NULL COMMENT '课程类型',
+    private String COURSE_TYPE_NAME;// varchar(20) DEFAULT NULL COMMENT '课程类型名',
+    private String COURSE_DETAIL;// longtext COMMENT '课程详细内容',
+    private String COURSE_TEACHER_NAME;// varchar(50) DEFAULT NULL COMMENT '任课老师',
+    private int COURSE_STU_NBR;// DEFAULT NULL COMMENT '允许上课学生人数，最大10',
+    private int COURSE_DONE_STU_NBR; // DEFAULT NULL COMMENT '已预约课程人数，不能大于允许人数'
+    private Date COURSE_TIME;// DEFAULT NULL COMMENT '课程开始时间',
+    private BigInteger EVALUATE_NBR;// DEFAULT NULL COMMENT '评价表nbr',
+    private int COURSE_STATUS = 0;// int(1) DEFAULT NULL COMMENT '课程状态，0=可以预约 1=已结束预约 2=异常'
+    private Date CREAT_TIME;// DEFAULT NULL COMMENT '创建时间'
+    private Date UPDATE_TIME = new Date();// DEFAULT NULL COMMENT '最近一次更新时间',
 
     public BigInteger getCOURSE_ID() {
         return COURSE_ID;
@@ -84,6 +85,10 @@ public class Course implements Serializable {
         this.COURSE_STU_NBR = COURSE_STU_NBR;
     }
 
+    public int getCOURSE_DONE_STU_NBR() { return COURSE_DONE_STU_NBR; }
+
+    public void setCOURSE_DONE_STU_NBR(int COURSE_DONE_STU_NBR) { this.COURSE_DONE_STU_NBR = COURSE_DONE_STU_NBR; }
+
     public Date getCOURSE_TIME() {
         return COURSE_TIME;
     }
@@ -133,6 +138,7 @@ public class Course implements Serializable {
 
         if (COURSE_TYPE_ID != course.COURSE_TYPE_ID) return false;
         if (COURSE_STU_NBR != course.COURSE_STU_NBR) return false;
+        if (COURSE_DONE_STU_NBR != course.COURSE_DONE_STU_NBR) return false;
         if (COURSE_STATUS != course.COURSE_STATUS) return false;
         if (COURSE_ID != null ? !COURSE_ID.equals(course.COURSE_ID) : course.COURSE_ID != null) return false;
         if (COURSE_NAME != null ? !COURSE_NAME.equals(course.COURSE_NAME) : course.COURSE_NAME != null) return false;
@@ -158,6 +164,7 @@ public class Course implements Serializable {
         result = 31 * result + (COURSE_DETAIL != null ? COURSE_DETAIL.hashCode() : 0);
         result = 31 * result + (COURSE_TEACHER_NAME != null ? COURSE_TEACHER_NAME.hashCode() : 0);
         result = 31 * result + COURSE_STU_NBR;
+        result = 31 * result + COURSE_DONE_STU_NBR;
         result = 31 * result + (COURSE_TIME != null ? COURSE_TIME.hashCode() : 0);
         result = 31 * result + (EVALUATE_NBR != null ? EVALUATE_NBR.hashCode() : 0);
         result = 31 * result + COURSE_STATUS;
