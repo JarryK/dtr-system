@@ -64,7 +64,7 @@ var App = function () {
                     if (App.isTeacher(uType)) {
                         window.open('/dtr/issue', "_self");
                     } else {
-                        App.alert('错误', 2, '没有权限');
+                        App.alert('错误', '没有权限', 2);
                     }
                 });
             },
@@ -86,7 +86,7 @@ var App = function () {
                     if (App.isTeacher(uType)) {
                         window.open('/dtr/issue', "_self");
                     } else {
-                        App.alert('错误', 2, '没有权限');
+                        App.alert('错误', '没有权限', 2);
                     }
                 });
             },
@@ -134,8 +134,8 @@ var App = function () {
                     }
                 });
             },
-            formatDateString:function (value) {
-            return new Date(value).format('yyyy-MM-dd hh:mm:ss');
+            formatDateString: function (value) {
+                return new Date(value).format('yyyy-MM-dd hh:mm:ss');
             },
         }
     })();
@@ -164,7 +164,7 @@ var App = function () {
             setDefault: function (item, val) {
                 return this.item = item || val;
             },
-            alert: function (title = '成功',  text, type = 1,callback) {
+            alert: function (title = '成功', text, type = 1, callback) {
                 App.setDefault(title, "成功");
                 var icon = this.checkAlertType(type);
                 Swal.fire({
@@ -173,7 +173,7 @@ var App = function () {
                     icon: icon,
                     confirmButtonText: '确定',
                     allowEscapeKey: true,
-                    backdrop: `rgba(0,0,0,0.6)`
+                    backdrop: `rgba(0, 0, 0, 0.6)`
                 }).then(function (isConfirm) {
                     try {
                         //判断 是否 点击的 确定按钮
@@ -274,15 +274,15 @@ var App = function () {
             // 设置时间输入框
             setInputBoxForTime: function (_id_or_class) {
                 $(_id_or_class).datetimepicker({
-                    bootcssVer:4,
+                    bootcssVer: 4,
                     format: 'yyyy-mm-dd hh:ii',
                     todayBtn: 'linked',
-                    todayHighlight:true,
-                    autoclose:true,
-                    Integer:1,
-                    startDate:new Date(),
+                    todayHighlight: true,
+                    autoclose: true,
+                    Integer: 1,
+                    startDate: new Date(),
                     // endDate
-                    language:'zh-CN'
+                    language: 'zh-CN'
                 });
             },
         }
@@ -313,7 +313,7 @@ var App = function () {
                         return false;
                 }
             },
-            isTeacher:function (type) {
+            isTeacher: function (type) {
                 return type == '教师';
             }
         }
