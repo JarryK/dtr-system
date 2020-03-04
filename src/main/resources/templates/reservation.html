@@ -223,11 +223,6 @@
                     reservation.el('#userMsg').data("uNbr", uNbr);
                     reservation.el('#userMsg').data("uType", uType);
                 });
-                reservation.el('.reservation-btn').off('click').on('click', function () {
-                    var $this = $(this);
-                    var index = $this.data("courseid");
-                    App.alert('预约成功！');
-                });
                 reservation.el('.cancel-reservation-btn').off('click').on('click', function () {
                     App.alert('取消成功');
                 });
@@ -310,7 +305,21 @@
                             }
                         });
                     });
-
+                    reservation.el('.reservation-btn').off('click').on('click', function () {
+                        var $this = $(this);
+                        var index = $this.data("courseid");
+                        $.post('/dtr/rese/reseCourse',{
+                            index:index
+                        }).done(function (data) {
+                            if (!App.checker(data)) {
+                                return;
+                            } else {
+                                App.alert('预约成功！');
+                                reservation.panelClick();
+                                return;
+                            }
+                        });
+                    });
                 },
             }
         })();

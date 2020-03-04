@@ -4,10 +4,8 @@ import cn.edu.mju.ccce.dtrsystem.bean.Course;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.PascalNameFilter;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -86,9 +84,34 @@ public class ReservationController {
         try {
             courseID.substring(1);// 探测非空
         } catch (Exception e) {
-            return G.page.returnMap(false, "查询条件异常");
+            log.error("预约条件异常", e);
+            return G.page.returnMap(false, "预约条件异常");
         }
-        return null;
+        try {
+            String sessionId = httpSession.getId();
+            Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionId);
+            String type_name = MapTool.getString(uMsg, "TYPE_NAME");
+            if (!"学生".equals(type_name)) {
+                return G.page.returnMap(false, "非学生用户不能预约");
+            }
+            String uNbr = MapTool.getString(uMsg, "uNbr");
+            String user_name = MapTool.getString(uMsg, "USER_NAME");
+            Map<String, Object> reseMap = new HashMap<>();
+            reseMap.put("userNbr", uNbr);
+            reseMap.put("userName", user_name);
+            reseMap.put("courseID", courseID);
+            Map<String, Object> relMap = courseBmo.reservationCourse(reseMap);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            return G.page.returnMap(true,"预约成功");
+
+        } catch (Exception e) {
+            log.error("预约异常", e);
+            return G.page.returnMap(false, "预约异常");
+        }
     }
 
     /**
@@ -105,6 +128,7 @@ public class ReservationController {
         try {
             courseID.substring(1);// 探测非空
         } catch (Exception e) {
+            log.error("查询条件异常", e);
             return G.page.returnMap(false, "查询条件异常");
         }
         try {

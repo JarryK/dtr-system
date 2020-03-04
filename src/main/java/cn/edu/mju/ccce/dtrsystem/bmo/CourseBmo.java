@@ -17,7 +17,7 @@ public interface CourseBmo {
     /**
      * 添加课程
      *
-     * @param inMap
+     * @param course
      * @return
      */
     public  Map<String, Object> addCourse(Course course);
@@ -45,18 +45,20 @@ public interface CourseBmo {
     public Map<String,Object> getCourseDetByID(String courseID);
 
     /**
+     *预约课程
+     * @param inMap
+     * @return
+     */
+    public  Map<String,Object> reservationCourse (Map<String,Object> inMap);
+
+    /**
      * 删除课程
      * @param inMap
      * @return
      */
     public Map<String,Object> removeCourse (Map<String,Object> inMap);
 
-    /**
-     *预约课程
-     * @param inMap
-     * @return
-     */
-    public Map<String,Object> reservationCourse (Map<String,Object> inMap);
+
 
     /**
      * 更新发布课程信息

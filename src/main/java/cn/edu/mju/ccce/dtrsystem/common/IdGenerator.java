@@ -16,9 +16,7 @@ public class IdGenerator {
     public static Long genLongId() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
         String timestamp = sdf.format(Calendar.getInstance().getTime());
-        int maxLength = String.valueOf(Long.MAX_VALUE).length();
-        int genLength = maxLength - timestamp.length();
-        String randomNumber = getRandomNumber(genLength);
+        String randomNumber = getRandomNumber(4);//js精度最多17位 超出位数都为0  改成16位
         String string = timestamp + randomNumber;
         return Long.valueOf(string);
     }
