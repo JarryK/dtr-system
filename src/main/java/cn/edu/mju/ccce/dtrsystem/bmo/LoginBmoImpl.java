@@ -28,7 +28,7 @@ public class LoginBmoImpl implements LoginBmo{
     @Override
     public Map<String,Object> chackLogin(Map<String, Object> inMap) {
         try{
-            Map<String,Object> relMap = loginDao.selcetUser(inMap);
+            Map<String,Object> relMap = loginDao.selectUser(inMap);
             if(relMap.isEmpty()){
                 return G.bmo.returnMap(false,"查询为空！");
             }

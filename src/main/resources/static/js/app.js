@@ -84,7 +84,7 @@ var App = function () {
             goIssueByNewPage: function () {
                 App.getUserMsg(function (uNbr, uName, uType) {
                     if (App.isTeacher(uType)) {
-                        window.open('/dtr/issue', "_self");
+                        window.open('/dtr/issue', "_blank");
                     } else {
                         App.alert('错误', '没有权限', 2);
                     }

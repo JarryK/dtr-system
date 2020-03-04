@@ -1,5 +1,6 @@
 package cn.edu.mju.ccce.dtrsystem.dao;
 
+import cn.edu.mju.ccce.dtrsystem.bean.User;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,12 @@ public interface LoginDao {
      * @param inMap
      * @return
      */
-    public Map<String,Object> selcetUser (Map<String,Object> inMap);
+    public Map<String,Object> selectUser (Map<String,Object> inMap);
+
+    /**
+     * 查找用户所有信息
+     * @param userUbr
+     * @return
+     */
+    public User selectUserAllMsgByUserNbr(String userUbr);
 }
