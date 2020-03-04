@@ -9,7 +9,7 @@ import java.util.Date;
  * <b>项目名称：</b>dtr-system<br>
  * <b>类名称：</b>cn.edu.mju.ccce.dtrsystem.bean.Issue<br>
  * <b>创建人：</b>yuks<br>
- * <b>类描述：</b><br>
+ * <b>类描述：</b>课程实体类<br>
  * <b>创建时间：</b>2020-02-15 19:44<br>
  */
 public class Course implements Serializable {
@@ -20,6 +20,7 @@ public class Course implements Serializable {
     private int COURSE_TYPE_ID;// int(2) NOT NULL COMMENT '课程类型',
     private String COURSE_TYPE_NAME;// varchar(20) DEFAULT NULL COMMENT '课程类型名',
     private String COURSE_DETAIL;// longtext COMMENT '课程详细内容',
+    private int COURSE_TEACHER_NBR;// bigint(32) DEFAULT NULL COMMENT '任课老师NBR',
     private String COURSE_TEACHER_NAME;// varchar(50) DEFAULT NULL COMMENT '任课老师',
     private int COURSE_STU_NBR;// DEFAULT NULL COMMENT '允许上课学生人数，最大10',
     private int COURSE_DONE_STU_NBR; // DEFAULT NULL COMMENT '已预约课程人数，不能大于允许人数'
@@ -68,6 +69,10 @@ public class Course implements Serializable {
     public void setCOURSE_DETAIL(String COURSE_DETAIL) {
         this.COURSE_DETAIL = COURSE_DETAIL;
     }
+
+    public int getCOURSE_TEACHER_NBR() { return COURSE_TEACHER_NBR; }
+
+    public void setCOURSE_TEACHER_NBR(int COURSE_TEACHER_NBR) { this.COURSE_TEACHER_NBR = COURSE_TEACHER_NBR; }
 
     public String getCOURSE_TEACHER_NAME() {
         return COURSE_TEACHER_NAME;
@@ -137,6 +142,7 @@ public class Course implements Serializable {
         Course course = (Course) o;
 
         if (COURSE_TYPE_ID != course.COURSE_TYPE_ID) return false;
+        if (COURSE_TEACHER_NBR != course.COURSE_TEACHER_NBR) return false;
         if (COURSE_STU_NBR != course.COURSE_STU_NBR) return false;
         if (COURSE_DONE_STU_NBR != course.COURSE_DONE_STU_NBR) return false;
         if (COURSE_STATUS != course.COURSE_STATUS) return false;
@@ -162,6 +168,7 @@ public class Course implements Serializable {
         result = 31 * result + COURSE_TYPE_ID;
         result = 31 * result + (COURSE_TYPE_NAME != null ? COURSE_TYPE_NAME.hashCode() : 0);
         result = 31 * result + (COURSE_DETAIL != null ? COURSE_DETAIL.hashCode() : 0);
+        result = 31 * result + COURSE_TEACHER_NBR;
         result = 31 * result + (COURSE_TEACHER_NAME != null ? COURSE_TEACHER_NAME.hashCode() : 0);
         result = 31 * result + COURSE_STU_NBR;
         result = 31 * result + COURSE_DONE_STU_NBR;

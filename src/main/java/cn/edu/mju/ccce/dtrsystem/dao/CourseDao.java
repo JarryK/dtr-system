@@ -39,17 +39,17 @@ public interface CourseDao {
     public Course selectCourseByID(String courseID);
 
     /**
-     * 更新指定课程的数据
+     * 更新指定课程已预约人数
      *
-     * @param course
+     * @param courseDoneStuNbr
      * @return
      */
-    public Course upDateCourse(Course course);
+    public void upDateCourseDoneStuNbr(String courseDoneStuNbr,String courseID);
 
     /**
-     * 删除课程信息
+     * 查找已预约课程人数
      *
      * @return
      */
-    public void removeCourseByCourseId(String CourseId);
+    public void selectCourseReservationNbr(String CourseId);
 }
