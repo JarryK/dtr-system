@@ -8,7 +8,7 @@ import java.util.Date;
  * <b>项目名称：</b>dtr-system<br>
  * <b>类名称：</b>cn.edu.mju.ccce.dtrsystem.bean.User<br>
  * <b>创建人：</b>yuks<br>
- * <b>类描述：</b><br>
+ * <b>类描述：</b>用户实体类<br>
  * <b>创建时间：</b>2020-02-08 20:35<br>
  */
 public class User implements Serializable {
@@ -23,9 +23,9 @@ public class User implements Serializable {
     private int USER_PHONE;
     private String USER_PASS;
     private BigInteger EVALUATE_NBR;
-    private int USER_STATUS;
+    private int USER_STATUS = 0;
     private Date CREAT_TIME;
-    private Date UPDATE_TIME;
+    private Date UPDATE_TIME = new Date();
 
     public BigInteger getUSER_ID() {
         return USER_ID;
