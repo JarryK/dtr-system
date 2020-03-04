@@ -21,8 +21,10 @@ public class PageController {
 
     @RequestMapping(value = {"","/", "/home", "home.html"})
     public String home(HttpSession session) {
+        try{
         Map<String,Object> user = (Map<String, Object>) session.getAttribute(session.getId());
-        if (user.isEmpty()){
+
+        }catch (Exception e){
             return "login";
         }
         return "home";
