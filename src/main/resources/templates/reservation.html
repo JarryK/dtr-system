@@ -112,7 +112,7 @@
                             <th scope="col">类型</th>
                             <th scope="col">名称</th>
                             <th scope="col">老师</th>
-                            <th scope="col">可预约人数</th>
+                            <th scope="col">总/已预约人数</th>
                             <th scope="col">操作</th>
                         </tr>
                     </thead>
@@ -162,7 +162,7 @@
             <td class="align-middle">{{$value.COURSE_TYPE_NAME}}</td>
             <td class="align-middle">{{$value.COURSE_NAME}}</td>
             <td class="align-middle">{{$value.COURSE_TEACHER_NAME}}</td>
-            <td class="align-middle">{{$value.COURSE_STU_NBR}}</td>
+            <td class="align-middle">{{$value.COURSE_STU_NBR}}/{{$value.COURSE_DONE_STU_NBR}}</td>
             <!--<td class="align-middle">{{$value.place}}</td>-->
             <td class="align-middle">
                 <p><a href="javascript:;"  class="detailed text-decoration-none font-italic" data-courseid="{{$value.COURSE_ID}}">详情</a>

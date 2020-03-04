@@ -20,7 +20,7 @@ public interface ReservationDao {
      * 增加一条新的预约课程信息
      * @param reservation
      */
-    public Reservation insertReservationRecord(Reservation reservation);
+    public void insertReservationRecord(Reservation reservation);
 
     /**
      * 根据用户编号查询用户预约记录

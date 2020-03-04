@@ -60,7 +60,7 @@ public class CourseBmoImpl implements CourseBmo {
             courseDao.insertNewCourse(course);
             return G.bmo.returnMap(true, "ok");
         } catch (Exception e) {
-            log.error("新建课程异常：",e);
+            log.error("新建课程异常：", e);
             return G.bmo.returnMap(false, "创建失败！");
         }
     }
@@ -71,71 +71,72 @@ public class CourseBmoImpl implements CourseBmo {
     }
 
     @Override
-    public Map<String,Object> getCanReservationCourseList() {
-        try{
-            List<Course> courseList= courseDao.selectCourseList();
-            if (courseList.isEmpty()){
-                return G.bmo.returnMap(false,"查询为空！");
+    public Map<String, Object> getCanReservationCourseList() {
+        try {
+            List<Course> courseList = courseDao.selectCourseList();
+            if (courseList.isEmpty()) {
+                return G.bmo.returnMap(false, "查询为空！");
             }
-            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
-            returnMap.put("courseList",courseList);
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("courseList", courseList);
             return returnMap;
-        }catch (Exception e){
-            log.error("查询可预约课程列表异常:",e);
+        } catch (Exception e) {
+            log.error("查询可预约课程列表异常:", e);
             return G.bmo.returnMap(false, "查询异常！");
         }
     }
 
     @Override
     public Map<String, Object> getCourseDetByID(String courseID) {
-        try{
+        try {
             Course course = courseDao.selectCourseByID(courseID);
             String courseDet = course.getCOURSE_DETAIL();
-            if (courseDet.isEmpty()){
-                return G.bmo.returnMap(false,"查询为空！");
+            if (courseDet.isEmpty()) {
+                return G.bmo.returnMap(false, "查询为空！");
             }
-            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
-            returnMap.put("courseDet",course);
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("courseDet", course);
             return returnMap;
-        }catch (Exception e){
-            log.error("查询课程详细异常:",e);
+        } catch (Exception e) {
+            log.error("查询课程详细异常:", e);
             return G.bmo.returnMap(false, "查询异常！");
         }
 
     }
 
     @Override
-    public  Map<String, Object> reservationCourse(Map<String, Object> inMap) {
-        synchronized(this) {
-            try{
-                String courseID = MapTool.getString(inMap,"courseID");
-                Course course =courseDao.selectCourseByID(courseID);;
+    public Map<String, Object> reservationCourse(Map<String, Object> inMap) {
+        synchronized (this) {
+            try {
+                String courseID = MapTool.getString(inMap, "courseID");
+                Course course = courseDao.selectCourseByID(courseID);
                 int stuNbr = course.getCOURSE_STU_NBR();
                 int doneStuNbr = course.getCOURSE_DONE_STU_NBR();
-                if (stuNbr == doneStuNbr){
-                    return G.bmo.returnMap(false,"预约课程人数已满");
+                if (stuNbr == doneStuNbr || stuNbr < doneStuNbr) {
+                    return G.bmo.returnMap(false, "预约课程人数已满");
                 }
-                Date nowTime  = new Date();
+                Date nowTime = new Date();
                 Date courseTime = course.getCOURSE_TIME();
                 long t = nowTime.getTime() - courseTime.getTime();
-                if (t  >  -60*60*1000 ){
-                    return G.bmo.returnMap(false,"不能预约即将开课的课程");
-                };
+                if (t > -60 * 60 * 1000) {
+                    return G.bmo.returnMap(false, "不能预约即将开课的课程");
+                }
                 Reservation reservation = new Reservation();
                 reservation.setRESERVATION_ID(IdGenerator.genLongId());
-                reservation.setCOURSE_ID(Integer.parseInt(courseID));
+                reservation.setCOURSE_ID(Long.parseLong(courseID));
                 reservation.setCOURSE_TEACHER_NBR(course.getCOURSE_TEACHER_NBR());
                 reservation.setCOURSE_TEACHER_NAME(course.getCOURSE_TEACHER_NAME());
-                reservation.setUSER_NAME(MapTool.getString(inMap,"userName"));
-                reservation.setUSER_NBR((Integer) MapTool.getObject(inMap,"userNbr"));
+                reservation.setUSER_NAME(MapTool.getString(inMap, "userName"));
+                reservation.setUSER_NBR(Long.parseLong(MapTool.getString(inMap, "userNbr")));
                 reservation.setCREAT_TIME(nowTime);
                 reseDao.insertReservationRecord(reservation);
-                return G.bmo.returnMap(true,"预约成功！");
-            }catch (Exception e){
-                log.error("预约课程异常",e);
-                return G.bmo.returnMap(false,"预约课程异常！");
+                courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr+1),courseID);
+                return G.bmo.returnMap(true, "预约成功！");
+            } catch (Exception e) {
+                log.error("预约课程异常", e);
+                return G.bmo.returnMap(false, "预约课程异常！");
             }
-           }
+        }
     }
 
     @Override

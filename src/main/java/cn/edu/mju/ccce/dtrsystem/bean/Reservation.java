@@ -62,7 +62,7 @@ public class Reservation implements Serializable {
         return USER_NBR;
     }
 
-    public void setUSER_NBR(int USER_NBR) {
+    public void setUSER_NBR(Long USER_NBR) {
         this.USER_NBR = USER_NBR;
     }
 
