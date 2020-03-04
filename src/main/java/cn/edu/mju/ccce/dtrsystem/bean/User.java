@@ -1,6 +1,8 @@
 package cn.edu.mju.ccce.dtrsystem.bean;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * <b>项目名称：</b>dtr-system<br>
@@ -12,25 +14,24 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private static final long serialVersionUID = -1320367561013449636L;
-    private int USER_ID;
+    private BigInteger USER_ID;
     private String USER_NAME;
-    private int USER_NBR;
+    private BigInteger USER_NBR;
     private String USER_SEX;
     private int TYPE_ID;
+    private String TYPE_NAME;
     private int USER_PHONE;
     private String USER_PASS;
-    private int EVALUATE_NBR;
+    private BigInteger EVALUATE_NBR;
     private int USER_STATUS;
+    private Date CREAT_TIME;
+    private Date UPDATE_TIME;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public int getUSER_ID() {
+    public BigInteger getUSER_ID() {
         return USER_ID;
     }
 
-    public void setUSER_ID(int USER_ID) {
+    public void setUSER_ID(BigInteger USER_ID) {
         this.USER_ID = USER_ID;
     }
 
@@ -42,11 +43,11 @@ public class User implements Serializable {
         this.USER_NAME = USER_NAME;
     }
 
-    public int getUSER_NBR() {
+    public BigInteger getUSER_NBR() {
         return USER_NBR;
     }
 
-    public void setUSER_NBR(int USER_NBR) {
+    public void setUSER_NBR(BigInteger USER_NBR) {
         this.USER_NBR = USER_NBR;
     }
 
@@ -66,6 +67,14 @@ public class User implements Serializable {
         this.TYPE_ID = TYPE_ID;
     }
 
+    public String getTYPE_NAME() {
+        return TYPE_NAME;
+    }
+
+    public void setTYPE_NAME(String TYPE_NAME) {
+        this.TYPE_NAME = TYPE_NAME;
+    }
+
     public int getUSER_PHONE() {
         return USER_PHONE;
     }
@@ -82,11 +91,11 @@ public class User implements Serializable {
         this.USER_PASS = USER_PASS;
     }
 
-    public int getEVALUATE_NBR() {
+    public BigInteger getEVALUATE_NBR() {
         return EVALUATE_NBR;
     }
 
-    public void setEVALUATE_NBR(int EVALUATE_NBR) {
+    public void setEVALUATE_NBR(BigInteger EVALUATE_NBR) {
         this.EVALUATE_NBR = EVALUATE_NBR;
     }
 
@@ -98,6 +107,22 @@ public class User implements Serializable {
         this.USER_STATUS = USER_STATUS;
     }
 
+    public Date getCREAT_TIME() {
+        return CREAT_TIME;
+    }
+
+    public void setCREAT_TIME(Date CREAT_TIME) {
+        this.CREAT_TIME = CREAT_TIME;
+    }
+
+    public Date getUPDATE_TIME() {
+        return UPDATE_TIME;
+    }
+
+    public void setUPDATE_TIME(Date UPDATE_TIME) {
+        this.UPDATE_TIME = UPDATE_TIME;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -105,28 +130,34 @@ public class User implements Serializable {
 
         User user = (User) o;
 
-        if (USER_ID != user.USER_ID) return false;
-        if (USER_NBR != user.USER_NBR) return false;
         if (TYPE_ID != user.TYPE_ID) return false;
         if (USER_PHONE != user.USER_PHONE) return false;
-        if (EVALUATE_NBR != user.EVALUATE_NBR) return false;
         if (USER_STATUS != user.USER_STATUS) return false;
+        if (USER_ID != null ? !USER_ID.equals(user.USER_ID) : user.USER_ID != null) return false;
         if (USER_NAME != null ? !USER_NAME.equals(user.USER_NAME) : user.USER_NAME != null) return false;
+        if (USER_NBR != null ? !USER_NBR.equals(user.USER_NBR) : user.USER_NBR != null) return false;
         if (USER_SEX != null ? !USER_SEX.equals(user.USER_SEX) : user.USER_SEX != null) return false;
-        return USER_PASS != null ? USER_PASS.equals(user.USER_PASS) : user.USER_PASS == null;
+        if (TYPE_NAME != null ? !TYPE_NAME.equals(user.TYPE_NAME) : user.TYPE_NAME != null) return false;
+        if (USER_PASS != null ? !USER_PASS.equals(user.USER_PASS) : user.USER_PASS != null) return false;
+        if (EVALUATE_NBR != null ? !EVALUATE_NBR.equals(user.EVALUATE_NBR) : user.EVALUATE_NBR != null) return false;
+        if (CREAT_TIME != null ? !CREAT_TIME.equals(user.CREAT_TIME) : user.CREAT_TIME != null) return false;
+        return UPDATE_TIME != null ? UPDATE_TIME.equals(user.UPDATE_TIME) : user.UPDATE_TIME == null;
     }
 
     @Override
     public int hashCode() {
-        int result = USER_ID;
+        int result = USER_ID != null ? USER_ID.hashCode() : 0;
         result = 31 * result + (USER_NAME != null ? USER_NAME.hashCode() : 0);
-        result = 31 * result + USER_NBR;
+        result = 31 * result + (USER_NBR != null ? USER_NBR.hashCode() : 0);
         result = 31 * result + (USER_SEX != null ? USER_SEX.hashCode() : 0);
         result = 31 * result + TYPE_ID;
+        result = 31 * result + (TYPE_NAME != null ? TYPE_NAME.hashCode() : 0);
         result = 31 * result + USER_PHONE;
         result = 31 * result + (USER_PASS != null ? USER_PASS.hashCode() : 0);
-        result = 31 * result + EVALUATE_NBR;
+        result = 31 * result + (EVALUATE_NBR != null ? EVALUATE_NBR.hashCode() : 0);
         result = 31 * result + USER_STATUS;
+        result = 31 * result + (CREAT_TIME != null ? CREAT_TIME.hashCode() : 0);
+        result = 31 * result + (UPDATE_TIME != null ? UPDATE_TIME.hashCode() : 0);
         return result;
     }
 }
