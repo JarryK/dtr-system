@@ -123,9 +123,8 @@ var App = function () {
                 $.post('/dtr/user/getUser').done(function (data) {
                     if (!App.checker(data)) {
                         App.alert('访问失败', '请先登录', 2, function () {
-                            App.goLoginBySelf()
+                            App.goLoginBySelf();
                         });
-                        return;
                     } else {
                         if ($.isFunction(callback)) {
                             callback(data.user.USER_NBR, data.user.USER_NAME, data.user.TYPE_NAME);
@@ -161,40 +160,40 @@ var App = function () {
                         return;
                 }
             },
-            setDefault: function (item, val) {
-                return this.item = item || val;
-            },
-            alert: function (title = '成功', text, type = 1, callback) {
-                App.setDefault(title, "成功");
-                var icon = this.checkAlertType(type);
-                Swal.fire({
-                    title: title,
-                    text: text,
-                    icon: icon,
-                    confirmButtonText: '确定',
-                    allowEscapeKey: true,
-                    backdrop: `rgba(0, 0, 0, 0.6)`
-                }).then(function (isConfirm) {
-                    try {
-                        //判断 是否 点击的 确定按钮
-                        if (isConfirm.value) {
-                            if ($.isFunction(callback)) {
-                                callback();
-                                return;
-                            }
-                        }
-                    } catch (e) {
-                        alert(e);
+            alert: function (title, text, type, callback) {
+                var wait = function (dtd) {
+                    var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
+                    var _title = title === '' ? '成功' : title;
+                    var _type = type === '' ? 1 : type;
+                    var _text = text === '' ? '确定吗' : text;
+                    var icon = App.checkAlertType(_type);
+                    Swal.fire({
+                        title: _title,
+                        text: _text,
+                        icon: icon,
+                        confirmButtonText: '确定',
+                        allowEscapeKey: true,
+                        backdrop: `rgba(0, 0, 0, 0.6)`
+                    }).then(function () {dtd.resolve();});
+                    return dtd.promise(); // 返回promise对象
+                };
+                $.when(wait()).done(function () {
+                    if ($.isFunction(callback)) {
+                        callback();
+                        return;
                     }
                 });
                 return;
             },
-            selectAlert: function (title = '操作提示', text = '确定吗？', type = 3, callback) {
-                var icon = this.checkAlertType(type);
+            selectAlert: function (title, text, type, callback) {
+                var _title = title === '' ? '操作提示' : title;
+                var _type = type === '' ? 1 : type;
+                var _text = text === '' ? '确定吗' : text;
+                var icon = App.checkAlertType(_type);
                 Swal.fire({
                     icon: icon, // 弹框类型
-                    title: title, //标题
-                    text: text, //显示内容
+                    title: _title, //标题
+                    text: _text, //显示内容
                     confirmButtonColor: '#3085d6', // 确定按钮的 颜色
                     confirmButtonText: '确定', // 确定按钮的 文字
                     showCancelButton: true, // 是否显示取消按钮
@@ -212,25 +211,31 @@ var App = function () {
                             }
                             Swal.fire("成功", "点击了确定", "success");
                         } else {
-
+                            return;
                         }
                     } catch (e) {
                         alert(e);
                     }
                 });
             },
-            topAlert: function (title = '操作提示', type = 1, timer = 3000) {
-                var icon = this.checkAlertType(type);
-                Swal.fire({
-                    toast: true,
-                    position: 'top',
-                    showConfirmButton: false,
-                    //时间进度条
-                    // timerProgressBar:true,
-                    timer: timer, //毫秒
-                    icon: icon,
-                    title: title
-                })
+            topAlert: function (title, type, timer) {
+                return $.Deferred(function (defer) {
+                    var _title = title === '' ? '操作提示' : title;
+                    var _type = type === '' ? 1 : type;
+                    var _timer = timer === '' ? 3000 : timer;
+                    var icon = App.checkAlertType(_type);
+                    Swal.fire({
+                        toast: true,
+                        position: 'top',
+                        showConfirmButton: false,
+                        //时间进度条
+                        // timerProgressBar:true,
+                        timer: _timer, //毫秒
+                        icon: icon,
+                        title: _title
+                    });
+                    defer.resolve();
+                }).promise();
             },
             msgAlert: function () {
                 Swal.fire({
@@ -314,7 +319,7 @@ var App = function () {
                 }
             },
             isTeacher: function (type) {
-                return type == '教师';
+                return type === '教师';
             }
         }
     })();
