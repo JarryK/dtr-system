@@ -30,7 +30,7 @@ public class LoginBmoImpl implements LoginBmo{
         try{
             Map<String,Object> relMap = loginDao.selectUser(inMap);
             if(relMap.isEmpty()){
-                return G.bmo.returnMap(false,"查询为空！");
+                return G.bmo.returnMap(false,"[0x10001]查询为空！");
             }
             Map<String,Object> returnMap =G.bmo.returnMap(true,"查询成功");
             returnMap.put("msg",relMap);
@@ -38,7 +38,7 @@ public class LoginBmoImpl implements LoginBmo{
 
         }catch (Exception e){
             log.error("查询错误",e);
-            Map<String,Object> returnMap  = G.bmo.returnMap(false,"查询错误");
+            Map<String,Object> returnMap  = G.bmo.returnMap(false,"[0x10002]查询错误");
             return returnMap;
         }
 
