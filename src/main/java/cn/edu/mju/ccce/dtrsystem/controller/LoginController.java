@@ -42,13 +42,10 @@ public class LoginController {
         Map<String, Object> returnMap = new HashMap<>();
         String unbr = MapTool.getString(inMap, "uNbr");
         String upass = MapTool.getString(inMap, "uPass");
-        String utype = MapTool.getString(inMap, "uType");
+//        String utype = MapTool.getString(inMap, "uType");
         try {
             unbr.substring(1); // 取1个串，探测非空
             upass.substring(1); // 取1个串，探测非空
-            if (utype.length() <= 0) {
-                utype.substring(1);
-            }
         } catch (Exception e) {
             return G.page.returnMap(false, "输入信息错误！");
         }
@@ -56,7 +53,6 @@ public class LoginController {
             Map<String, Object> userMap = new HashMap<>();
             userMap.put("userNbr", unbr);
             userMap.put("userPass", upass);
-            userMap.put("userType", utype);
             Map<String, Object> relMap = loginBmo.chackLogin(userMap);
             Boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             Map<String, Object> userMsgMap = MapTool.getMap(relMap, "msg");

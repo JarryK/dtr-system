@@ -27,14 +27,14 @@
                 <input type="password" name="pass" id="userPass">
                 <span class="spin"></span>
             </div>
-            <div class="inputType">
-                <label>类型</label>
-                <select class="form-control" type="password" name="pass" id="userType">
-                    <option value="1">学生</option>
-                    <option value="2">教师</option>
-                    <option value="3">家长</option>
-                </select>
-            </div>
+<!--            <div class="inputType">-->
+<!--                <label>类型</label>-->
+<!--                <select class="form-control" type="password" name="pass" id="userType">-->
+<!--                    <option value="1">学生</option>-->
+<!--                    <option value="2">教师</option>-->
+<!--                    <option value="3">家长</option>-->
+<!--                </select>-->
+<!--            </div>-->
             <div class="button login">
                 <button id="login-btn">
                     <span>登录</span>
@@ -191,11 +191,11 @@
             login.el("#login-btn").off('click').on('click', function () {
                 var uNbr = $.trim(login.el("#userName").val());
                 var uPass = login.el("#userPass").val();
-                var uType = login.el("#userType").val();
+                // var uType = login.el("#userType").val();
                 $.post("/dtr/user/check", {
                     uNbr: uNbr,
                     uPass: uPass,
-                    uType: uType
+                    // uType: uType
                 }).done(function (response) {
                     if (!App.checker(response)) {
                         return;
