@@ -1,7 +1,9 @@
 package cn.edu.mju.ccce.dtrsystem.controller;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
+import cn.edu.mju.ccce.dtrsystem.bean.Reservation;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
+import cn.edu.mju.ccce.dtrsystem.bmo.ReservationBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
 import com.alibaba.fastjson.JSONArray;
@@ -39,6 +41,8 @@ public class ReservationController {
 
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.CourseBmoImpl")
     private CourseBmo courseBmo;
+    @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.ReservationBmoImpl")
+    private ReservationBmo reservationBmo;
 
     /**
      * 获取可预约课程列表
@@ -50,7 +54,7 @@ public class ReservationController {
     public Map<String, Object> getCourseList() {
         try {
             Map<String, Object> returnMap = new HashMap<>();
-            Map<String, Object> courseListMap = courseBmo.getCanReservationCourseList();
+            Map<String, Object> courseListMap = reservationBmo.getCanReservationCourseList();
             boolean listMapBoolean = G.bmo.returnMapBool(courseListMap);
             if (!listMapBoolean) {
                 String msg = G.bmo.returnMapMsg(courseListMap);
@@ -94,20 +98,34 @@ public class ReservationController {
             if (!"学生".equals(type_name)) {
                 return G.page.returnMap(false, "非学生用户不能预约");
             }
-            String uNbr = MapTool.getString(uMsg, "uNbr");
+            String uNbr = MapTool.getString(uMsg, "USER_NBR");
+            Map<String, Object> reservationMap = reservationBmo.getAllReservationCourseByUserNbr(uNbr);
+            boolean reservationMapBoolean = G.bmo.returnMapBool(reservationMap);
+            if (!reservationMapBoolean) {
+                String msg = G.bmo.returnMapMsg(reservationMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Reservation> reservationList = (List<Reservation>) MapTool.getObject(reservationMap, "reservationList");
+            if (!reservationList.isEmpty()) {
+                for (Reservation reservation : reservationList) {
+                    String reservationCourseID = String.valueOf(reservation.getCOURSE_ID());
+                    if (courseID.equals(reservationCourseID)){
+                        return G.page.returnMap(false,"不能重复预约");
+                    }
+                }
+            }
             String user_name = MapTool.getString(uMsg, "USER_NAME");
             Map<String, Object> reseMap = new HashMap<>();
             reseMap.put("userNbr", uNbr);
             reseMap.put("userName", user_name);
             reseMap.put("courseID", courseID);
-            Map<String, Object> relMap = courseBmo.reservationCourse(reseMap);
+            Map<String, Object> relMap = reservationBmo.reservationCourse(reseMap);
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean) {
                 String msg = G.bmo.returnMapMsg(relMap);
                 return G.page.returnMap(false, msg);
             }
-            return G.page.returnMap(true,"预约成功");
-
+            return G.page.returnMap(true, "预约成功");
         } catch (Exception e) {
             log.error("预约异常", e);
             return G.page.returnMap(false, "预约异常");
