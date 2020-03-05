@@ -128,7 +128,7 @@ var App = function () {
                         return;
                     } else {
                         if ($.isFunction(callback)) {
-                            callback(data.user.uNbr, data.user.USER_NAME, data.user.TYPE_NAME);
+                            callback(data.user.USER_NBR, data.user.USER_NAME, data.user.TYPE_NAME);
                             return;
                         }
                     }

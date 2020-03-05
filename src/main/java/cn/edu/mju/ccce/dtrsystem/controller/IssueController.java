@@ -67,6 +67,7 @@ public class IssueController {
             Map<String,Object> uMgs = (Map<String, Object>) httpSession.getAttribute(sessionID);
             //session里面最好改成用户类,不过比较懒  先放着
             String uName = MapTool.getString(uMgs,"USER_NAME");
+            String userNbr =MapTool.getString(uMgs,"USER_NBR");
             Course course = new Course();
             course.setCOURSE_NAME(courseName);
             course.setCOURSE_TYPE_ID(typeId);
@@ -75,10 +76,12 @@ public class IssueController {
             course.setCOURSE_STU_NBR(Integer.parseInt(courseStuNbr));
             course.setCOURSE_TIME(courseTime);
             course.setCOURSE_TEACHER_NAME(uName);
+            course.setCOURSE_TEACHER_NBR(Integer.parseInt(userNbr));
             Map<String, Object> relMap = courseBmo.addCourse(course);
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean) {
-                return G.page.returnMap(false, "新建失败");
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
             }
             return G.page.returnMap(true, "ok");
         } catch (Exception e) {

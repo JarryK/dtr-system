@@ -203,9 +203,8 @@
                     if (!App.checker(data)) {
                         return;
                     } else {
-                        App.alert("提交成功", '', '', function () {
-                            issue.inputClear();
-                        });
+                        App.alert("提交成功", '', 1);
+                        issue.inputClear();
                         return;
                     }
                 });
