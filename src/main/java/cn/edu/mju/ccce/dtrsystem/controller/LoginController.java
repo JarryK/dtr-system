@@ -59,7 +59,7 @@ public class LoginController {
             if (!relMapBoolean) {
                 return G.page.returnMap(false, "用户名或密码错误！");
             }
-            userMsgMap.put("uNbr",unbr);
+            userMsgMap.put("USER_NBR",unbr);
             session.setAttribute(session.getId(), userMsgMap);
             returnMap = G.page.returnMap(true, "登录成功！");
             returnMap.put("userMsg", userMsgMap);
@@ -97,7 +97,7 @@ public class LoginController {
             if (uMsg.isEmpty()){
                 return G.page.returnMap(false,"用户已退出");
             }
-            String userNbr = MapTool.getString(uMsg,"uNbr");
+            String userNbr = MapTool.getString(uMsg,"USER_NBR");
             if (!userNbr.equals(loginOutUserNbr)){
                 return G.page.returnMap(false,"退出异常");
             }
