@@ -47,10 +47,12 @@ public class CourseBmoImpl implements CourseBmo {
     @Qualifier("cn.edu.mju.ccce.dtrsystem.dao.LoginDao")
     protected LoginDao loginDao;
 
-    @Autowired
-    @Qualifier("cn.edu.mju.ccce.dtrsystem.dao.ReservationDao")
-    protected ReservationDao reseDao;
-
+    /**
+     * 添加课程
+     *
+     * @param course
+     * @return
+     */
     @Override
     public Map<String, Object> addCourse(Course course) {
         try {
@@ -65,27 +67,22 @@ public class CourseBmoImpl implements CourseBmo {
         }
     }
 
+    /**
+     * 获取课程类型id
+     * 特殊,不用检测
+     * @param courseTypeName
+     * @return
+     */
     @Override
     public int getCourseIDbyName(String courseTypeName) {
         return Integer.parseInt(courseTypeDao.selectCourseTypeId(courseTypeName));
     }
 
-    @Override
-    public Map<String, Object> getCanReservationCourseList() {
-        try {
-            List<Course> courseList = courseDao.selectCourseList();
-            if (courseList.isEmpty()) {
-                return G.bmo.returnMap(false, "查询为空！");
-            }
-            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
-            returnMap.put("courseList", courseList);
-            return returnMap;
-        } catch (Exception e) {
-            log.error("查询可预约课程列表异常:", e);
-            return G.bmo.returnMap(false, "查询异常！");
-        }
-    }
-
+    /**
+     * 根据课程ID获得课程全部信息
+     * @param courseID
+     * @return map key=courseDet
+     */
     @Override
     public Map<String, Object> getCourseDetByID(String courseID) {
         try {
@@ -104,46 +101,11 @@ public class CourseBmoImpl implements CourseBmo {
 
     }
 
-    @Override
-    public Map<String, Object> reservationCourse(Map<String, Object> inMap) {
-        synchronized (this) {
-            try {
-                String courseID = MapTool.getString(inMap, "courseID");
-                Course course = courseDao.selectCourseByID(courseID);
-                int stuNbr = course.getCOURSE_STU_NBR();
-                int doneStuNbr = course.getCOURSE_DONE_STU_NBR();
-                if (stuNbr == doneStuNbr || stuNbr < doneStuNbr) {
-                    return G.bmo.returnMap(false, "预约课程人数已满");
-                }
-                Date nowTime = new Date();
-                Date courseTime = course.getCOURSE_TIME();
-                long t = nowTime.getTime() - courseTime.getTime();
-                if (t > -60 * 60 * 1000) {
-                    return G.bmo.returnMap(false, "不能预约即将开课的课程");
-                }
-                Reservation reservation = new Reservation();
-                reservation.setRESERVATION_ID(IdGenerator.genLongId());
-                reservation.setCOURSE_ID(Long.parseLong(courseID));
-                reservation.setCOURSE_TEACHER_NBR(course.getCOURSE_TEACHER_NBR());
-                reservation.setCOURSE_TEACHER_NAME(course.getCOURSE_TEACHER_NAME());
-                reservation.setUSER_NAME(MapTool.getString(inMap, "userName"));
-                reservation.setUSER_NBR(Long.parseLong(MapTool.getString(inMap, "userNbr")));
-                reservation.setCREAT_TIME(nowTime);
-                reseDao.insertReservationRecord(reservation);
-                courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr+1),courseID);
-                return G.bmo.returnMap(true, "预约成功！");
-            } catch (Exception e) {
-                log.error("预约课程异常", e);
-                return G.bmo.returnMap(false, "预约课程异常！");
-            }
-        }
-    }
 
     @Override
     public Map<String, Object> removeCourse(Map<String, Object> inMap) {
         return null;
     }
-
 
     @Override
     public Map<String, Object> upDateCourse(Map<String, Object> inMap) {
