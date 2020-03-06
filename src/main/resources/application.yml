@@ -1,13 +1,16 @@
 spring:
+  resources:
+    static-locations: classpath:/static/
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/dtr-system?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
     password: 123
     driver-class-name: com.mysql.jdbc.Driver
   thymeleaf:
-    prefix:
-      classpath: /templates   # 访问template下的html文件需要配置模板，映射
-      cache: false  # 开发时关闭缓存,不然没法看到实时页面
+    prefix: classpath:/templates/  # 访问template下的html文件需要配置模板，映射
+    cache: false  # 开发时关闭缓存,不然没法看到实时页面
+    mode: HTML
+    encoding: UTF-8
   redis:
     database: 0 # Redis数据库索引（默认为0）
     host: localhost   # Redis服务器地址
