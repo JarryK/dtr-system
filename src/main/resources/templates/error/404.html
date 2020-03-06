@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>发生错误啦！</title>
+</head>
+<body>
+<div th:replace="error/400 :: html"></div>
+</body>
+<script>
+    window.onload=function () {
+        document.getElementById('error_code').innerText="404";
+    }
+</script>
+</html>
