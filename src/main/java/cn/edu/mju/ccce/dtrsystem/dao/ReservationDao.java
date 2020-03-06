@@ -30,6 +30,13 @@ public interface ReservationDao {
     public List<Reservation> selectAllReservationRecordByUserNbr(String userNbr);
 
     /**
+     * 根据用户编号查询用户完成上课的预约记录
+     * @param userNbr
+     * @return
+     */
+    public List<Reservation> selectAllReservationDoneRecordByUserNbr(String userNbr);
+
+    /**
      * 根据课程ID查询所有预约的记录
      * @param courseID
      * @return
@@ -43,5 +50,12 @@ public interface ReservationDao {
      * @return
      */
     public List<String> selectAllReservationRecordByTeacherNbr(String teacherNbr);
+
+    /**
+     * 根据老师工号查找所有发布已完成课程的预约记录的courseID
+     * @param teacherNbr
+     * @return
+     */
+    public List<String> selectAllReservationRecordDoneByTeacherNbr(String teacherNbr);
 
 }

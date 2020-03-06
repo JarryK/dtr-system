@@ -109,8 +109,8 @@ public class ReservationController {
             if (!reservationList.isEmpty()) {
                 for (Reservation reservation : reservationList) {
                     String reservationCourseID = String.valueOf(reservation.getCOURSE_ID());
-                    if (courseID.equals(reservationCourseID)){
-                        return G.page.returnMap(false,"不能重复预约");
+                    if (courseID.equals(reservationCourseID)) {
+                        return G.page.returnMap(false, "不能重复预约");
                     }
                 }
             }
@@ -135,7 +135,6 @@ public class ReservationController {
     /**
      * 查询课程详细
      *
-     * @param inMap
      * @param httpSession
      * @return
      */
@@ -165,6 +164,41 @@ public class ReservationController {
         } catch (Exception e) {
             log.error("查询课程详细异常：", e);
             return G.page.returnMap(false, "查询课程详细异常");
+        }
+    }
+
+    /**
+     * 获取未上课的预约记录
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("/getSelfHistory")
+    @ResponseBody
+    public Map<String, Object> getSelfReservationHistory(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        try {
+//            String sessionID = httpSession.getId();
+//            Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
+//            if (uMsg.isEmpty()) {
+//                return G.page.returnMap(false, "请先登录");
+//            }
+//            String uNbr = MapTool.getString(uMsg, "USER_NBR");
+            Map<String, Object> reservationMap = reservationBmo.getAllReservationCourseByUserNbr("123654");
+            boolean reservationMapBoolean = G.bmo.returnMapBool(reservationMap);
+            if (!reservationMapBoolean) {
+                String msg = G.bmo.returnMapMsg(reservationMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Reservation> reservationList = (List<Reservation>) MapTool.getObject(reservationMap, "reservationList");
+            if (reservationList.isEmpty()){
+                return  G.page.returnMap(false,"暂无预约记录");
+            }
+            Map<String,Object> returnMap = G.page.returnMap(true,"ok");
+            returnMap.put("reservationList",reservationList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询预约历史信息异常",e);
+            return G.page.returnMap(false,"查询预约历史信息异常");
         }
     }
 

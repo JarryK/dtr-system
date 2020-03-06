@@ -18,7 +18,9 @@ public class Reservation implements Serializable {
 
     private long RESERVATION_ID;// bigint(17) NOT NULL COMMENT '预约ID',
     private long COURSE_ID;//bigint(17) DEFAULT NULL COMMENT '预约的课程ID',
-    private Date COURSE_TIME;// datetime DEFAULT NULL COMMENT '课程时间',
+    private Date COURSE_TIME;// datetime DEFAULT NULL COMMENT '预约课程时间',
+    private String COURSE_TYPE_NAME;// varchar(20) DEFAULT NULL '预约课程类型名',
+    private String  COURSE_NAME;// varchar(32) DEFAULT NULL '预约课程名',
     private long COURSE_TEACHER_NBR;// bigint(32) DEFAULT NULL COMMENT '预约课程的任课老师NBR',
     private String COURSE_TEACHER_NAME;//varchar(50) DEFAULT NULL COMMENT '预约课程的任课老师',
     private long USER_NBR;// bigint(17) DEFAULT NULL COMMENT '预约的用户NBR',
@@ -39,13 +41,33 @@ public class Reservation implements Serializable {
         return COURSE_ID;
     }
 
-    public void setCOURSE_ID(long COURSE_ID) { this.COURSE_ID = COURSE_ID; }
+    public void setCOURSE_ID(long COURSE_ID) {
+        this.COURSE_ID = COURSE_ID;
+    }
 
-    public Date getCOURSE_TIME() { return COURSE_TIME; }
+    public Date getCOURSE_TIME() {
+        return COURSE_TIME;
+    }
 
-    public void setCOURSE_TIME(Date COURSE_TIME) { this.COURSE_TIME = COURSE_TIME; }
+    public void setCOURSE_TIME(Date COURSE_TIME) {
+        this.COURSE_TIME = COURSE_TIME;
+    }
 
-    public void setUSER_NBR(long USER_NBR) { this.USER_NBR = USER_NBR; }
+    public String getCOURSE_TYPE_NAME() {
+        return COURSE_TYPE_NAME;
+    }
+
+    public void setCOURSE_TYPE_NAME(String COURSE_TYPE_NAME) {
+        this.COURSE_TYPE_NAME = COURSE_TYPE_NAME;
+    }
+
+    public String getCOURSE_NAME() {
+        return COURSE_NAME;
+    }
+
+    public void setCOURSE_NAME(String COURSE_NAME) {
+        this.COURSE_NAME = COURSE_NAME;
+    }
 
     public long getCOURSE_TEACHER_NBR() {
         return COURSE_TEACHER_NBR;
@@ -63,9 +85,11 @@ public class Reservation implements Serializable {
         this.COURSE_TEACHER_NAME = COURSE_TEACHER_NAME;
     }
 
-    public long getUSER_NBR() { return USER_NBR; }
+    public long getUSER_NBR() {
+        return USER_NBR;
+    }
 
-    public void setUSER_NBR(Long USER_NBR) {
+    public void setUSER_NBR(long USER_NBR) {
         this.USER_NBR = USER_NBR;
     }
 
@@ -114,6 +138,9 @@ public class Reservation implements Serializable {
         if (USER_NBR != that.USER_NBR) return false;
         if (RESERVATION_STATUS != that.RESERVATION_STATUS) return false;
         if (COURSE_TIME != null ? !COURSE_TIME.equals(that.COURSE_TIME) : that.COURSE_TIME != null) return false;
+        if (COURSE_TYPE_NAME != null ? !COURSE_TYPE_NAME.equals(that.COURSE_TYPE_NAME) : that.COURSE_TYPE_NAME != null)
+            return false;
+        if (COURSE_NAME != null ? !COURSE_NAME.equals(that.COURSE_NAME) : that.COURSE_NAME != null) return false;
         if (COURSE_TEACHER_NAME != null ? !COURSE_TEACHER_NAME.equals(that.COURSE_TEACHER_NAME) : that.COURSE_TEACHER_NAME != null)
             return false;
         if (USER_NAME != null ? !USER_NAME.equals(that.USER_NAME) : that.USER_NAME != null) return false;
@@ -126,6 +153,8 @@ public class Reservation implements Serializable {
         int result = (int) (RESERVATION_ID ^ (RESERVATION_ID >>> 32));
         result = 31 * result + (int) (COURSE_ID ^ (COURSE_ID >>> 32));
         result = 31 * result + (COURSE_TIME != null ? COURSE_TIME.hashCode() : 0);
+        result = 31 * result + (COURSE_TYPE_NAME != null ? COURSE_TYPE_NAME.hashCode() : 0);
+        result = 31 * result + (COURSE_NAME != null ? COURSE_NAME.hashCode() : 0);
         result = 31 * result + (int) (COURSE_TEACHER_NBR ^ (COURSE_TEACHER_NBR >>> 32));
         result = 31 * result + (COURSE_TEACHER_NAME != null ? COURSE_TEACHER_NAME.hashCode() : 0);
         result = 31 * result + (int) (USER_NBR ^ (USER_NBR >>> 32));

@@ -25,7 +25,7 @@ public interface ReservationBmo {
     public Map<String,Object> getCanReservationCourseList();
 
     /**
-     * 获取用户所有预约的课程信息
+     * 获取用户所有预约未上课的历史记录
      * @param userNbr
      * @return map key=reservationList
      */

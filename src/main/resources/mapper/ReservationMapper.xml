@@ -5,6 +5,8 @@
         <result property="RESERVATION_ID" column="RESERVATION_ID"/>
         <result property="COURSE_ID" column="COURSE_ID"/>
         <result property="COURSE_TIME" column="COURSE_TIME"/>
+        <result property="COURSE_TYPE_NAME" column="COURSE_TYPE_NAME"/>
+        <result property="COURSE_NAME" column="COURSE_NAME"/>
         <result property="COURSE_TEACHER_NBR" column="COURSE_TEACHER_NBR"/>
         <result property="COURSE_TEACHER_NAME" column="COURSE_TEACHER_NAME"/>
         <result property="USER_NBR" column="USER_NBR"/>
@@ -18,6 +20,8 @@
          RESERVATION_ID,
          COURSE_ID,
          COURSE_TIME,
+         COURSE_TYPE_NAME,
+         COURSE_NAME,
          COURSE_TEACHER_NBR,
          COURSE_TEACHER_NAME,
          USER_NBR,
@@ -38,6 +42,12 @@
             </if>
             <if test="COURSE_TIME != null">
                 COURSE_TIME,
+            </if>
+            <if test="COURSE_TYPE_NAME != null">
+                COURSE_TYPE_NAME,
+            </if>
+            <if test="COURSE_NAME != null">
+                COURSE_NAME,
             </if>
             <if test="COURSE_TEACHER_NBR != null">
                 COURSE_TEACHER_NBR,
@@ -71,6 +81,12 @@
             <if test="COURSE_TIME != null">
                 #{COURSE_TIME,jdbcType=TIMESTAMP},
             </if>
+            <if test="COURSE_TYPE_NAME != null">
+                #{COURSE_TYPE_NAME,jdbcType=VARCHAR},
+            </if>
+            <if test="COURSE_NAME != null">
+                #{COURSE_NAME,jdbcType=VARCHAR},
+            </if>
             <if test="COURSE_TEACHER_NBR != null">
                 #{COURSE_TEACHER_NBR,jdbcType=NUMERIC},
             </if>
@@ -98,7 +114,12 @@
     <select id="selectAllReservationRecordByUserNbr" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
         SELECT <include refid="sl_Reservation" />
         FROM reservation
-        WHERE USER_NBR = #{userNbr,jdbcType=VARCHAR}
+        WHERE USER_NBR = #{userNbr,jdbcType=VARCHAR} AND RESERVATION_STATUS = '0'
+    </select>
+    <select id="selectAllReservationDoneRecordByUserNbr" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
+        SELECT <include refid="sl_Reservation" />
+        FROM reservation
+        WHERE USER_NBR = #{userNbr,jdbcType=VARCHAR} AND RESERVATION_STATUS = '1'
     </select>
 
     <select id="selectAllReservationRecordByCourseID" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
@@ -110,7 +131,14 @@
     <select id="selectAllReservationRecordByTeacherNbr" parameterType="java.lang.String" resultType="java.util.List" >
         SELECT COURSE_ID
         FROM reservation
-        WHERE COURSE_TEACHER_NBR = #{teacherNbr,jdbcType=VARCHAR}
+        WHERE COURSE_TEACHER_NBR = #{teacherNbr,jdbcType=VARCHAR} AND RESERVATION_STATUS = '0'
     </select>
+
+    <select id="selectAllReservationRecordDoneByTeacherNbr" parameterType="java.lang.String" resultType="java.util.List" >
+        SELECT COURSE_ID
+        FROM reservation
+        WHERE COURSE_TEACHER_NBR = #{teacherNbr,jdbcType=VARCHAR} AND RESERVATION_STATUS = '1'
+    </select>
+
 
 </mapper>

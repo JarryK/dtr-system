@@ -105,15 +105,16 @@ var App = function () {
     var utils_functions = (function () {
         return {
             loginOut: function (uNbr, uName) {
-                App.selectAlert("用户<span style='color: red'>" + uName + "</span>确定退出吗?", '', 5, function () {
+                App.selectAlert('操作提示', "用户" + uName + "确定退出吗?", 3, function () {
                     $.post('/dtr/user/loginOut', {
                         uNbr: uNbr
                     }).done(function (data) {
                         if (!App.checker(data)) {
                             return;
                         } else {
-                            App.topAlert("退出成功！");
-                            window.open("/dtr/login", "_self");
+                            App.topAlert("退出成功！", 1, 1300, function () {
+                                window.open("/dtr/login", "_self");
+                            });
                             return;
                         }
                     });
@@ -140,158 +141,174 @@ var App = function () {
     })();
     // utils常用ui函数集
     var utils_ui_functions = (function () {
-        return {
-            alertClose: function () {
-                swal.close();
-            },
-            checkAlertType: function (type) {
-                switch (type) {
-                    case 1:
-                        return 'success';
-                    case 2:
-                        return 'error';
-                    case 3:
-                        return 'warning';
-                    case 4:
-                        return 'info';
-                    case 5:
-                        return 'question';
-                    default:
-                        return;
-                }
-            },
-            alert: function (title, text, type, callback) {
-                var wait = function (dtd) {
-                    var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
-                    var _title = title === '' ? '成功' : title;
-                    var _type = type === '' ? 1 : type;
-                    var _text = text === '' ? '确定吗' : text;
-                    var icon = App.checkAlertType(_type);
-                    Swal.fire({
-                        title: _title,
-                        text: _text,
-                        icon: icon,
-                        confirmButtonText: '确定',
-                        allowEscapeKey: true,
-                        backdrop: `rgba(0, 0, 0, 0.6)`
-                    }).then(function () {dtd.resolve();});
-                    return dtd.promise(); // 返回promise对象
-                };
-                $.when(wait()).done(function () {
-                    if ($.isFunction(callback)) {
-                        callback();
-                        return;
+            return {
+                alertClose: function () {
+                    swal.close();
+                },
+                checkAlertType: function (type) {
+                    switch (type) {
+                        case 1:
+                            return 'success';
+                        case 2:
+                            return 'error';
+                        case 3:
+                            return 'warning';
+                        case 4:
+                            return 'info';
+                        case 5:
+                            return 'question';
+                        default:
+                            return;
                     }
-                });
-                return;
-            },
-            selectAlert: function (title, text, type, callback) {
-                var _title = title === '' ? '操作提示' : title;
-                var _type = type === '' ? 1 : type;
-                var _text = text === '' ? '确定吗' : text;
-                var icon = App.checkAlertType(_type);
-                Swal.fire({
-                    icon: icon, // 弹框类型
-                    title: _title, //标题
-                    text: _text, //显示内容
-                    confirmButtonColor: '#3085d6', // 确定按钮的 颜色
-                    confirmButtonText: '确定', // 确定按钮的 文字
-                    showCancelButton: true, // 是否显示取消按钮
-                    cancelButtonColor: '#d33', // 取消按钮的 颜色
-                    cancelButtonText: "取消", // 取消按钮的 文字
-                    focusCancel: true, // 是否聚焦 取消按钮
-                    reverseButtons: false // 是否 反转 两个按钮的位置 默认是  左边 确定  右边 取消
-                }).then(function (isConfirm) {
-                    try {
-                        //判断 是否 点击的 确定按钮
-                        if (isConfirm.value) {
-                            if ($.isFunction(callback)) {
-                                callback();
-                                return;
-                            }
-                            Swal.fire("成功", "点击了确定", "success");
-                        } else {
+                },
+                alert: function (title = '提示', text = '操作成功' , type = 1, callback) {
+                    var wait = function (dtd) {
+                        var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
+                        // var _title = (title == '' ? '成功' : title);
+                        // var _type = (type == '' ? 1 : type);
+                        // var _text = (text == '' ? '操作成功' : text);
+                        var icon = App.checkAlertType(type);
+                        Swal.fire({
+                            title: title,
+                            text: text,
+                            icon: icon,
+                            confirmButtonText: '确定',
+                            allowEscapeKey: true,
+                            backdrop: `rgba(0, 0, 0, 0.6)`
+                        }).then(function () {
+                            dtd.resolve();
+                        });
+                        return dtd.promise(); // 返回promise对象
+                    };
+                    $.when(wait()).done(function () {
+                        if ($.isFunction(callback)) {
+                            callback();
                             return;
                         }
-                    } catch (e) {
-                        alert(e);
-                    }
-                });
-            },
-            topAlert: function (title, type, timer) {
-                return $.Deferred(function (defer) {
-                    var _title = title === '' ? '操作提示' : title;
-                    var _type = type === '' ? 1 : type;
-                    var _timer = timer === '' ? 3000 : timer;
-                    var icon = App.checkAlertType(_type);
-                    Swal.fire({
-                        toast: true,
-                        position: 'top',
-                        showConfirmButton: false,
-                        //时间进度条
-                        // timerProgressBar:true,
-                        timer: _timer, //毫秒
-                        icon: icon,
-                        title: _title
                     });
-                    defer.resolve();
-                }).promise();
-            },
-            msgAlert: function () {
-                Swal.fire({
-                    title: '<strong>记录</strong>',
-                    type: 'info',
-                    html: content, // HTML
-                    focusConfirm: true, //聚焦到确定按钮
-                    showCloseButton: true,//右上角关闭
-                })
+                    return;
+                },
+                selectAlert: function (title = '操作提示', text = '确定吗', type = 1, callback) {
+                    // var _title = (title === '' ? '操作提示' : title);
+                    // var _type = (type === '' ? 1 : type);
+                    // var _text = (text === '' ? '确定吗' : text);
+                    var icon = App.checkAlertType(type);
+                    Swal.fire({
+                        icon: icon, // 弹框类型
+                        title: title, //标题
+                        text: text, //显示内容
+                        confirmButtonColor: '#3085d6', // 确定按钮的 颜色
+                        confirmButtonText: '确定', // 确定按钮的 文字
+                        showCancelButton: true, // 是否显示取消按钮
+                        cancelButtonColor: '#d33', // 取消按钮的 颜色
+                        cancelButtonText: "取消", // 取消按钮的 文字
+                        focusCancel: true, // 是否聚焦 取消按钮
+                        reverseButtons: false // 是否 反转 两个按钮的位置 默认是  左边 确定  右边 取消
+                    }).then(function (isConfirm) {
+                        try {
+                            //判断 是否 点击的 确定按钮
+                            if (isConfirm.value) {
+                                if ($.isFunction(callback)) {
+                                    callback();
+                                    return;
+                                }
+                                Swal.fire("成功", "点击了确定", "success");
+                            } else {
+                                return;
+                            }
+                        } catch (e) {
+                            alert(e);
+                        }
+                    });
+                },
+                topAlert: function (title = '操作提示', type = 1, timer = 3000, callback) {
+                    // var _title = (title === '' ? '操作提示' : title);
+                    // var _type = (type === '' ? 1 : type);
+                    // var _timer = (timer === '' ? 3000 : timer);
+                    var wait = function (dtd) {
+                        var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
+                        var icon = App.checkAlertType(type);
+                        Swal.fire({
+                            toast: true,
+                            position: 'top',
+                            showConfirmButton: false,
+                            //时间进度条
+                            // timerProgressBar:true,
+                            timer: timer, //毫秒
+                            icon: icon,
+                            title: title
+                        }).then(function () {
+                            dtd.resolve();
+                        });
+                        return dtd.promise();
+                    };
+                    $.when(wait()).done(function () {
+                        if ($.isFunction(callback)) {
+                            callback();
+                            return;
+                        }
+                    });
+                    return;
+                },
+                msgAlert: function () {
+                    Swal.fire({
+                        title: '<strong>记录</strong>',
+                        type: 'info',
+                        html: content, // HTML
+                        focusConfirm: true, //聚焦到确定按钮
+                        showCloseButton: true,//右上角关闭
+                    })
 
-            },
-            // inputAlert: function () {
-            //     Swal.mixin({
-            //         input: 'text',
-            //         confirmButtonText: 'Next &rarr;',
-            //         showCancelButton: true,
-            //         progressSteps: ['1', '2', '3']
-            //     }).queue([{
-            //         title: 'Question 1',
-            //         text: 'Chaining swal2 modals is easy'
-            //     }, {
-            //         title: 'Question 1',
-            //         text: 'Chaining swal2 modals is easy'
-            //
-            //     }, {
-            //         title: 'Question 1',
-            //         text: 'Chaining swal2 modals is easy'
-            //     }]).then(function(result){
-            //         if (result.value) {
-            //             const answers = JSON.stringify(result.value);
-            //             Swal.fire({
-            //                 title: 'All done!',
-            //                 html: `Your answers:<pre><code>${answers}</code></pre>`,
-            //                 confirmButtonText: 'Lovely!'
-            //             })
-            //         }
-            //     })
-            // },
-            // 检验后端返回的数据成功or失败，并可以控制在屏幕顶部提示
+                }
 
-            // 设置时间输入框
-            setInputBoxForTime: function (_id_or_class) {
-                $(_id_or_class).datetimepicker({
-                    bootcssVer: 4,
-                    format: 'yyyy-mm-dd hh:ii',
-                    todayBtn: 'linked',
-                    todayHighlight: true,
-                    autoclose: true,
-                    Integer: 1,
-                    startDate: new Date(),
-                    // endDate
-                    language: 'zh-CN'
-                });
-            },
+                ,
+                // inputAlert: function () {
+                //     Swal.mixin({
+                //         input: 'text',
+                //         confirmButtonText: 'Next &rarr;',
+                //         showCancelButton: true,
+                //         progressSteps: ['1', '2', '3']
+                //     }).queue([{
+                //         title: 'Question 1',
+                //         text: 'Chaining swal2 modals is easy'
+                //     }, {
+                //         title: 'Question 1',
+                //         text: 'Chaining swal2 modals is easy'
+                //
+                //     }, {
+                //         title: 'Question 1',
+                //         text: 'Chaining swal2 modals is easy'
+                //     }]).then(function(result){
+                //         if (result.value) {
+                //             const answers = JSON.stringify(result.value);
+                //             Swal.fire({
+                //                 title: 'All done!',
+                //                 html: `Your answers:<pre><code>${answers}</code></pre>`,
+                //                 confirmButtonText: 'Lovely!'
+                //             })
+                //         }
+                //     })
+                // },
+                // 检验后端返回的数据成功or失败，并可以控制在屏幕顶部提示
+
+                // 设置时间输入框
+                setInputBoxForTime: function (_id_or_class) {
+                    $(_id_or_class).datetimepicker({
+                        bootcssVer: 4,
+                        format: 'yyyy-mm-dd hh:ii',
+                        todayBtn: 'linked',
+                        todayHighlight: true,
+                        autoClose: true,
+                        Integer: 1,
+                        startDate: new Date(),
+                        // endDate
+                        language: 'zh-CN'
+                    });
+                }
+                ,
+            }
         }
-    })();
+    )();
     // utils检验函数集
     var utils_checker = (function () {
         return {

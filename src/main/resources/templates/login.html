@@ -200,8 +200,9 @@
                     if (!App.checker(response)) {
                         return;
                     } else {
-                        App.topAlert("登录成功！");
-                        App.goHomeBySelf();
+                        App.topAlert('登录成功！',1,1300,function () {
+                            App.goHomeBySelf();
+                        });
                     }
                 });
             });

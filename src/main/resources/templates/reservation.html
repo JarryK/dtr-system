@@ -128,6 +128,7 @@
                             <th>时间</th>
                             <th>类型</th>
                             <th>老师</th>
+                            <th>课程名</th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -157,7 +158,7 @@
         {{ if courseList && courseList.length>0 }}{{each courseList}}
         <tr>
             <th class="align-middle" scope="row">{{$index+1}}</th>
-            <td class="align-middle">{{$value.COURSE_TIME | formatDateString}}</td>
+            <td class="align-middle">{{$value.COURSE_TIME | formatDateString }}</td>
             <td class="align-middle">{{$value.COURSE_TYPE_NAME}}</td>
             <td class="align-middle">{{$value.COURSE_NAME}}</td>
             <td class="align-middle">{{$value.COURSE_TEACHER_NAME}}</td>
@@ -175,15 +176,15 @@
     <script type="text/html" id="rese-class-historyMsg-art">
         {{ if historyList && historyList.length>0 }}{{each historyList}}
         <tr>
-            <th class="align-middle" scope="row">{{$value.index}}</th>
-            <td class="align-middle">{{$value.time}}</td>
-            <td class="align-middle">{{$value.type}}</td>
-            <td class="align-middle">{{$value.teacherName}}</td>
-            <td class="align-middle">{{$value.place}}</td>
+            <th class="align-middle" scope="row">{{$index+1}}</th>
+            <td class="align-middle">{{$value.course_TIME | formatDateString }}</td>
+            <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
+            <td class="align-middle">{{$value.course_TEACHER_NAME}}</td>
+            <td class="align-middle">{{$value.course_NAME}}</td>
             <td class="align-middle">
-                <p><a href="#" class="detailed text-decoration-none font-italic" data-index="{{$value.index}}">详情</a>
+                <p><a href="javascript:;" class="detailed text-decoration-none font-italic" data-index="{{$value.index}}">详情</a>
                 </p>
-                <p><a href="#" class="text-decoration-none font-italic cancel-reservation-btn"
+                <p><a href="javascript:;" class="text-decoration-none font-italic cancel-reservation-btn"
                         data-index="{{$value.index}}">取消</a></p>
             </td>
         </tr>
@@ -237,15 +238,9 @@
                     return this
                 },
                 getClassList: function () {
-                    $.post('/dtr/rese/getList').done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            reservation.el("#rese-class-msg-container").html(template('rese-class-msg-art', {courseList: data.courseList}));
-                            reservation.panelClick();
-                            return;
-                        }
-                    });
+                    reservation.getCanReservationList();
+                    reservation.getHistoryList();
+                    reservation.panelClick();
                     classList = [{
                         "index": "1",
                         "time": "2020年1月4日 19点56分",
@@ -279,15 +274,37 @@
                         "place": "逸夫楼七年级5班教室",
                         "number": "5",
                     }];
-                    reservation.el("#rese-class-historyMsg-container").html(template(
-                        'rese-class-historyMsg-art', {
-                            historyList: classList
-                        }));
+
                     reservation.el("#rese-class-doneHistoryMsg-container").html(template(
                         'rese-class-doneHistoryMsg-art', {
                             doneHistoryList: classList
                         }));
                     reservation.el('#table').data('classList', classList);
+                },
+                getHistoryList:function(){
+                    $.post('/dtr/rese/getSelfHistory',{
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            reservation.el("#rese-class-historyMsg-container").html(template(
+                                'rese-class-historyMsg-art', {
+                                    historyList: data.reservationList
+                                }));
+                            return;
+                        }
+                    });
+
+                },
+                getCanReservationList:function(){
+                    $.post('/dtr/rese/getList').done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            reservation.el("#rese-class-msg-container").html(template('rese-class-msg-art', {courseList: data.courseList}));
+                            return;
+                        }
+                    });
                 },
                 //  后置才能触发的按钮
                 panelClick:function () {
@@ -313,7 +330,7 @@
                             if (!App.checker(data)) {
                                 return;
                             } else {
-                                App.alert('预约成功！');
+                                App.alert('预约成功！','',1);
                                 reservation.getClassList();
                                 return;
                             }

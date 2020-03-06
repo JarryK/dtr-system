@@ -66,8 +66,11 @@ public class ReservationBmoImpl implements ReservationBmo {
                 Reservation reservation = new Reservation();
                 reservation.setRESERVATION_ID(IdGenerator.genLongId());
                 reservation.setCOURSE_ID(Long.parseLong(courseID));
+                reservation.setCOURSE_TIME(course.getCOURSE_TIME());
                 reservation.setCOURSE_TEACHER_NBR(course.getCOURSE_TEACHER_NBR());
                 reservation.setCOURSE_TEACHER_NAME(course.getCOURSE_TEACHER_NAME());
+                reservation.setCOURSE_TYPE_NAME(course.getCOURSE_TYPE_NAME());
+                reservation.setCOURSE_NAME(course.getCOURSE_NAME());
                 reservation.setUSER_NAME(MapTool.getString(inMap, "userName"));
                 reservation.setUSER_NBR(Long.parseLong(MapTool.getString(inMap, "userNbr")));
                 reservation.setCREAT_TIME(nowTime);
@@ -104,7 +107,7 @@ public class ReservationBmoImpl implements ReservationBmo {
     }
 
     /**
-     * 获取用户所有预约的课程信息
+     * 获取用户所有预约未上课的历史记录
      *
      * @param userNbr
      * @return map key=reservationList
