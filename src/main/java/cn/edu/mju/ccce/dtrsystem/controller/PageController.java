@@ -1,10 +1,8 @@
 package cn.edu.mju.ccce.dtrsystem.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
@@ -19,12 +17,12 @@ import java.util.Map;
 @RequestMapping("/dtr")
 public class PageController {
 
-    @RequestMapping(value = {"","/", "/home", "home.html"})
+    @RequestMapping(value = {"", "/", "/home", "home.html"})
     public String home(HttpSession session) {
-        try{
-        Map<String,Object> user = (Map<String, Object>) session.getAttribute(session.getId());
+        try {
+            Map<String, Object> user = (Map<String, Object>) session.getAttribute(session.getId());
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return "login";
         }
         return "home";
