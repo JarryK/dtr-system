@@ -41,6 +41,7 @@ public class ReservationController {
 
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.CourseBmoImpl")
     private CourseBmo courseBmo;
+
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.ReservationBmoImpl")
     private ReservationBmo reservationBmo;
 
@@ -168,7 +169,7 @@ public class ReservationController {
     }
 
     /**
-     * 获取未上课的预约记录
+     * 获取所有的预约记录
      * @param inMap
      * @param httpSession
      * @return
@@ -189,12 +190,28 @@ public class ReservationController {
                 String msg = G.bmo.returnMapMsg(reservationMap);
                 return G.page.returnMap(false, msg);
             }
+            Map<String,Object> relMap = new HashMap<>();
+            // 做提前声明，不然前端数据异常也不会报错自己还偷偷吃掉这个BUG
+            relMap.put("noReservationList","");
+            relMap.put("noReservationDoneList","");
             List<Reservation> reservationList = (List<Reservation>) MapTool.getObject(reservationMap, "reservationList");
             if (reservationList.isEmpty()){
-                return  G.page.returnMap(false,"暂无预约记录");
+                relMap.put("noReservationList","暂无预约记录");
+            }
+            Map<String, Object> reservationDoneMap = reservationBmo.getAllReservationCourseDoneByUserNbr("123654");
+            boolean reservationDoneMapBoolean = G.bmo.returnMapBool(reservationDoneMap);
+            if (!reservationDoneMapBoolean) {
+                String msg = G.bmo.returnMapMsg(reservationDoneMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Reservation> reservationDoneList = (List<Reservation>) MapTool.getObject(reservationDoneMap, "reservationDoneList");
+            if (reservationDoneList.isEmpty()){
+                relMap.put("noReservationDoneList","暂无预约记录");
             }
             Map<String,Object> returnMap = G.page.returnMap(true,"ok");
+            returnMap.putAll(relMap);
             returnMap.put("reservationList",reservationList);
+            returnMap.put("reservationDoneList",reservationDoneList);
             return returnMap;
         } catch (Exception e) {
             log.error("查询预约历史信息异常",e);

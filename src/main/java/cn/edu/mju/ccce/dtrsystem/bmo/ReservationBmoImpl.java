@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -115,9 +116,13 @@ public class ReservationBmoImpl implements ReservationBmo {
     @Override
     public Map<String, Object> getAllReservationCourseByUserNbr(String userNbr) {
         try {
-            List<Reservation> reservationList = reseDao.selectAllReservationRecordByUserNbr(userNbr);
-            if (reservationList.isEmpty()) {
-                G.bmo.returnMap(false, "获取用户预约信息为空");
+            List<Reservation> reservationList = new ArrayList<>();
+            try {
+                reservationList = reseDao.selectAllReservationRecordByUserNbr(userNbr);
+
+            } catch (NullPointerException e) {
+                Map<String, Object> reMap = G.bmo.returnMap(true, "获取用户预约信息为空");
+                return reMap;
             }
             Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
             returnMap.put("reservationList", reservationList);
@@ -128,5 +133,30 @@ public class ReservationBmoImpl implements ReservationBmo {
         }
     }
 
-    ;
+    /**
+     * 获取用户所有预约未上课的历史记录
+     *
+     * @param userNbr
+     * @return map key=reservationDoneList
+     */
+    @Override
+    public Map<String, Object> getAllReservationCourseDoneByUserNbr(String userNbr) {
+        try {
+            List<Reservation> reservationList = new ArrayList<>();
+            try {
+                reservationList = reseDao.selectAllReservationDoneRecordByUserNbr(userNbr);
+
+            } catch (NullPointerException e) {
+                Map<String, Object> reMap = G.bmo.returnMap(true, "获取用户预约信息为空");
+                return reMap;
+            }
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("reservationDoneList", reservationList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("获取用户预约信息异常：", e);
+            return G.bmo.returnMap(false, "获取用户预约信息异常");
+        }
+    }
+
 }

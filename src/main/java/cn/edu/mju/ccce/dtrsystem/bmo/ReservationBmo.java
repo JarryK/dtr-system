@@ -20,7 +20,7 @@ public interface ReservationBmo {
     /**
      * 获取可预约课程列表
      * @param
-     * @return ap key=courseList
+     * @return map key=courseList
      */
     public Map<String,Object> getCanReservationCourseList();
 
@@ -30,5 +30,12 @@ public interface ReservationBmo {
      * @return map key=reservationList
      */
     public Map<String,Object> getAllReservationCourseByUserNbr (String userNbr);
+
+    /**
+     * 获取用户所有预约未上课的历史记录
+     * @param userNbr
+     * @return map key=reservationDoneList
+     */
+    public Map<String,Object> getAllReservationCourseDoneByUserNbr (String userNbr);
 
 }

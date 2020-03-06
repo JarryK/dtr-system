@@ -250,7 +250,7 @@ var App = function () {
                     });
                     return;
                 },
-                msgAlert: function () {
+                msgAlert: function (content) {
                     Swal.fire({
                         title: '<strong>记录</strong>',
                         type: 'info',
