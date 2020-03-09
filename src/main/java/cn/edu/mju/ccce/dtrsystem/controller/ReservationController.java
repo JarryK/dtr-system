@@ -134,6 +134,60 @@ public class ReservationController {
     }
 
     /**
+     * 取消预约课程
+     *
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("/unReseCourse")
+    @ResponseBody
+    public Map<String, Object> unReseCourse(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String courseID = MapTool.getString(inMap, "index");
+        try {
+            courseID.substring(1);// 探测非空
+        } catch (Exception e) {
+            log.error("预约条件异常", e);
+            return G.page.returnMap(false, "预约条件异常");
+        }
+        try {
+            String sessionID = httpSession.getId();
+            Map<String,Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
+            String type_name = MapTool.getString(uMsg, "TYPE_NAME");
+            if (!"学生".equals(type_name)) {
+                return G.page.returnMap(false, "非学生用户不能操作");
+            }
+            String uNbr = MapTool.getString(uMsg, "USER_NBR");
+            Map<String, Object> reservationMap = reservationBmo.getAllReservationCourseByUserNbr(uNbr);
+            boolean reservationMapBoolean = G.bmo.returnMapBool(reservationMap);
+            if (!reservationMapBoolean) {
+                String msg = G.bmo.returnMapMsg(reservationMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Reservation> reservationList = (List<Reservation>) MapTool.getObject(reservationMap, "reservationList");
+            if (!reservationList.isEmpty()) {
+                for (Reservation reservation : reservationList) {
+                    String reservationCourseID = String.valueOf(reservation.getCOURSE_ID());
+                    if (courseID.equals(reservationCourseID)) {
+                        Map<String,Object> relMap = reservationBmo.updateReservationCourseStatus(courseID,uNbr,"2");
+                        boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+                        if (!relMapBoolean){
+                            String msg = G.bmo.returnMapMsg(relMap);
+                            return G.page.returnMap(false,msg);
+                        }
+
+                        return  G.page.returnMap(true, "ok");
+                    }
+                }
+            }
+            return G.page.returnMap(false,"预约历史为空，请刷新页面后重试");
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
+    /**
      * 查询课程详细
      *
      * @param httpSession
@@ -170,6 +224,7 @@ public class ReservationController {
 
     /**
      * 获取所有的预约记录
+     *
      * @param inMap
      * @param httpSession
      * @return
@@ -178,44 +233,44 @@ public class ReservationController {
     @ResponseBody
     public Map<String, Object> getSelfReservationHistory(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
         try {
-//            String sessionID = httpSession.getId();
-//            Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
-//            if (uMsg.isEmpty()) {
-//                return G.page.returnMap(false, "请先登录");
-//            }
-//            String uNbr = MapTool.getString(uMsg, "USER_NBR");
-            Map<String, Object> reservationMap = reservationBmo.getAllReservationCourseByUserNbr("123654");
+            String sessionID = httpSession.getId();
+            Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
+            if (uMsg.isEmpty()) {
+                return G.page.returnMap(false, "请先登录");
+            }
+            String uNbr = MapTool.getString(uMsg, "USER_NBR");
+            Map<String, Object> reservationMap = reservationBmo.getAllReservationCourseByUserNbr(uNbr);
             boolean reservationMapBoolean = G.bmo.returnMapBool(reservationMap);
             if (!reservationMapBoolean) {
                 String msg = G.bmo.returnMapMsg(reservationMap);
                 return G.page.returnMap(false, msg);
             }
-            Map<String,Object> relMap = new HashMap<>();
+            Map<String, Object> relMap = new HashMap<>();
             // 做提前声明，不然前端数据异常也不会报错自己还偷偷吃掉这个BUG
-            relMap.put("noReservationList","");
-            relMap.put("noReservationDoneList","");
+            relMap.put("noReservationList", "");
+            relMap.put("noReservationDoneList", "");
             List<Reservation> reservationList = (List<Reservation>) MapTool.getObject(reservationMap, "reservationList");
-            if (reservationList.isEmpty()){
-                relMap.put("noReservationList","暂无预约记录");
+            if (reservationList.isEmpty()) {
+                relMap.put("noReservationList", "暂无预约记录");
             }
-            Map<String, Object> reservationDoneMap = reservationBmo.getAllReservationCourseDoneByUserNbr("123654");
+            Map<String, Object> reservationDoneMap = reservationBmo.getAllReservationCourseDoneByUserNbr(uNbr);
             boolean reservationDoneMapBoolean = G.bmo.returnMapBool(reservationDoneMap);
             if (!reservationDoneMapBoolean) {
                 String msg = G.bmo.returnMapMsg(reservationDoneMap);
                 return G.page.returnMap(false, msg);
             }
             List<Reservation> reservationDoneList = (List<Reservation>) MapTool.getObject(reservationDoneMap, "reservationDoneList");
-            if (reservationDoneList.isEmpty()){
-                relMap.put("noReservationDoneList","暂无预约记录");
+            if (reservationDoneList.isEmpty()) {
+                relMap.put("noReservationDoneList", "暂无预约记录");
             }
-            Map<String,Object> returnMap = G.page.returnMap(true,"ok");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
             returnMap.putAll(relMap);
-            returnMap.put("reservationList",reservationList);
-            returnMap.put("reservationDoneList",reservationDoneList);
+            returnMap.put("reservationList", reservationList);
+            returnMap.put("reservationDoneList", reservationDoneList);
             return returnMap;
         } catch (Exception e) {
-            log.error("查询预约历史信息异常",e);
-            return G.page.returnMap(false,"查询预约历史信息异常");
+            log.error("查询预约历史信息异常", e);
+            return G.page.returnMap(false, "查询预约历史信息异常");
         }
     }
 

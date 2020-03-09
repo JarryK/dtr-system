@@ -58,4 +58,10 @@ public interface ReservationDao {
      */
     public List<String> selectAllReservationRecordDoneByTeacherNbr(String teacherNbr);
 
+    /**
+     * 根据courseID改变预约课程预约状态
+     * @param courseID
+     */
+    public void updateReservationCourseStatusByCourseID(String courseID,String userNbr,String status);
+
 }

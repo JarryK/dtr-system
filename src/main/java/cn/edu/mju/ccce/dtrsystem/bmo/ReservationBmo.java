@@ -38,4 +38,12 @@ public interface ReservationBmo {
      */
     public Map<String,Object> getAllReservationCourseDoneByUserNbr (String userNbr);
 
+    /**
+     * 取消预约课程
+     * @param courseID
+     * @param status
+     * @return
+     */
+    public Map<String,Object> updateReservationCourseStatus (String courseID,String userNbr,String status);
+
 }

@@ -161,26 +161,16 @@ var App = function () {
                             return;
                     }
                 },
-                alert: function (title = '提示', text = '操作成功' , type = 1, callback) {
-                    var wait = function (dtd) {
-                        var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
-                        // var _title = (title == '' ? '成功' : title);
-                        // var _type = (type == '' ? 1 : type);
-                        // var _text = (text == '' ? '操作成功' : text);
-                        var icon = App.checkAlertType(type);
-                        Swal.fire({
-                            title: title,
-                            text: text,
-                            icon: icon,
-                            confirmButtonText: '确定',
-                            allowEscapeKey: true,
-                            backdrop: `rgba(0, 0, 0, 0.6)`
-                        }).then(function () {
-                            dtd.resolve();
-                        });
-                        return dtd.promise(); // 返回promise对象
-                    };
-                    $.when(wait()).done(function () {
+                alert: function (title = '提示', text = '操作成功', type = 1, callback) {
+                    var icon = App.checkAlertType(type);
+                    Swal.fire({
+                        title: title,
+                        text: text,
+                        icon: icon,
+                        confirmButtonText: '确定',
+                        allowEscapeKey: true,
+                        backdrop: `rgba(0, 0, 0, 0.6)`
+                    }).then(function () {
                         if ($.isFunction(callback)) {
                             callback();
                             return;
@@ -189,9 +179,6 @@ var App = function () {
                     return;
                 },
                 selectAlert: function (title = '操作提示', text = '确定吗', type = 1, callback) {
-                    // var _title = (title === '' ? '操作提示' : title);
-                    // var _type = (type === '' ? 1 : type);
-                    // var _text = (text === '' ? '确定吗' : text);
                     var icon = App.checkAlertType(type);
                     Swal.fire({
                         icon: icon, // 弹框类型
@@ -212,7 +199,6 @@ var App = function () {
                                     callback();
                                     return;
                                 }
-                                Swal.fire("成功", "点击了确定", "success");
                             } else {
                                 return;
                             }
@@ -222,27 +208,17 @@ var App = function () {
                     });
                 },
                 topAlert: function (title = '操作提示', type = 1, timer = 3000, callback) {
-                    // var _title = (title === '' ? '操作提示' : title);
-                    // var _type = (type === '' ? 1 : type);
-                    // var _timer = (timer === '' ? 3000 : timer);
-                    var wait = function (dtd) {
-                        var dtd = $.Deferred(); //在函数内部，新建一个Deferred对象
-                        var icon = App.checkAlertType(type);
-                        Swal.fire({
-                            toast: true,
-                            position: 'top',
-                            showConfirmButton: false,
-                            //时间进度条
-                            // timerProgressBar:true,
-                            timer: timer, //毫秒
-                            icon: icon,
-                            title: title
-                        }).then(function () {
-                            dtd.resolve();
-                        });
-                        return dtd.promise();
-                    };
-                    $.when(wait()).done(function () {
+                    var icon = App.checkAlertType(type);
+                    Swal.fire({
+                        toast: true,
+                        position: 'top',
+                        showConfirmButton: false,
+                        //时间进度条
+                        // timerProgressBar:true,
+                        timer: timer, //毫秒
+                        icon: icon,
+                        title: title
+                    }).then(function () {
                         if ($.isFunction(callback)) {
                             callback();
                             return;
@@ -259,9 +235,7 @@ var App = function () {
                         showCloseButton: true,//右上角关闭
                     })
 
-                }
-
-                ,
+                },
                 // inputAlert: function () {
                 //     Swal.mixin({
                 //         input: 'text',

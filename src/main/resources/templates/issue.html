@@ -6,10 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>发布课程</title>
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/issue.css">
+    <link rel="stylesheet" type="text/css" href="/js/bootstrap/datepicker/bootstrap-datetimepicker.min.css">
 </head>
 
 <body>
-<div th:replace="header :: html"></div>
+<div th:replace="header :: header"></div>
 <div class="container function">
     <nav aria-label="breadcrumb function">
         <ol class="breadcrumb function">
@@ -83,7 +87,10 @@
     </div>
 </div>
 <!-- 模态框结束 -->
-
+<script src="/js/bootstrap/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
+<script src="/js/bootstrap/datepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="/js/bootstrap/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script>
     var issue = (function () {
         var bindEvents = function () {

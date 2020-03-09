@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="/css/base.css">
     <link rel="stylesheet" type="text/css" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/home.css">
     <link rel="stylesheet" type="text/css" href="/css/base.css">
     <link rel="stylesheet" type="text/css" href="/css/issue.css">
     <link rel="stylesheet" type="text/css" href="/css/reservation.css">
     <link rel="stylesheet" type="text/css" href="/js/bootstrap/datepicker/bootstrap-datetimepicker.min.css">
 </head>
 <body>
-<div id="header" class="navbar navbar-expand-lg navbar-light bg-light ">
+
+
+
+<div id="header" class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header">
     <h3 class="navbar-brand">诊断辅导预约系统</h3>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,58 +56,55 @@
             </ul>
         </div>
     </div>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/app.js"></script>
+
+    <script>
+        var header = (function () {
+            var bindEvents = function () {
+                App.getUserMsg(function (uNbr, uName, type) {
+                    header.el('.userName').html(uName + "(" + type + ")");
+                    header.el('#userDropdown').data("uNbr", uNbr);
+                    header.el('#userDropdown').data("uName", uName);
+                });
+                header.el("#goto-issue").off('click').on('click', function () {
+                    App.goIssueByNewPage();
+                });
+                header.el("#goto-reservation").off('click').on('click', function () {
+                    App.goReservationByNewPage();
+                });
+                header.el("#goto-evaluate").off('click').on('click', function () {
+                    App.goEvaluateByNewPage();
+                });
+                header.el("#goto-history").off('click').on('click', function () {
+                    App.goHistoryByNewPage();
+                });
+                header.el("#loginOut").off('click').on('click', function () {
+                    var uName = home.el('#userDropdown').data('uName');
+                    var uNbr = home.el('#userDropdown').data('uNbr');
+                    App.loginOut(uNbr, uName);
+                });
+            };
+            return {
+                data: {
+                    "uNbr": '',
+                    "uName": ''
+                },
+                el: function (expr) {
+                    $('#header' + ' ' + (expr ? expr : ''));
+                },
+                init: function () {
+                    bindEvents();
+                    return this
+                },
+            }
+        })();
+        $(function () {
+            header.init();
+        })
+    </script>
 </div>
 
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/bootstrap/popper.min.js"></script>
-<script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
-<script src="/js/bootstrap/datepicker/bootstrap-datetimepicker.min.js"></script>
-<script src="/js/bootstrap/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
-<script src="/js/app.js"></script>
 
-<script>
-    var header = (function () {
-        var bindEvents = function () {
-            App.getUserMsg(function (uNbr,uName,type) {
-                header.el('#userDropdown').data("uNbr",uNbr);
-                header.el('.userName').html(uName+"("+type+")");
-                header.el('#userDropdown').data("uName",uName);
-            });
-            header.el("#goto-issue").off('click').on('click', function () {
-                App.goIssueByNewPage();
-            });
-            header.el("#goto-reservation").off('click').on('click', function () {
-                App.goReservationByNewPage();
-            });
-            header.el("#goto-evaluate").off('click').on('click', function () {
-                App.goEvaluateByNewPage();
-            });
-            header.el("#goto-history").off('click').on('click', function () {
-                App.goHistoryByNewPage();
-            });
-            header.el("#loginOut").off('click').on('click',function () {
-                var uName = home.el('#userDropdown').data('uName');
-                var uNbr = home.el('#userDropdown').data('uNbr');
-                App.loginOut(uNbr,uName);
-            });
-        };
-        return {
-            data:{
-                "uNbr":'',
-                "uName":''
-            },
-            el: function (expr) {
-                $('#header' + ' ' + (expr ? expr : ''));
-            },
-            init: function () {
-                bindEvents();
-                return this
-            },
-        }
-    })();
-    $(function () {
-        header.init();
-    })
-</script>
 </body>
 </html>

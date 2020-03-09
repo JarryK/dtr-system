@@ -159,4 +159,32 @@ public class ReservationBmoImpl implements ReservationBmo {
         }
     }
 
+    /**
+     * 取消预约课程
+     * @param courseID
+     * @param status
+     * @return
+     */
+    @Override
+    public Map<String, Object> updateReservationCourseStatus(String courseID, String userNbr, String status) {
+        synchronized (this){
+        try{
+            Course course = courseDao.selectCourseByID(courseID);
+            Date nowTime = new Date();
+            Date courseTime = course.getCOURSE_TIME();
+            long t = nowTime.getTime() - courseTime.getTime();
+            // 开课前两小时不能取消预约
+            if (t > -2 * 60 * 60 * 1000) {
+                return G.bmo.returnMap(false, "不能取消即将开课的课程");
+            }
+            reseDao.updateReservationCourseStatusByCourseID(courseID,userNbr,status);
+            int doneStuNbr = course.getCOURSE_DONE_STU_NBR();
+            courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr - 1), courseID);
+            return G.bmo.returnMap(true,"ok");
+        }catch (Exception e){
+            log.error("更改预约状态异常",e);
+            return G.bmo.returnMap(false,"更改预约状态异常");
+        }
+    }
+    }
 }

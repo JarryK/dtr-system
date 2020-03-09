@@ -12,8 +12,8 @@
 <div class="container function">
     <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="reservationsClas-tab" data-toggle="tab" href="#reservationsClas"
-               role="tab" aria-controls="reservationsClas" aria-selected="true">预约课程</a>
+            <a class="nav-item nav-link active" id="reservationsClass-tab" data-toggle="tab" href="#reservationsClass"
+               role="tab" aria-controls="reservationsClass" aria-selected="true">预约课程</a>
             <a class="nav-item nav-link" id="reservationsHistory-tab" data-toggle="tab" href="#reservationsHistory"
                role="tab" aria-controls="reservationsHistory" aria-selected="false">未开课预约记录</a>
             <a class="nav-item nav-link" id="doneReservationsHistory-tab" data-toggle="tab"
@@ -22,8 +22,8 @@
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade  p-2 show active" id="reservationsClas" role="tabpanel"
-             aria-labelledby="reservationsClas-tab">
+        <div class="tab-pane fade  p-2 show active" id="reservationsClass" role="tabpanel"
+             aria-labelledby="reservationsClass-tab">
             <div class="search-box card">
                 <div class="row card-body">
                     <div class="col-md-6">
@@ -160,6 +160,7 @@
     {{/each}}{{/if}}
 </script>
 <!--  模板结束  -->
+
 <script>
     // template 时间日期格式功能
     template.helper('formatDateString', function (value) {
@@ -167,16 +168,10 @@
     });
     var reservation = (function () {
         var bindEvents = function () {
-            App.getUserMsg(function (uNbr, uName, uType) {
-                reservation.el('.userName').html(uName + '(' + uType + ')');
-                reservation.el('#userMsg').data("uName", uName);
-                reservation.el('#userMsg').data("uNbr", uNbr);
-                reservation.el('#userMsg').data("uType", uType);
-            });
-            reservation.el('.cancel-reservation-btn').off('click').on('click', function () {
-                App.alert('取消成功');
-            });
             reservation.getClassList();
+            reservation.el('.reservationsHistory-tab').off('click').on('click',function () {
+                reservation.getClassList();
+            });
         };
         return {
             data: {},
@@ -187,6 +182,7 @@
                 bindEvents();
                 return this
             },
+            // 获取所有的数据列表
             getClassList: function () {
                 reservation.getCanReservationList();
                 reservation.getHistoryList();
@@ -250,8 +246,7 @@
                     });
                 });
                 reservation.el('.reservation-btn').off('click').on('click', function () {
-                    var $this = $(this);
-                    var index = $this.data("courseid");
+                    var index = $(this).data("courseid");
                     $.post('/dtr/rese/reseCourse', {
                         index: index
                     }).done(function (data) {
@@ -262,6 +257,22 @@
                             reservation.getClassList();
                             return;
                         }
+                    });
+                });
+                reservation.el('.cancel-reservation-btn').off('click').on('click', function () {
+                    var index = $(this).data("courseid");
+                    App.selectAlert('操作提示','确定吗',4,function(){
+                        $.post('/dtr/rese/unReseCourse', {
+                            index: index
+                        }).done(function (data) {
+                            if (!App.checker(data)) {
+                                return;
+                            } else {
+                                App.alert('取消成功','');
+                                reservation.getClassList();
+                                return;
+                            }
+                        });
                     });
                 });
             },

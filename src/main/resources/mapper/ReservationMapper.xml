@@ -140,5 +140,9 @@
         WHERE COURSE_TEACHER_NBR = #{teacherNbr,jdbcType=VARCHAR} AND RESERVATION_STATUS = '1'
     </select>
 
+    <update id="updateReservationCourseStatusByCourseID" parameterType="java.lang.String">
+        UPDATE reservation SET RESERVATION_STATUS = #{status,jdbcType=VARCHAR}
+        WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND USER_NBR = #{userNbr,jdbcType=VARCHAR}
+    </update>
 
 </mapper>
