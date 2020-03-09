@@ -48,6 +48,24 @@ var App = function () {
                 return $.ajax(_options_apply);
             },
         });
+        //
+        $("#header-goto-issue").off('click').on('click', function () {
+            App.goIssueByNewPage();
+        });
+        $("#header-goto-reservation").off('click').on('click', function () {
+            App.goReservationByNewPage();
+        });
+        $("#header-goto-evaluate").off('click').on('click', function () {
+            App.goEvaluateByNewPage();
+        });
+        $("#header-goto-history").off('click').on('click', function () {
+            App.goHistoryByNewPage();
+        });
+        $("#header-loginOut").off('click').on('click', function () {
+            var uName =$('#header-userDropdown').data('uName');
+            var uNbr = $('#header-userDropdown').data('uNbr');
+            App.loginOut(uNbr, uName);
+        });
     };
     //page_turn页面跳转函数集
     var page_turn_functions = (function () {
@@ -127,6 +145,9 @@ var App = function () {
                             App.goLoginBySelf();
                         });
                     } else {
+                            $('.header-userName').html(data.user.USER_NAME + "(" + data.user.TYPE_NAME + ")");
+                            $('#header-userDropdown').data("uNbr", data.user.USER_NBR);
+                            $('#header-userDropdown').data("uName", data.user.USER_NAME);
                         if ($.isFunction(callback)) {
                             callback(data.user.USER_NBR, data.user.USER_NAME, data.user.TYPE_NAME);
                             return;
