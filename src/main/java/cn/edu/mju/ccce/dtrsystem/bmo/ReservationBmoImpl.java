@@ -94,8 +94,10 @@ public class ReservationBmoImpl implements ReservationBmo {
     @Override
     public Map<String, Object> getCanReservationCourseList() {
         try {
-            List<Course> courseList = courseDao.selectCourseList();
-            if (courseList.isEmpty()) {
+            List<Course> courseList = new ArrayList<>();
+            try {
+                courseList = courseDao.selectCourseList();
+            } catch (NullPointerException e) {
                 return G.bmo.returnMap(false, "查询为空！");
             }
             Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");

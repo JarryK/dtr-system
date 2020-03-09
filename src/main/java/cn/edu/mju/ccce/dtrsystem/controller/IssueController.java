@@ -1,6 +1,7 @@
 package cn.edu.mju.ccce.dtrsystem.controller;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
+import cn.edu.mju.ccce.dtrsystem.bean.Reservation;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
@@ -17,6 +18,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,7 +30,7 @@ import java.util.Map;
  * <b>创建时间：</b>2020-02-11 20:17<br>
  */
 @Controller
-@RequestMapping("/dtr/eval")
+@RequestMapping("/dtr/issue")
 public class IssueController {
 
     /**
@@ -38,6 +41,13 @@ public class IssueController {
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.CourseBmoImpl")
     private CourseBmo courseBmo;
 
+    /**
+     * 新建可以预约的课程
+     *
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
     @RequestMapping("/insert")
     @ResponseBody
     public Map<String, Object> insert(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
@@ -64,10 +74,10 @@ public class IssueController {
                 e.printStackTrace();
             }
             String sessionID = httpSession.getId();
-            Map<String,Object> uMgs = (Map<String, Object>) httpSession.getAttribute(sessionID);
+            Map<String, Object> uMgs = (Map<String, Object>) httpSession.getAttribute(sessionID);
             //session里面最好改成用户类,不过比较懒  先放着
-            String uName = MapTool.getString(uMgs,"USER_NAME");
-            String userNbr =MapTool.getString(uMgs,"USER_NBR");
+            String uName = MapTool.getString(uMgs, "USER_NAME");
+            String userNbr = MapTool.getString(uMgs, "USER_NBR");
             Course course = new Course();
             course.setCOURSE_NAME(courseName);
             course.setCOURSE_TYPE_ID(typeId);
@@ -90,5 +100,58 @@ public class IssueController {
 
         }
 
+    }
+
+    /**
+     * 获取所有已发布的课程
+     *
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("/getSelfIssue")
+    @ResponseBody
+    public Map<String, Object> getSelfIssue(HttpSession httpSession) {
+        try{
+//            String sessionID = httpSession.getId();
+//            Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
+//            String type_name = MapTool.getString(uMsg, "TYPE_NAME");
+//            if (!"教师".equals(type_name)) {
+//                return G.page.returnMap(false, "非教师用户不能操作");
+//            }
+//            String uNbr = MapTool.getString(uMsg, "USER_NBR");
+            String uNbr = "123456";
+            Map<String, Object> Map = new HashMap<>();
+            // 做提前声明，不然前端数据异常也不会报错自己还偷偷吃掉这个BUG
+            Map.put("noIssueList", "");
+            Map.put("noIssueDoneList", "");
+            Map<String, Object> relMap = courseBmo.getCourseListByTeacherNbr(uNbr);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Course> courseList = (List<Course>) MapTool.getObject(relMap, "courseList");
+            if (courseList.isEmpty()) {
+                Map.put("noIssueList", "暂无记录");
+            }
+            Map<String, Object> relDoneMap = courseBmo.getCourseDoneListByTeacherNbr(uNbr);
+            boolean relDoneMapBoolean = G.bmo.returnMapBool(relDoneMap);
+            if (!relDoneMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relDoneMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Course> courseDoneList = (List<Course>) MapTool.getObject(relDoneMap, "courseDoneList");
+            if (courseDoneList.isEmpty()) {
+                Map.put("noIssueDoneList", "暂无记录");
+            }
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.putAll(Map);
+            returnMap.put("courseList", courseList);
+            returnMap.put("courseDoneList", courseDoneList);
+            return returnMap;
+        }catch (Exception e){
+            log.error("查询异常：", e);
+            return G.page.returnMap(false, "查询异常");
+        }
     }
 }

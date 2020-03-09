@@ -1,14 +1,11 @@
 package cn.edu.mju.ccce.dtrsystem.bmo;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
-import cn.edu.mju.ccce.dtrsystem.bean.Reservation;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.IdGenerator;
-import cn.edu.mju.ccce.dtrsystem.common.MapTool;
 import cn.edu.mju.ccce.dtrsystem.dao.CourseDao;
 import cn.edu.mju.ccce.dtrsystem.dao.CourseTypeDao;
 import cn.edu.mju.ccce.dtrsystem.dao.LoginDao;
-import cn.edu.mju.ccce.dtrsystem.dao.ReservationDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +68,7 @@ public class CourseBmoImpl implements CourseBmo {
     /**
      * 获取课程类型id
      * 特殊,不用检测
+     *
      * @param courseTypeName
      * @return
      */
@@ -80,28 +79,75 @@ public class CourseBmoImpl implements CourseBmo {
 
     /**
      * 根据课程ID获得课程全部信息
+     *
      * @param courseID
      * @return map key=courseDet
      */
     @Override
     public Map<String, Object> getCourseDetByID(String courseID) {
         try {
-            Course course = courseDao.selectCourseByID(courseID);
-            String courseDet = course.getCOURSE_DETAIL();
-            if (courseDet.isEmpty()) {
-                return G.bmo.returnMap(false, "查询为空！");
+            Course course = new Course();
+            try {
+                course = courseDao.selectCourseByID(courseID);
+            } catch (NullPointerException e) {
+                return G.bmo.returnMap(false, "查询为空");
             }
             Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
             returnMap.put("courseDet", course);
             return returnMap;
         } catch (Exception e) {
             log.error("查询课程详细异常:", e);
-            return G.bmo.returnMap(false, "查询异常！");
+            return G.bmo.returnMap(false, "查询异常");
         }
 
     }
 
+    /**
+     * 根据老师Nbr获取可预约的课程列表
+     *
+     * @param teacherNbr
+     * @return
+     */
+    @Override
+    public Map<String, Object> getCourseListByTeacherNbr(String teacherNbr) {
+        try {
+            List<Course> courseList = new ArrayList<>();
+            try {
+                courseList = courseDao.selectCourseListByTeacherNbr(teacherNbr, "0");
+            } catch (NullPointerException e) {
+                return G.bmo.returnMap(false, "查询为空");
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("courseList",courseList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询发布课程异常:", e);
+            return G.bmo.returnMap(false, "查询异常");
+        }
+    }
 
+    /**
+     * 根据老师Nbr获取已完成的课程列表
+     * @param teacherNbr
+     * @return
+     */
+    @Override
+    public Map<String, Object> getCourseDoneListByTeacherNbr(String teacherNbr) {
+        try {
+            List<Course> courseList = new ArrayList<>();
+            try {
+                courseList = courseDao.selectCourseListByTeacherNbr(teacherNbr, "1");
+            } catch (NullPointerException e) {
+                return G.bmo.returnMap(false, "查询为空");
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("courseDoneList",courseList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询发布课程（完成）异常:", e);
+            return G.bmo.returnMap(false, "查询异常");
+        }
+    }
     @Override
     public Map<String, Object> removeCourse(Map<String, Object> inMap) {
         return null;
@@ -112,12 +158,5 @@ public class CourseBmoImpl implements CourseBmo {
         return null;
     }
 
-    public Map<String, Object> addEvaluateCourse(Map<String, Object> inMap) {
-        return null;
-    }
-
-    public Map<String, Object> removeEvaluateCourse(Map<String, Object> inMap) {
-        return null;
-    }
 
 }

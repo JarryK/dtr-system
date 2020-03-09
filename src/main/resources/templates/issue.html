@@ -15,50 +15,94 @@
 <body>
 <div th:replace="header :: header"></div>
 <div class="container function">
-    <nav aria-label="breadcrumb function">
-        <ol class="breadcrumb function">
-            <li class="breadcrumb-item " aria-current="page">主页</li>
-            <li class="breadcrumb-item active" aria-current="page">发布课程</li>
-        </ol>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="issueClass-tab" data-toggle="tab" href="#issueCourse"
+               role="tab" aria-controls="reservationsClass" aria-selected="true">发布课程</a>
+            <a class="nav-item nav-link" id="issueCourse-tab" data-toggle="tab" href="#issueCourseHistory"
+               role="tab" aria-controls="issueCourseHistory" aria-selected="false">可预约课程记录</a>
+            <a class="nav-item nav-link" id="issueDoneCourse-tab" data-toggle="tab" href="#issueDoneCourseHistory"
+               role="tab" aria-controls="issueDoneCourseHistory" aria-selected="false">已完成课程记录</a>
+        </div>
     </nav>
-    <hr>
-    <div class="row">
-        <!--<p class="alert alert-warning col-md-12 text-xl-center" role="alert"><button type="button" class="close"-->
-        <!--data-dismiss="alert" aria-hidden="true">-->
-        <!--&times;-->
-        <!--</button>请合理安排时间!</p>-->
-        <div class="col-md-4 text-xl-center classTime">
-            <h5><img src="/images/classTime.png" alt=""> 开始时间</h5>
-            <input class="form-control" id="settime" type="text" readonly="readonly"/>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade  p-2 show active" id="issueCourse" role="tabpanel"
+             aria-labelledby="issueClass-tab">
+            <div class="row">
+                <!--<p class="alert alert-warning col-md-12 text-xl-center" role="alert"><button type="button" class="close"-->
+                <!--data-dismiss="alert" aria-hidden="true">-->
+                <!--&times;-->
+                <!--</button>请合理安排时间!</p>-->
+                <div class="col-md-4 text-xl-center classTime">
+                    <h5><img src="/images/classTime.png" alt=""> 开始时间</h5>
+                    <input class="form-control" id="settime" type="text" readonly="readonly"/>
+                </div>
+                <div class="col-md-4 text-xl-center classType">
+                    <h5><img src="/images/classType.png" alt=""> 课程类型</h5>
+                    <select class="form-control" name="classType" id="classType">
+                        <option value="语文">语文</option>
+                        <option value="数学">数学</option>
+                        <option value="英语">英语</option>
+                        <option value="物理">物理</option>
+                        <option value="化学">化学</option>
+                    </select>
+                </div>
+                <div class="col-md-4 text-xl-center stuNbr">
+                    <h5><img src="/images/classType.png" alt=""> 课程学生人数</h5>
+                    <input class="form-control" name="classType" id="stuNbr" type="number"/>
+                </div>
+                <div class="col-md-12 className">
+                    <h5><img src="/images/className.png" alt=""> 课程名称</h5>
+                    <input class="form-control" id="className" type=""/>
+                </div>
+                <div class="col-md-12 classContent">
+                    <h5><img src="/images/classContent.png" alt=""> 课程内容</h5>
+                    <textarea class="form-control" id="classContent" cols="30" rows="7" style="resize:none"></textarea>
+                </div>
+            </div>
+            <div class="col-md-12 text-right">
+                <button class="btn btn-secondary" id="commitClassMsg" data-toggle="tooltip" data-placement="top"
+                        title="请您务必核实输入！">提交
+                </button>
+            </div>
         </div>
-        <div class="col-md-4 text-xl-center classType">
-            <h5><img src="/images/classType.png" alt=""> 课程类型</h5>
-            <select class="form-control" name="classType" id="classType">
-                <option value="语文">语文</option>
-                <option value="数学">数学</option>
-                <option value="英语">英语</option>
-                <option value="物理">物理</option>
-                <option value="化学">化学</option>
-            </select>
+        <div class="tab-pane fade  p-2 show " id="issueCourseHistory" role="tabpanel"
+             aria-labelledby="issueCourse-tab">
+            <table class="table text-center table-striped  shadow">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">序号</th>
+                    <th scope="col">时间</th>
+                    <th scope="col">类型</th>
+                    <th scope="col">名称</th>
+                    <th scope="col">总/已预约人数</th>
+                    <th scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody id="issue-class-msg-container">
+                </tbody>
+            </table>
         </div>
-        <div class="col-md-4 text-xl-center stuNbr">
-            <h5><img src="/images/classType.png" alt=""> 课程学生人数</h5>
-            <input class="form-control" name="classType" id="stuNbr" type="number"/>
+        <div class="tab-pane fade  p-2 show " id="issueDoneCourseHistory" role="tabpanel"
+             aria-labelledby="issueDoneCourse-tab">
+            <table class="table text-center table-striped  shadow">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">序号</th>
+                    <th scope="col">时间</th>
+                    <th scope="col">类型</th>
+                    <th scope="col">名称</th>
+                    <th scope="col">总/已预约人数</th>
+                    <th scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody id="issue-done-class-msg-container">
+                </tbody>
+            </table>
         </div>
-        <div class="col-md-12 className">
-            <h5><img src="/images/className.png" alt=""> 课程名称</h5>
-            <input class="form-control" id="className" type=""/>
-        </div>
-        <div class="col-md-12 classContent">
-            <h5><img src="/images/classContent.png" alt=""> 课程内容</h5>
-            <textarea class="form-control" id="classContent" cols="30" rows="7" style="resize:none"></textarea>
-        </div>
+
     </div>
-    <div class="col-md-12 text-right">
-        <button class="btn btn-secondary" id="commitClassMsg" data-toggle="tooltip" data-placement="top"
-                title="请您务必核实输入！">提交
-        </button>
-    </div>
+
 </div>
 
 <!-- 模态框开始 -->
@@ -87,6 +131,46 @@
     </div>
 </div>
 <!-- 模态框结束 -->
+
+<script type="text/html" id="issue-class-msg-art">
+    {{ if courseList && courseList.length>0 }}{{each courseList}}
+    <tr>
+        <th class="align-middle" scope="row">{{$index+1}}</th>
+        <td class="align-middle">{{$value.course_TIME | formatDateString }}</td>
+        <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
+        <td class="align-middle">{{$value.course_NAME}}</td>
+        <td class="align-middle">{{$value.course_STU_NBR}}/{{$value.course_DONE_STU_NBR}}</td>
+        <!--<td class="align-middle">{{$value.place}}</td>-->
+        <td class="align-middle">
+            <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
+                  data-courseid="{{$value.COURSE_ID}}">详情</a>
+            </p>
+            <p><a href="javascript:;" class="text-decoration-none font-italic reservation-btn"
+                  data-courseid="{{$value.COURSE_ID}}">预约</a></p>
+        </td>
+    </tr>
+    {{/each}}{{/if}}
+</script>
+
+<script type="text/html" id="issue-done-class-msg-art">
+    {{ if courseDoneList && courseDoneList.length>0 }}{{each courseDoneList}}
+    <tr>
+        <th class="align-middle" scope="row">{{$index+1}}</th>
+        <td class="align-middle">{{$value.course_TIME | formatDateString }}</td>
+        <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
+        <td class="align-middle">{{$value.course_NAME}}</td>
+        <td class="align-middle">{{$value.course_STU_NBR}}/{{$value.course_DONE_STU_NBR}}</td>
+        <!--<td class="align-middle">{{$value.place}}</td>-->
+        <td class="align-middle">
+            <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
+                  data-courseid="{{$value.COURSE_ID}}">详情</a>
+            </p>
+            <p><a href="javascript:;" class="text-decoration-none font-italic reservation-btn"
+                  data-courseid="{{$value.COURSE_ID}}">预约</a></p>
+        </td>
+    </tr>
+    {{/each}}{{/if}}
+</script>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
@@ -94,6 +178,10 @@
 <script src="/js/bootstrap/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="/js/app.js"></script>
 <script>
+    // template 时间日期格式功能
+    template.helper('formatDateString', function (value) {
+        return new Date(value).format('yyyy-MM-dd hh:mm:ss');
+    });
     var issue = (function () {
         var bindEvents = function () {
             App.getUserMsg(function (uNbr, uName, uType) {
@@ -144,7 +232,7 @@
                 var className = issue.el('#className').val();
                 var stuNbr = issue.el('#stuNbr').val();
                 var classContent = issue.el('#classContent').val();
-                $.post('/dtr/eval/insert', {
+                $.post('/dtr/issue/insert', {
                     courseName: className,
                     typeName: classType,
                     courseDetail: classContent,
@@ -154,14 +242,18 @@
                     if (!App.checker(data)) {
                         return;
                     } else {
-                        App.alert("提交成功", '', 1);
-                        issue.inputClear();
+                        App.alert("提交成功", '', 1, function () {
+                            issue.inputClear();
+                        });
                         return;
                     }
                 });
                 $('#checkInput').modal('hide');
                 issue.el('.modal-in').html('');
             });
+            issue.el('.nav-link').off('click').on('click', function () {
+                issue.getCourseList();
+            })
         };
         return {
             el: function (expr) {
@@ -182,6 +274,27 @@
                 issue.el('.inputName').html('');
                 issue.el('.inputStuNbr').html('');
                 issue.el('.inputContent').html('');
+            },
+            getCourseList: function () {
+                $.post('/dtr/issue/getSelfIssue').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        var courseList = data.courseList;
+                        var courseDoneList = data.courseDoneList;
+                        if (!data.noIssueList == '') {
+                            issue.el("#issue-class-msg-container").html("<tr><td colspan='6' style='text-align: center'>" + data.noIssueList + "</td></tr>")
+                        } else {
+                            issue.el("#issue-class-msg-container").html(template('issue-class-msg-art', {courseList: courseList}))
+                        }
+                        if (!data.noIssueDoneList == '') {
+                            issue.el("#issue-done-class-msg-container").html("<tr><td colspan='6' style='text-align: center'>" + data.noIssueDoneList + "</td></tr>")
+                        } else {
+                            issue.el("#issue-done-class-msg-container").html(template('issue-done-class-msg-art', {courseDoneList: courseDoneList}))
+                        }
+                    }
+                });
+
             }
         }
     })();

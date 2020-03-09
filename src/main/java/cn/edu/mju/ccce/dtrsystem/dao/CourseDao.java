@@ -52,4 +52,20 @@ public interface CourseDao {
      * @return
      */
     public void selectCourseReservationNbr(String CourseId);
+
+    /**
+     * 获取老师的课程列表
+     * @param courseTeacherNbr
+     * @param courseStatus    =0可预约  =1 已过期
+     * @return
+     */
+    public List<Course> selectCourseListByTeacherNbr(String courseTeacherNbr,String courseStatus);
+
+
+    /**
+     * 更新课程信息
+     * @param course
+     * @return
+     */
+    public void updateCourse(Course course);
 }

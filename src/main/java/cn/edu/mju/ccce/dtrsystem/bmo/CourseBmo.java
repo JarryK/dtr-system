@@ -38,6 +38,20 @@ public interface CourseBmo {
     public Map<String,Object> getCourseDetByID(String courseID);
 
     /**
+     * 根据老师Nbr获取可预约的课程列表
+     * @param teacherNbr
+     * @return
+     */
+    public Map<String,Object> getCourseListByTeacherNbr(String teacherNbr);
+
+    /**
+     * 根据老师Nbr获取已完成的课程列表
+     * @param teacherNbr
+     * @return
+     */
+    public Map<String,Object> getCourseDoneListByTeacherNbr(String teacherNbr);
+
+    /**
      * 删除课程
      * @param inMap
      * @return
