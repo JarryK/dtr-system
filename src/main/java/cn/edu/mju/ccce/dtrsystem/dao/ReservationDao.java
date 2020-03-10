@@ -20,21 +20,21 @@ public interface ReservationDao {
      * 增加一条新的预约课程信息
      * @param reservation
      */
-    public void insertReservationRecord(Reservation reservation);
+    public int insertReservationRecord(Reservation reservation);
 
     /**
-     * 根据用户编号查询用户预约记录
-     * @param userNbr
+     * 根据学号查询学号预约记录
+     * @param StuNbr
      * @return
      */
-    public List<Reservation> selectAllReservationRecordByUserNbr(String userNbr);
+    public List<Reservation> selectAllReservationRecordByStuNbr(String StuNbr);
 
     /**
-     * 根据用户编号查询用户完成上课的预约记录
-     * @param userNbr
+     * 根据学号查询学号完成上课的预约记录
+     * @param StuNbr
      * @return
      */
-    public List<Reservation> selectAllReservationDoneRecordByUserNbr(String userNbr);
+    public List<Reservation> selectAllReservationDoneRecordByStuNbr(String StuNbr);
 
     /**
      * 根据课程ID查询所有预约的记录
@@ -43,25 +43,10 @@ public interface ReservationDao {
      */
     public List<Reservation> selectAllReservationRecordByCourseID(String courseID);
 
-
-    /**
-     * 根据老师工号查找所有发布课程的预约记录的courseID
-     * @param teacherNbr
-     * @return
-     */
-    public List<String> selectAllReservationRecordByTeacherNbr(String teacherNbr);
-
-    /**
-     * 根据老师工号查找所有发布已完成课程的预约记录的courseID
-     * @param teacherNbr
-     * @return
-     */
-    public List<String> selectAllReservationRecordDoneByTeacherNbr(String teacherNbr);
-
     /**
      * 根据courseID改变预约课程预约状态
      * @param courseID
      */
-    public void updateReservationCourseStatusByCourseID(String courseID,String userNbr,String status);
+    public int updateReservationCourseStatusByCourseID(String courseID,String userNbr,String status);
 
 }

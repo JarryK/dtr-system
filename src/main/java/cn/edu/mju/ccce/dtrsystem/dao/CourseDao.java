@@ -21,7 +21,7 @@ public interface CourseDao {
      * @param course
      * @return
      */
-    public void insertNewCourse(Course course);
+    public int insertNewCourse(Course course);
 
     /**
      * 获取可预约课程列表
@@ -44,14 +44,7 @@ public interface CourseDao {
      * @param courseDoneStuNbr
      * @return
      */
-    public void upDateCourseDoneStuNbr(String courseDoneStuNbr,String courseID);
-
-    /**
-     * 查找已预约课程人数
-     *
-     * @return
-     */
-    public void selectCourseReservationNbr(String CourseId);
+    public int upDateCourseDoneStuNbr(String courseDoneStuNbr,String courseID);
 
     /**
      * 获取老师的课程列表
@@ -67,5 +60,5 @@ public interface CourseDao {
      * @param course
      * @return
      */
-    public void updateCourse(Course course);
+    public int updateCourse(Course course);
 }

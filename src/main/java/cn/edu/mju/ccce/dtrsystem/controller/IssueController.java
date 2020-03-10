@@ -2,6 +2,7 @@ package cn.edu.mju.ccce.dtrsystem.controller;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
 import cn.edu.mju.ccce.dtrsystem.bean.Reservation;
+import cn.edu.mju.ccce.dtrsystem.bean.User;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
@@ -112,14 +113,13 @@ public class IssueController {
     @ResponseBody
     public Map<String, Object> getSelfIssue(HttpSession httpSession) {
         try{
-//            String sessionID = httpSession.getId();
-//            Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
-//            String type_name = MapTool.getString(uMsg, "TYPE_NAME");
-//            if (!"教师".equals(type_name)) {
-//                return G.page.returnMap(false, "非教师用户不能操作");
-//            }
-//            String uNbr = MapTool.getString(uMsg, "USER_NBR");
-            String uNbr = "123456";
+            String sessionID = httpSession.getId();
+            Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
+            String type_name = MapTool.getString(uMsg, "TYPE_NAME");
+            if (!"教师".equals(type_name)) {
+                return G.page.returnMap(false, "非教师用户不能操作");
+            }
+            String uNbr = MapTool.getString(uMsg, "USER_NBR");
             Map<String, Object> Map = new HashMap<>();
             // 做提前声明，不然前端数据异常也不会报错自己还偷偷吃掉这个BUG
             Map.put("noIssueList", "");
@@ -153,5 +153,31 @@ public class IssueController {
             log.error("查询异常：", e);
             return G.page.returnMap(false, "查询异常");
         }
+    }
+
+    @RequestMapping("/getCourseStu")
+    @ResponseBody
+    public Map<String,Object> getCourseStu(@RequestBody Map<String,Object> inMap){
+        String courseID = MapTool.getString(inMap, "courseID");
+        try {
+            courseID.substring(1);//探测非空;
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空！");
+        }
+        try{
+            Map<String,Object> relMap = courseBmo.getCourseStuList(courseID);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean){
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false,msg);
+            }
+            List<Map<String,Object>> userList = (List<Map<String,Object>>) MapTool.getObject(relMap,"userList");
+            Map<String,Object> returnMap = G.page.returnMap(true,"ok");
+            returnMap.put("userList",userList);
+            return returnMap;
+        }catch (Exception e){
+
+        }
+        return null;
     }
 }

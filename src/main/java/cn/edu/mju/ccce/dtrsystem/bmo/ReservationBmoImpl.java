@@ -75,12 +75,18 @@ public class ReservationBmoImpl implements ReservationBmo {
                 reservation.setUSER_NAME(MapTool.getString(inMap, "userName"));
                 reservation.setUSER_NBR(Long.parseLong(MapTool.getString(inMap, "userNbr")));
                 reservation.setCREAT_TIME(nowTime);
-                reseDao.insertReservationRecord(reservation);
-                courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr + 1), courseID);
-                return G.bmo.returnMap(true, "预约成功！");
+                int insert = reseDao.insertReservationRecord(reservation);
+                if (insert <= 0){
+                    return G.bmo.returnMap(false,"预约失败");
+                }
+                int i = courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr + 1), courseID);
+                if (i <= 0){
+                    return G.bmo.returnMap(false,"预约失败");
+                }
+                return G.bmo.returnMap(true, "预约成功");
             } catch (Exception e) {
                 log.error("预约课程异常", e);
-                return G.bmo.returnMap(false, "预约课程异常！");
+                return G.bmo.returnMap(false, "预约课程异常");
             }
         }
     }
@@ -120,7 +126,7 @@ public class ReservationBmoImpl implements ReservationBmo {
         try {
             List<Reservation> reservationList = new ArrayList<>();
             try {
-                reservationList = reseDao.selectAllReservationRecordByUserNbr(userNbr);
+                reservationList = reseDao.selectAllReservationRecordByStuNbr(userNbr);
 
             } catch (NullPointerException e) {
                 Map<String, Object> reMap = G.bmo.returnMap(true, "获取用户预约信息为空");
@@ -146,7 +152,7 @@ public class ReservationBmoImpl implements ReservationBmo {
         try {
             List<Reservation> reservationList = new ArrayList<>();
             try {
-                reservationList = reseDao.selectAllReservationDoneRecordByUserNbr(userNbr);
+                reservationList = reseDao.selectAllReservationDoneRecordByStuNbr(userNbr);
 
             } catch (NullPointerException e) {
                 Map<String, Object> reMap = G.bmo.returnMap(true, "获取用户预约信息为空");
@@ -179,9 +185,15 @@ public class ReservationBmoImpl implements ReservationBmo {
             if (t > -2 * 60 * 60 * 1000) {
                 return G.bmo.returnMap(false, "不能取消即将开课的课程");
             }
-            reseDao.updateReservationCourseStatusByCourseID(courseID,userNbr,status);
             int doneStuNbr = course.getCOURSE_DONE_STU_NBR();
-            courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr - 1), courseID);
+            int up = reseDao.updateReservationCourseStatusByCourseID(courseID,userNbr,status);
+            if (up <= 0){
+                return G.bmo.returnMap(false,"取消失败");
+            }
+            int i = courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr - 1), courseID);
+            if (i <= 0){
+                return G.bmo.returnMap(false,"取消失败");
+            }
             return G.bmo.returnMap(true,"ok");
         }catch (Exception e){
             log.error("更改预约状态异常",e);

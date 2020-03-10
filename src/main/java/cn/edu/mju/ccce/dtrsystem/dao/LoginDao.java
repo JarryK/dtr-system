@@ -28,5 +28,5 @@ public interface LoginDao {
      * @param userUbr
      * @return
      */
-    public User selectUserAllMsgByUserNbr(String userUbr);
+    public Map<String,Object> selectUserAllMsgByUserNbr(String userUbr);
 }

@@ -52,17 +52,24 @@ public interface CourseBmo {
     public Map<String,Object> getCourseDoneListByTeacherNbr(String teacherNbr);
 
     /**
-     * 删除课程
-     * @param inMap
+     * 取消课程
+     * @param courseID
      * @return
      */
-    public Map<String,Object> removeCourse (Map<String,Object> inMap);
+    public Map<String,Object> cancelCourse (String courseID);
 
 
     /**
      * 更新发布课程信息
-     * @param inMap
+     * @param course
      * @return
      */
-    public Map<String,Object> upDateCourse (Map<String,Object> inMap);
+    public Map<String,Object> upDateCourse (Course course);
+
+    /**
+     * 获取预约课程的学生列表
+     * @param course
+     * @return
+     */
+    public Map<String,Object> getCourseStuList(String course);
 }

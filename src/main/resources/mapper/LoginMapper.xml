@@ -37,7 +37,7 @@
         WHERE USER_NBR =#{userNbr,jdbcType=VARCHAR} AND USER_PASS = #{userPass,jdbcType=VARCHAR} AND USER_STATUS = 0
     </select>
     <select id="selectUserAllMsgByUserNbr" parameterType="java.lang.String" resultType="java.util.HashMap">
-        SELECT <include refid="sl_User" />
+        SELECT  USER_ID,USER_NAME,USER_NBR,USER_SEX, TYPE_ID,TYPE_NAME, USER_PHONE
         FROM user
         WHERE USER_NBR =#{userNbr,jdbcType=VARCHAR}  AND USER_STATUS = 0
     </select>

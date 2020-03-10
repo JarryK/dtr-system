@@ -23,4 +23,7 @@ ol.breadcrumb {
     padding-bottom: 15px;
 }
 
+.table p{
+    margin: 0 !important;
+}
 /* 功能区结束 */

@@ -130,7 +130,7 @@
     <select id="selectCourseList" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
         SELECT <include refid="sl_Course" />
         FROM course
-        WHERE COURSE_STATUS ='0'
+        WHERE COURSE_STATUS ='0' ORDER BY COURSE_TIME
     </select>
 
     <select id="selectCourseByID" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
@@ -148,7 +148,55 @@
     <select id="selectCourseListByTeacherNbr" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
         SELECT <include refid="sl_Course" />
         FROM course
-        WHERE COURSE_TEACHER_NBR = #{courseTeacherNbr,jdbcType=VARCHAR} AND COURSE_STATUS = #{courseStatus,jdbcType=VARCHAR}
+        WHERE COURSE_TEACHER_NBR = #{courseTeacherNbr,jdbcType=VARCHAR} AND COURSE_STATUS = #{courseStatus,jdbcType=VARCHAR}  ORDER BY COURSE_TIME
     </select>
 
+    <update id="updateCourse" parameterType="cn.edu.mju.ccce.dtrsystem.bean.Course">
+        UPDATE course
+        <set><trim suffixOverrides=",">
+        <if test="COURSE_ID != null">
+            COURSE_ID=#{COURSE_ID,jdbcType=VARCHAR},
+        </if>
+        <if test="COURSE_NAME != null">
+            COURSE_NAME=#{COURSE_NAME,jdbcType=VARCHAR},
+        </if>
+        <if test="COURSE_TYPE_ID != null">
+            COURSE_TYPE_ID=#{COURSE_TYPE_ID,jdbcType=NUMERIC},
+        </if>
+        <if test="COURSE_TYPE_NAME != null">
+            COURSE_TYPE_NAME=#{COURSE_TYPE_NAME,jdbcType=VARCHAR},
+        </if>
+        <if test="COURSE_DETAIL != null">
+            COURSE_DETAIL=#{COURSE_DETAIL,jdbcType=VARCHAR},
+        </if>
+        <if test="COURSE_TEACHER_NBR != null">
+            COURSE_TEACHER_NBR=#{COURSE_TEACHER_NBR,jdbcType=VARCHAR},
+        </if>
+        <if test="COURSE_TEACHER_NAME != null">
+            COURSE_TEACHER_NAME=#{COURSE_TEACHER_NAME,jdbcType=VARCHAR},
+        </if>
+        <if test="COURSE_STU_NBR != null">
+            COURSE_STU_NBR=#{COURSE_STU_NBR,jdbcType=VARCHAR},
+        </if>
+        <if test="COURSE_DONE_STU_NBR != null">
+            COURSE_DONE_STU_NBR=#{COURSE_DONE_STU_NBR,jdbcType=VARCHAR},
+        </if>
+        <if test="COURSE_TIME != null">
+            COURSE_TIME=#{COURSE_TIME,jdbcType=VARCHAR},
+        </if>
+        <if test="EVALUATE_NBR != null">
+            EVALUATE_NBR=#{EVALUATE_NBR,jdbcType=VARCHAR},
+        </if>
+        <if test="COURSE_STATUS != null">
+            COURSE_STATUS=#{COURSE_STATUS,jdbcType=VARCHAR},
+        </if>
+        <if test="CREAT_TIME != null">
+            CREAT_TIME=#{CREAT_TIME,jdbcType=VARCHAR},
+        </if>
+        <if test="UPDATE_TIME != null">
+            UPDATE_TIME=#{UPDATE_TIME,jdbcType=VARCHAR},
+        </if>
+    </trim></set>
+    WHERE COURSE_ID = #{COURSE_ID,jdbcType=NUMERIC}
+    </update>
 </mapper>

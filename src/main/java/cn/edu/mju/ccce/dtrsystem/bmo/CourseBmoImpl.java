@@ -1,11 +1,14 @@
 package cn.edu.mju.ccce.dtrsystem.bmo;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
+import cn.edu.mju.ccce.dtrsystem.bean.Reservation;
+import cn.edu.mju.ccce.dtrsystem.bean.User;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.IdGenerator;
 import cn.edu.mju.ccce.dtrsystem.dao.CourseDao;
 import cn.edu.mju.ccce.dtrsystem.dao.CourseTypeDao;
 import cn.edu.mju.ccce.dtrsystem.dao.LoginDao;
+import cn.edu.mju.ccce.dtrsystem.dao.ReservationDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,10 @@ public class CourseBmoImpl implements CourseBmo {
     @Qualifier("cn.edu.mju.ccce.dtrsystem.dao.LoginDao")
     protected LoginDao loginDao;
 
+    @Autowired
+    @Qualifier("cn.edu.mju.ccce.dtrsystem.dao.ReservationDao")
+    protected ReservationDao reservationDao;
+
     /**
      * 添加课程
      *
@@ -57,11 +64,14 @@ public class CourseBmoImpl implements CourseBmo {
             course.setCOURSE_ID(BigInteger.valueOf(IdGenerator.genLongId()));
             course.setEVALUATE_NBR(BigInteger.valueOf(IdGenerator.genLongId()));
             course.setCREAT_TIME(new Date());
-            courseDao.insertNewCourse(course);
-            return G.bmo.returnMap(true, "ok");
+            int insert = courseDao.insertNewCourse(course);
+            if (insert > 0) {
+                return G.bmo.returnMap(true, "ok");
+            }
+            return G.bmo.returnMap(false, "创建失败");
         } catch (Exception e) {
             log.error("新建课程异常：", e);
-            return G.bmo.returnMap(false, "创建失败！");
+            return G.bmo.returnMap(false, "创建异常");
         }
     }
 
@@ -117,8 +127,8 @@ public class CourseBmoImpl implements CourseBmo {
             } catch (NullPointerException e) {
                 return G.bmo.returnMap(false, "查询为空");
             }
-            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
-            returnMap.put("courseList",courseList);
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("courseList", courseList);
             return returnMap;
         } catch (Exception e) {
             log.error("查询发布课程异常:", e);
@@ -128,6 +138,7 @@ public class CourseBmoImpl implements CourseBmo {
 
     /**
      * 根据老师Nbr获取已完成的课程列表
+     *
      * @param teacherNbr
      * @return
      */
@@ -140,23 +151,79 @@ public class CourseBmoImpl implements CourseBmo {
             } catch (NullPointerException e) {
                 return G.bmo.returnMap(false, "查询为空");
             }
-            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
-            returnMap.put("courseDoneList",courseList);
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("courseDoneList", courseList);
             return returnMap;
         } catch (Exception e) {
             log.error("查询发布课程（完成）异常:", e);
             return G.bmo.returnMap(false, "查询异常");
         }
     }
+
+    /**
+     * 取消课程
+     *
+     * @param courseID
+     * @return
+     */
     @Override
-    public Map<String, Object> removeCourse(Map<String, Object> inMap) {
-        return null;
+    public Map<String, Object> cancelCourse(String courseID) {
+        try {
+            Course course = courseDao.selectCourseByID(courseID);
+            course.setCOURSE_STATUS(2);
+            int up = courseDao.updateCourse(course);
+            if (up > 0) {
+                return G.bmo.returnMap(true, "ok");
+            }
+            return G.bmo.returnMap(false, "取消失败");
+        } catch (Exception e) {
+            log.error("课程取消异常：", e);
+            return G.bmo.returnMap(false, "课程取消异常");
+        }
+    }
+
+    /**
+     * 更新发布课程信息
+     *
+     * @param course
+     * @return
+     */
+    @Override
+    public Map<String, Object> upDateCourse(Course course) {
+        try {
+            int result = courseDao.updateCourse(course);
+            if (result > 0) {
+                return G.bmo.returnMap(true, "ok");
+            }
+            return G.bmo.returnMap(false, "更新失败");
+        } catch (Exception e) {
+            log.error("更新课程信息异常：", e);
+            return G.bmo.returnMap(false, "更新课程信息异常");
+        }
     }
 
     @Override
-    public Map<String, Object> upDateCourse(Map<String, Object> inMap) {
-        return null;
+    public Map<String, Object> getCourseStuList(String courseID) {
+        try {
+            List<Reservation> reservationList = new ArrayList<>();
+            try {
+                reservationList = reservationDao.selectAllReservationRecordByCourseID(courseID);
+            } catch (NullPointerException e) {
+                return G.bmo.returnMap(false, "查询为空");
+            }
+            List<Map<String,Object>> userList = new ArrayList<>();
+            for (Reservation r : reservationList) {
+                long stuNbr = r.getUSER_NBR();
+                Map<String,Object> user = loginDao.selectUserAllMsgByUserNbr(String.valueOf(stuNbr));
+                userList.add(user);
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("userList",userList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("获取学生预约信息异常：", e);
+            return G.bmo.returnMap(false, "获取学生预约信息异常");
+        }
     }
-
 
 }

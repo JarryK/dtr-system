@@ -75,7 +75,7 @@
                     <th scope="col">时间</th>
                     <th scope="col">类型</th>
                     <th scope="col">名称</th>
-                    <th scope="col">总/已预约人数</th>
+                    <th scope="col">已预约/总人数</th>
                     <th scope="col">操作</th>
                 </tr>
                 </thead>
@@ -92,7 +92,7 @@
                     <th scope="col">时间</th>
                     <th scope="col">类型</th>
                     <th scope="col">名称</th>
-                    <th scope="col">总/已预约人数</th>
+                    <th scope="col">已预约/总人数</th>
                     <th scope="col">操作</th>
                 </tr>
                 </thead>
@@ -139,14 +139,14 @@
         <td class="align-middle">{{$value.course_TIME | formatDateString }}</td>
         <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
         <td class="align-middle">{{$value.course_NAME}}</td>
-        <td class="align-middle">{{$value.course_STU_NBR}}/{{$value.course_DONE_STU_NBR}}</td>
+        <td class="align-middle">{{$value.course_DONE_STU_NBR}}/{{$value.course_STU_NBR}}</td>
         <!--<td class="align-middle">{{$value.place}}</td>-->
         <td class="align-middle">
-            <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
-                  data-courseid="{{$value.COURSE_ID}}">详情</a>
+            <p><a href="javascript:;" class="text-decoration-none font-italic compile-btn"
+                  data-courseid="{{$value.COURSE_ID}}">编辑信息</a>
             </p>
-            <p><a href="javascript:;" class="text-decoration-none font-italic reservation-btn"
-                  data-courseid="{{$value.COURSE_ID}}">预约</a></p>
+            <p><a href="javascript:;" class="text-decoration-none font-italic student-det-btn"
+                  data-courseid="{{$value.COURSE_ID}}">预约详情</a></p>
         </td>
     </tr>
     {{/each}}{{/if}}
@@ -159,7 +159,7 @@
         <td class="align-middle">{{$value.course_TIME | formatDateString }}</td>
         <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
         <td class="align-middle">{{$value.course_NAME}}</td>
-        <td class="align-middle">{{$value.course_STU_NBR}}/{{$value.course_DONE_STU_NBR}}</td>
+        <td class="align-middle">{{$value.course_DONE_STU_NBR}}/{{$value.course_STU_NBR}}</td>
         <!--<td class="align-middle">{{$value.place}}</td>-->
         <td class="align-middle">
             <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
@@ -253,7 +253,7 @@
             });
             issue.el('.nav-link').off('click').on('click', function () {
                 issue.getCourseList();
-            })
+            });
         };
         return {
             el: function (expr) {
@@ -292,10 +292,24 @@
                         } else {
                             issue.el("#issue-done-class-msg-container").html(template('issue-done-class-msg-art', {courseDoneList: courseDoneList}))
                         }
+                        issue.tableClick();
                     }
                 });
+            },
+            tableClick:function () {
+                issue.el('.student-det-btn').off('click').on('click',function () {
+                    var courseID = $(this).data('courseid');
+                    $.post('/dtr/issue/getSelfIssue',{
+                        courseID:courseID
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {}
 
-            }
+
+                    });
+                });
+            },
         }
     })();
     $(function () {
