@@ -48,7 +48,7 @@ var App = function () {
                 return $.ajax(_options_apply);
             },
         });
-        //
+        // 笨方法，不过能用就好了
         $("#header-goto-issue").off('click').on('click', function () {
             App.goIssueByNewPage();
         });
@@ -247,9 +247,9 @@ var App = function () {
                     });
                     return;
                 },
-                msgAlert: function (content) {
+                msgAlert: function (title,content) {
                     Swal.fire({
-                        title: '<strong>记录</strong>',
+                        title: '<strong>'+title+'</strong>',
                         type: 'info',
                         html: content, // HTML
                         focusConfirm: true, //聚焦到确定按钮

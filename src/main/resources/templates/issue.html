@@ -105,7 +105,40 @@
 
 </div>
 
+<!-- Modal -->
 <!-- 模态框开始 -->
+<div class="modal fade" id="stuNameListModel" tabindex="-1" role="dialog" aria-labelledby="stuNameListModelLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="stuNameListModelLabel">学生预约列表</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding-bottom: 0;">
+                <table class="table text-center table-striped  shadow">
+                    <thead>
+                    <tr>
+                        <th scope="col">序号</th>
+                        <th scope="col">学号</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="stu-list-msg-container">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <!--                <button type="button" class="btn btn-primary">Save changes</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="checkInput" tabindex="-1" role="dialog" aria-labelledby="checkInputTitle"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -132,6 +165,7 @@
 </div>
 <!-- 模态框结束 -->
 
+<!-- 数据模板开始 -->
 <script type="text/html" id="issue-class-msg-art">
     {{ if courseList && courseList.length>0 }}{{each courseList}}
     <tr>
@@ -143,15 +177,14 @@
         <!--<td class="align-middle">{{$value.place}}</td>-->
         <td class="align-middle">
             <p><a href="javascript:;" class="text-decoration-none font-italic compile-btn"
-                  data-courseid="{{$value.COURSE_ID}}">编辑信息</a>
+                  data-courseid="{{$value.course_ID}}">编辑信息</a>
             </p>
             <p><a href="javascript:;" class="text-decoration-none font-italic student-det-btn"
-                  data-courseid="{{$value.COURSE_ID}}">预约详情</a></p>
+                  data-courseid="{{$value.course_ID}}">预约详情</a></p>
         </td>
     </tr>
     {{/each}}{{/if}}
 </script>
-
 <script type="text/html" id="issue-done-class-msg-art">
     {{ if courseDoneList && courseDoneList.length>0 }}{{each courseDoneList}}
     <tr>
@@ -163,14 +196,29 @@
         <!--<td class="align-middle">{{$value.place}}</td>-->
         <td class="align-middle">
             <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
-                  data-courseid="{{$value.COURSE_ID}}">详情</a>
+                  data-courseid="{{$value.course_ID}}">详情</a>
             </p>
             <p><a href="javascript:;" class="text-decoration-none font-italic reservation-btn"
-                  data-courseid="{{$value.COURSE_ID}}">预约</a></p>
+                  data-courseid="{{$value.course_ID}}">预约</a></p>
         </td>
     </tr>
     {{/each}}{{/if}}
 </script>
+<script type="text/html" id="stu-list-msg-art">
+    {{ if stuList && stuList.length>0 }}{{each stuList}}
+    <tr>
+        <th class="align-middle" scope="row">{{$index+1}}</th>
+        <td class="align-middle">{{$value.USER_NBR}}</td>
+        <td class="align-middle">{{$value.USER_NAME}}</td>
+        <td class="align-middle">
+            <p><a href="javascript:;" class="detailed text-decoration-none student-detMsg"
+                  data-courseid="{{$value.course_ID}}">详情</a>
+            </p>
+        </td>
+    </tr>
+    {{/each}}{{/if}}
+</script>
+<!-- 数据模板结束 -->
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
@@ -296,19 +344,36 @@
                     }
                 });
             },
-            tableClick:function () {
-                issue.el('.student-det-btn').off('click').on('click',function () {
+            tableClick: function () {
+                issue.el('.student-det-btn').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
-                    $.post('/dtr/issue/getSelfIssue',{
-                        courseID:courseID
+                    $.post('/dtr/issue/getCourseStu', {
+                        courseID: courseID
                     }).done(function (data) {
                         if (!App.checker(data)) {
                             return;
-                        } else {}
-
-
+                        } else {
+                            var stuNameList = data.userList;
+                            if (stuNameList.length == 0) {
+                                App.topAlert("暂无预约",4);
+                                return;
+                            }
+                            issue.paddingStuNameList(stuNameList)
+                                .then(function () {issue.el('#stuNameListModel').modal('show');return this;})
+                                .then(function (){issue.tableClick(); return this;}); //后置触发
+                        }
                     });
                 });
+                issue.el('.student-detMsg').off('click').on('click', function () {
+                    App.topAlert("暂不支持此功能", 4)
+                });
+            },
+            // 填充课程学生名单列表
+            paddingStuNameList: function (userList) {
+                return $.Deferred(function (defer) {
+                    issue.el("#stu-list-msg-container").html(template('stu-list-msg-art', {stuList: userList}));
+                    defer.resolve();
+                }).promise();
             },
         }
     })();
