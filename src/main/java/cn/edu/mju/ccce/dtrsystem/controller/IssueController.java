@@ -1,8 +1,6 @@
 package cn.edu.mju.ccce.dtrsystem.controller;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
-import cn.edu.mju.ccce.dtrsystem.bean.Reservation;
-import cn.edu.mju.ccce.dtrsystem.bean.User;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
@@ -52,6 +50,12 @@ public class IssueController {
     @RequestMapping("/insert")
     @ResponseBody
     public Map<String, Object> insert(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String sessionID = "";
+        try{
+            sessionID = httpSession.getId();
+        }catch (Exception e){
+            return G.page.returnMap(false, "请先登录");
+        }
         String courseName = MapTool.getString(inMap, "courseName");
         String typeName = MapTool.getString(inMap, "typeName");
         String courseDetail = MapTool.getString(inMap, "courseDetail");
@@ -74,7 +78,6 @@ public class IssueController {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            String sessionID = httpSession.getId();
             Map<String, Object> uMgs = (Map<String, Object>) httpSession.getAttribute(sessionID);
             //session里面最好改成用户类,不过比较懒  先放着
             String uName = MapTool.getString(uMgs, "USER_NAME");
@@ -98,7 +101,6 @@ public class IssueController {
         } catch (Exception e) {
             log.error("新建异常：", e);
             return G.page.returnMap(false, "新建异常");
-
         }
 
     }
@@ -112,12 +114,17 @@ public class IssueController {
     @RequestMapping("/getSelfIssue")
     @ResponseBody
     public Map<String, Object> getSelfIssue(HttpSession httpSession) {
+        String sessionID = "";
         try{
-            String sessionID = httpSession.getId();
+            sessionID = httpSession.getId();
+        }catch (Exception e){
+            return G.page.returnMap(false, "请先登录");
+        }
+        try {
             Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
             String type_name = MapTool.getString(uMsg, "TYPE_NAME");
             if (!"教师".equals(type_name)) {
-                return G.page.returnMap(false, "非教师用户不能操作");
+                return G.page.returnMap(false, "非教师用户，不能操作");
             }
             String uNbr = MapTool.getString(uMsg, "USER_NBR");
             Map<String, Object> Map = new HashMap<>();
@@ -149,35 +156,146 @@ public class IssueController {
             returnMap.put("courseList", courseList);
             returnMap.put("courseDoneList", courseDoneList);
             return returnMap;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("查询异常：", e);
             return G.page.returnMap(false, "查询异常");
         }
     }
 
+    /**
+     * 获得已预约本课程的学生名单
+     *
+     * @param inMap
+     * @return
+     */
     @RequestMapping("/getCourseStu")
     @ResponseBody
-    public Map<String,Object> getCourseStu(@RequestBody Map<String,Object> inMap){
+    public Map<String, Object> getCourseStu(@RequestBody Map<String, Object> inMap) {
         String courseID = MapTool.getString(inMap, "courseID");
         try {
             courseID.substring(1);//探测非空;
         } catch (Exception e) {
-            return G.page.returnMap(false, "输入为空！");
+            return G.page.returnMap(false, "输入为空");
+        }
+        try {
+            Map<String, Object> relMap = courseBmo.getCourseStuList(courseID);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Map<String, Object>> userList = (List<Map<String, Object>>) MapTool.getObject(relMap, "userList");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("userList", userList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询异常：", e);
+            return G.page.returnMap(false, "查询异常");
+        }
+    }
+
+    /**
+     * 更新课程信息
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("/updateCourse")
+    @ResponseBody
+    public Map<String, Object> updateCourse(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String sessionID = "";
+        try{
+            sessionID = httpSession.getId();
+        }catch (Exception e){
+            return G.page.returnMap(false, "请先登录");
+        }
+        String courseID = MapTool.getString(inMap, "courseID");
+        String courseName = MapTool.getString(inMap, "courseName");
+        String courseDetail = MapTool.getString(inMap, "courseDetail");
+        String courseTimeStr = MapTool.getString(inMap, "courseTime");
+        try {
+            courseID.substring(1);//探测非空;
+            courseName.substring(1);
+            courseTimeStr.substring(1);
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空");
         }
         try{
-            Map<String,Object> relMap = courseBmo.getCourseStuList(courseID);
+            //给定输出格式
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date courseTime = null;
+            try {
+                courseTime = format.parse(courseTimeStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Map<String, Object> uMap = (Map<String, Object>) httpSession.getAttribute(sessionID);
+            String type_name = MapTool.getString(uMap, "TYPE_NAME");
+            if (!"教师".equals(type_name)) {
+                return G.page.returnMap(false, "非教师用户，不能操作");
+            }
+            Map<String,Object> relMap = courseBmo.getCourseDetByID(courseID);
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean){
                 String msg = G.bmo.returnMapMsg(relMap);
                 return G.page.returnMap(false,msg);
             }
-            List<Map<String,Object>> userList = (List<Map<String,Object>>) MapTool.getObject(relMap,"userList");
-            Map<String,Object> returnMap = G.page.returnMap(true,"ok");
-            returnMap.put("userList",userList);
-            return returnMap;
-        }catch (Exception e){
+            Course course = (Course) MapTool.getObject(relMap,"courseDet");
+            course.setCOURSE_NAME(courseName);
+            course.setCOURSE_DETAIL(courseDetail);
+            course.setCOURSE_TIME(courseTime);
+            Map<String,Object> updateMap = courseBmo.upDateCourse(course);
+            boolean updateMapBoolean = G.bmo.returnMapBool(updateMap);
+            if (!updateMapBoolean){
+                String msg = G.bmo.returnMapMsg(updateMap);
+                return G.page.returnMap(false,msg);
+            }
+            return G.page.returnMap(true,"ok");
 
+        }catch (Exception e){
+            log.error("更新课程异常：", e);
+            return G.page.returnMap(false, "更新课程异常");
         }
-        return null;
     }
+        /**
+         * 取消以发布的课程
+         * @param inMap
+         * @param httpSession
+         * @return
+         */
+    @RequestMapping("/cancelCourse")
+    @ResponseBody
+    public Map<String, Object> cancelCourse(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String sessionID = "";
+        try{
+            sessionID = httpSession.getId();
+        }catch (Exception e){
+            return G.page.returnMap(false, "请先登录");
+        }
+        String courseID = MapTool.getString(inMap, "courseID");
+        try {
+            courseID.substring(1);//探测非空;
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空");
+        }
+        try {
+            Map<String, Object> uMap = (Map<String, Object>) httpSession.getAttribute(sessionID);
+            String type_name = MapTool.getString(uMap, "TYPE_NAME");
+            if (!"教师".equals(type_name)) {
+                return G.page.returnMap(false, "非教师用户，不能操作");
+            }
+            Map<String, Object> relMap = courseBmo.cancelCourse(courseID);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean){
+                String msg = G.page.returnMapMsg(relMap);
+                return G.page.returnMap(false,msg);
+            }
+            return G.page.returnMap(true,"ok");
+        } catch (Exception e) {
+            log.error("取消课程异常：", e);
+            return G.page.returnMap(false, "取消课程异常");
+        }
+    }
+
+
 }

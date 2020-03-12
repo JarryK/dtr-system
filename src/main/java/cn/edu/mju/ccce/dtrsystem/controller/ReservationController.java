@@ -91,7 +91,7 @@ public class ReservationController {
         } catch (Exception e) {
             return G.page.returnMap(false, "请先登录");
         }
-        String courseID = MapTool.getString(inMap, "index");
+        String courseID = MapTool.getString(inMap, "courseID");
         try {
             courseID.substring(1);// 探测非空
         } catch (Exception e) {
@@ -154,7 +154,7 @@ public class ReservationController {
         } catch (Exception e) {
             return G.page.returnMap(false, "请先登录");
         }
-        String courseID = MapTool.getString(inMap, "index");
+        String courseID = MapTool.getString(inMap, "courseID");
         try {
             courseID.substring(1);// 探测非空
         } catch (Exception e) {
@@ -200,13 +200,13 @@ public class ReservationController {
     /**
      * 查询课程详细
      *
-     * @param httpSession
+     * @param inMap
      * @return
      */
     @RequestMapping("/getCourseDet")
     @ResponseBody
     public Map<String, Object> getCourseDet(@RequestBody Map<String, Object> inMap) {
-        String courseID = MapTool.getString(inMap, "index");
+        String courseID = MapTool.getString(inMap, "courseID");
         try {
             courseID.substring(1);// 探测非空
         } catch (Exception e) {

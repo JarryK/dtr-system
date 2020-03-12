@@ -242,7 +242,7 @@
                 reservation.el('.detailed').off('click').on('click', function () {
                     var index = $(this).data("courseid");
                     $.post('/dtr/rese/getCourseDet', {
-                        index: index
+                        courseID: index
                     }).done(function (data) {
                         if (!App.checker(data)) {
                             return;
@@ -255,7 +255,7 @@
                 reservation.el('.reservation-btn').off('click').on('click', function () {
                     var index = $(this).data("courseid");
                     $.post('/dtr/rese/reseCourse', {
-                        index: index
+                        courseID: index
                     }).done(function (data) {
                         if (!App.checker(data)) {
                             return;
@@ -270,7 +270,7 @@
                     var index = $(this).data("courseid");
                     App.selectAlert('操作提示','确定吗',4,function(){
                         $.post('/dtr/rese/unReseCourse', {
-                            index: index
+                            courseID: index
                         }).done(function (data) {
                             if (!App.checker(data)) {
                                 return;
