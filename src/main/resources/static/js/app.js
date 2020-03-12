@@ -1,6 +1,7 @@
 document.write("<script src='/js/SweetAlert2.js'></script>");
 document.write("<script src='/js/template.js'></script>");
 var App = function () {
+    // 全局设置
     var globalSetting = function () {
         // 扩展时间日期格式功能
         Date.prototype.format = function (fmt) {
@@ -48,26 +49,8 @@ var App = function () {
                 return $.ajax(_options_apply);
             },
         });
-        // 笨方法，不过能用就好了
-        $("#header-goto-issue").off('click').on('click', function () {
-            App.goIssueByNewPage();
-        });
-        $("#header-goto-reservation").off('click').on('click', function () {
-            App.goReservationByNewPage();
-        });
-        $("#header-goto-evaluate").off('click').on('click', function () {
-            App.goEvaluateByNewPage();
-        });
-        $("#header-goto-history").off('click').on('click', function () {
-            App.goHistoryByNewPage();
-        });
-        $("#header-loginOut").off('click').on('click', function () {
-            var uName =$('#header-userDropdown').data('uName');
-            var uNbr = $('#header-userDropdown').data('uNbr');
-            App.loginOut(uNbr, uName);
-        });
     };
-    //page_turn页面跳转函数集
+    // page_turn页面跳转函数集
     var page_turn_functions = (function () {
         return {
             //在自身窗口打开
@@ -302,8 +285,7 @@ var App = function () {
                 }
                 ,
             }
-        }
-    )();
+        })();
     // utils检验函数集
     var utils_checker = (function () {
         return {
@@ -335,13 +317,38 @@ var App = function () {
             }
         }
     })();
+    // 顶部跳转
+    var top_menu_click = (function () {
+        // 笨方法，不过能用就好了
+        $("#header-goto-issue").off('click').on('click', function () {
+            App.goIssueByNewPage();
+        });
+        $("#header-goto-reservation").off('click').on('click', function () {
+            App.goReservationByNewPage();
+        });
+        $("#header-goto-evaluate").off('click').on('click', function () {
+            App.goEvaluateByNewPage();
+        });
+        $("#header-goto-history").off('click').on('click', function () {
+            App.goHistoryByNewPage();
+        });
+        $("#header-loginOut").off('click').on('click', function () {
+            var uName =$('#header-userDropdown').data('uName');
+            var uNbr = $('#header-userDropdown').data('uNbr');
+            App.loginOut(uNbr, uName);
+        });
+    })();
     return {
         init: function () {
             // 初始化全局设置
-            globalSetting($.extend(true, App, utils_functions, utils_ui_functions, utils_checker, page_turn_functions)); // 全局功能设置
-            // 绑定全局事件
-            // bindEvents();
-            return this;
+            return App.bindEvents()
+                .then(function () { top_menu_click(); return this});// 都加载完了再加载顶部跳转按钮，防止没有及时绑定按钮事件
+        },
+        bindEvents:function(){
+            return $.Deferred(function (defer) {
+                globalSetting($.extend(true, App, utils_functions, utils_ui_functions, utils_checker, page_turn_functions)); // 全局功能设置
+                defer.resolve();
+            }).promise();
         },
     }
 }();

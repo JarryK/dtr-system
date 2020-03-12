@@ -214,7 +214,7 @@ public class ReservationController {
             //不做查询是否为空检查  bmo已经做了检查返回
             // 阿里fastjson返回首字母总是小写,暂时没有更好的解决办法  暂时这样
             Map<String, Object> returnMap = G.page.returnMap(true, "ok");
-            returnMap.put("courseDet", courseDet.getCOURSE_DETAIL());
+            returnMap.put("courseDet", courseDet);
             return returnMap;
         } catch (Exception e) {
             log.error("查询课程详细异常：", e);
