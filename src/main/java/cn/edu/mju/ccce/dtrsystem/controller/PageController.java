@@ -21,7 +21,6 @@ public class PageController {
     public String home(HttpSession session) {
         try {
             Map<String, Object> user = (Map<String, Object>) session.getAttribute(session.getId());
-
         } catch (Exception e) {
             return "login";
         }

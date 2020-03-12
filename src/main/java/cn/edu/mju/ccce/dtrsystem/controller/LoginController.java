@@ -103,7 +103,6 @@ public class LoginController {
             }
             session.removeAttribute(sessionID);
             return G.page.returnMap(true, "ok");
-
         } catch (Exception e) {
             return G.page.returnMap(false, "退出失败");
         }

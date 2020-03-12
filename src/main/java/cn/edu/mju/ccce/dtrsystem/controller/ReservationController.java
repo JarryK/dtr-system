@@ -85,6 +85,12 @@ public class ReservationController {
     @RequestMapping("/reseCourse")
     @ResponseBody
     public Map<String, Object> reserCourse(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String sessionId = "";
+        try {
+            sessionId = httpSession.getId();
+        } catch (Exception e) {
+            return G.page.returnMap(false, "请先登录");
+        }
         String courseID = MapTool.getString(inMap, "index");
         try {
             courseID.substring(1);// 探测非空
@@ -93,7 +99,6 @@ public class ReservationController {
             return G.page.returnMap(false, "预约条件异常");
         }
         try {
-            String sessionId = httpSession.getId();
             Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionId);
             String type_name = MapTool.getString(uMsg, "TYPE_NAME");
             if (!"学生".equals(type_name)) {
@@ -143,6 +148,12 @@ public class ReservationController {
     @RequestMapping("/unReseCourse")
     @ResponseBody
     public Map<String, Object> unReseCourse(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String sessionID = "";
+        try {
+            sessionID = httpSession.getId();
+        } catch (Exception e) {
+            return G.page.returnMap(false, "请先登录");
+        }
         String courseID = MapTool.getString(inMap, "index");
         try {
             courseID.substring(1);// 探测非空
@@ -151,8 +162,7 @@ public class ReservationController {
             return G.page.returnMap(false, "预约条件异常");
         }
         try {
-            String sessionID = httpSession.getId();
-            Map<String,Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
+            Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
             String type_name = MapTool.getString(uMsg, "TYPE_NAME");
             if (!"学生".equals(type_name)) {
                 return G.page.returnMap(false, "非学生用户不能操作");
@@ -169,18 +179,18 @@ public class ReservationController {
                 for (Reservation reservation : reservationList) {
                     String reservationCourseID = String.valueOf(reservation.getCOURSE_ID());
                     if (courseID.equals(reservationCourseID)) {
-                        Map<String,Object> relMap = reservationBmo.updateReservationCourseStatus(courseID,uNbr,"2");
+                        Map<String, Object> relMap = reservationBmo.updateReservationCourseStatus(courseID, uNbr, "2");
                         boolean relMapBoolean = G.bmo.returnMapBool(relMap);
-                        if (!relMapBoolean){
+                        if (!relMapBoolean) {
                             String msg = G.bmo.returnMapMsg(relMap);
-                            return G.page.returnMap(false,msg);
+                            return G.page.returnMap(false, msg);
                         }
 
-                        return  G.page.returnMap(true, "ok");
+                        return G.page.returnMap(true, "ok");
                     }
                 }
             }
-            return G.page.returnMap(false,"预约历史为空，请刷新页面后重试");
+            return G.page.returnMap(false, "预约历史为空，请刷新页面后重试");
         } catch (Exception e) {
 
         }
@@ -195,7 +205,7 @@ public class ReservationController {
      */
     @RequestMapping("/getCourseDet")
     @ResponseBody
-    public Map<String, Object> getCourseDet(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+    public Map<String, Object> getCourseDet(@RequestBody Map<String, Object> inMap) {
         String courseID = MapTool.getString(inMap, "index");
         try {
             courseID.substring(1);// 探测非空
@@ -232,12 +242,14 @@ public class ReservationController {
     @RequestMapping("/getSelfHistory")
     @ResponseBody
     public Map<String, Object> getSelfReservationHistory(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String sessionID = "";
         try {
-            String sessionID = httpSession.getId();
+            sessionID = httpSession.getId();
+        } catch (Exception e) {
+            return G.page.returnMap(false, "请先登录");
+        }
+        try {
             Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
-            if (uMsg.isEmpty()) {
-                return G.page.returnMap(false, "请先登录");
-            }
             String uNbr = MapTool.getString(uMsg, "USER_NBR");
             Map<String, Object> reservationMap = reservationBmo.getAllReservationCourseByUserNbr(uNbr);
             boolean reservationMapBoolean = G.bmo.returnMapBool(reservationMap);
