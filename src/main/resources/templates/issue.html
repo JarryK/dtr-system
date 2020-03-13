@@ -454,7 +454,7 @@
                         if (!App.checker(data)) {
                             return;
                         } else {
-                            App.alert("修改成功");
+                            App.alert("修改成功","",1,function () {issue.getCourseList()});
                         }
                     });
                 });
@@ -467,7 +467,7 @@
                             if (!App.checker(data)) {
                                 return;
                             } else {
-                                App.alert("取消成功")
+                                App.alert("取消成功","",1,function () {issue.getCourseList()});
                             }
                         });
                     });

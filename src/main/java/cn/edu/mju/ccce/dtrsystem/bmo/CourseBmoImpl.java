@@ -2,7 +2,6 @@ package cn.edu.mju.ccce.dtrsystem.bmo;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
 import cn.edu.mju.ccce.dtrsystem.bean.Reservation;
-import cn.edu.mju.ccce.dtrsystem.bean.User;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.IdGenerator;
 import cn.edu.mju.ccce.dtrsystem.dao.CourseDao;
@@ -170,6 +169,22 @@ public class CourseBmoImpl implements CourseBmo {
     public Map<String, Object> cancelCourse(String courseID) {
         try {
             Course course = courseDao.selectCourseByID(courseID);
+            List<Reservation> reservationList = new ArrayList<>();
+            try {
+                reservationList = reservationDao.selectAllReservationRecordByCourseID(courseID);
+            } catch (NullPointerException e) {
+            }
+            if (!reservationList.isEmpty()) {
+                for (Reservation r : reservationList) {
+                    r.setRESERVATION_STATUS(2);
+                    String userNbr = String.valueOf(r.getUSER_NBR());
+                    reservationDao.updateReservationCourseStatusByCourseID(courseID, userNbr, "2");
+                }
+            }
+            int i = courseDao.upDateCourseDoneStuNbr("0", courseID);
+            if (i <= 0) {
+                return G.bmo.returnMap(false, "取消失败");
+            }
             course.setCOURSE_STATUS(2);
             int up = courseDao.updateCourse(course);
             if (up > 0) {
@@ -211,14 +226,14 @@ public class CourseBmoImpl implements CourseBmo {
             } catch (NullPointerException e) {
                 return G.bmo.returnMap(false, "查询为空");
             }
-            List<Map<String,Object>> userList = new ArrayList<>();
+            List<Map<String, Object>> userList = new ArrayList<>();
             for (Reservation r : reservationList) {
                 long stuNbr = r.getUSER_NBR();
-                Map<String,Object> user = loginDao.selectUserAllMsgByUserNbr(String.valueOf(stuNbr));
+                Map<String, Object> user = loginDao.selectUserAllMsgByUserNbr(String.valueOf(stuNbr));
                 userList.add(user);
             }
-            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
-            returnMap.put("userList",userList);
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("userList", userList);
             return returnMap;
         } catch (Exception e) {
             log.error("获取学生预约信息异常：", e);
