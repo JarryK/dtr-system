@@ -72,4 +72,12 @@ public interface CourseBmo {
      * @return
      */
     public Map<String,Object> getCourseStuList(String course);
+
+    /**
+     * 特殊，定时检测job专用
+     * 控制课程过期
+     * @param courseID
+     * @return
+     */
+    public Map<String,Object> passDueCourse (String courseID);
 }

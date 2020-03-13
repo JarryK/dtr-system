@@ -444,7 +444,7 @@
                     var courseID = issue.el('.del-course').data("courseid");
                     var course_name =  issue.el("#course_name").val();
                     var course_detail = issue.el("#course_detail").val();
-                    var course_time = issue.el("#course_time").val();
+                    var course_time = issue.el("#course_time").val() + ':00';
                     $.post('/dtr/issue/updateCourse', {
                         courseID: courseID,
                         courseName:course_name,

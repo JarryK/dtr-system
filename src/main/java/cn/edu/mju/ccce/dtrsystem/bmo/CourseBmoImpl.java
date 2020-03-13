@@ -176,7 +176,6 @@ public class CourseBmoImpl implements CourseBmo {
             }
             if (!reservationList.isEmpty()) {
                 for (Reservation r : reservationList) {
-                    r.setRESERVATION_STATUS(2);
                     String userNbr = String.valueOf(r.getUSER_NBR());
                     reservationDao.updateReservationCourseStatusByCourseID(courseID, userNbr, "2");
                 }
@@ -238,6 +237,43 @@ public class CourseBmoImpl implements CourseBmo {
         } catch (Exception e) {
             log.error("获取学生预约信息异常：", e);
             return G.bmo.returnMap(false, "获取学生预约信息异常");
+        }
+    }
+
+    /**
+     * 特殊，定时检测job专用
+     * 控制课程过期
+     * @param courseID
+     * @return
+     */
+    @Override
+    public Map<String, Object> passDueCourse(String courseID) {
+        try {
+            Course course = courseDao.selectCourseByID(courseID);
+            List<Reservation> reservationList = new ArrayList<>();
+            try {
+                reservationList = reservationDao.selectAllReservationRecordByCourseID(courseID);
+            } catch (NullPointerException e) {
+            }
+            if (!reservationList.isEmpty()) {
+                for (Reservation r : reservationList) {
+                    String userNbr = String.valueOf(r.getUSER_NBR());
+                    reservationDao.updateReservationCourseStatusByCourseID(courseID, userNbr, "1");
+                }
+            }
+            int i = courseDao.upDateCourseDoneStuNbr("0", courseID);
+            if (i <= 0) {
+                return G.bmo.returnMap(false, "过期失败");
+            }
+            course.setCOURSE_STATUS(1);
+            int up = courseDao.updateCourse(course);
+            if (up > 0) {
+                return G.bmo.returnMap(true, "ok");
+            }
+            return G.bmo.returnMap(false, "过期失败");
+        } catch (Exception e) {
+            log.error("课程过期异常：", e);
+            return G.bmo.returnMap(false, "课程过期异常");
         }
     }
 

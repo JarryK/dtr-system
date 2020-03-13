@@ -1,16 +1,23 @@
 package cn.edu.mju.ccce.dtrsystem.job;
 
+import cn.edu.mju.ccce.dtrsystem.bean.Course;
+import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
+import cn.edu.mju.ccce.dtrsystem.bmo.ReservationBmo;
+import cn.edu.mju.ccce.dtrsystem.common.G;
+import cn.edu.mju.ccce.dtrsystem.common.MapTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <b>项目名称：</b>dtr-system<br>
@@ -27,9 +34,44 @@ public class CourseDetectionJob implements SchedulingConfigurer, Runnable, Trigg
      */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+    @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.CourseBmoImpl")
+    private CourseBmo courseBmo;
+
+    @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.ReservationBmoImpl")
+    private ReservationBmo reservationBmo;
+
     @Override
     public void run() {
-        log.info("执行检测任务："+new Date());
+        log.info("执行检测任务：" + new Date());
+        try {
+            Map<String, Object> courseListMap = reservationBmo.getCanReservationCourseList();
+            boolean courseListMapBoolean = G.bmo.returnMapBool(courseListMap);
+            if (!courseListMapBoolean) {
+                String msg = G.bmo.returnMapMsg(courseListMap);
+                log.error("获取检测任务错误：", msg);
+                return;
+            }
+            List<Course> courseList = (List<Course>) MapTool.getObject(courseListMap, "courseList");
+            if (courseList.isEmpty()) {
+                log.info("可预约课程列表为空");
+                return;
+            }
+            for (Course c : courseList) {
+                Date nowTime = new Date();
+                Date courseTime = c.getCOURSE_TIME();
+                Long i = nowTime.getTime() - courseTime.getTime();
+                if (i > -10 * 60 * 1000) {
+                    String courseID = String.valueOf(c.getCOURSE_ID());
+                    Map<String,Object> ralMap = courseBmo.passDueCourse(courseID);
+                    if (!G.bmo.returnMapBool(ralMap)){
+                        log.error("更新状态异常：",G.bmo.returnMapMsg(ralMap));
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            log.error("执行检测任务异常:", e);
+        }
     }
 
     @Override

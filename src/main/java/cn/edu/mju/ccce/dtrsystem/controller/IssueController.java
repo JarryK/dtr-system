@@ -60,24 +60,19 @@ public class IssueController {
         String typeName = MapTool.getString(inMap, "typeName");
         String courseDetail = MapTool.getString(inMap, "courseDetail");
         String courseStuNbr = MapTool.getString(inMap, "courseStuNbr");
+        String courseTimeStr = MapTool.getString(inMap,"courseTime");
         try {
             courseName.substring(1);//探测非空
             typeName.substring(1);
             courseDetail.substring(1);
             courseStuNbr.substring(1);
+            courseTimeStr.substring(1);
         } catch (Exception e) {
             return G.page.returnMap(false, "输入为空！");
         }
         try {
             int typeId = courseBmo.getCourseIDbyName(typeName);
-            //给定输出格式
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date courseTime = null;
-            try {
-                courseTime = format.parse(MapTool.getString(inMap, "courseTime"));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            Date courseTime = formatTimeStrToDate(courseTimeStr);
             Map<String, Object> uMgs = (Map<String, Object>) httpSession.getAttribute(sessionID);
             //session里面最好改成用户类,不过比较懒  先放着
             String uName = MapTool.getString(uMgs, "USER_NAME");
@@ -90,6 +85,7 @@ public class IssueController {
             course.setCOURSE_STU_NBR(Integer.parseInt(courseStuNbr));
             course.setCOURSE_TIME(courseTime);
             course.setCOURSE_TEACHER_NAME(uName);
+            course.setCOURSE_STATUS(0);
             course.setCOURSE_TEACHER_NBR(Integer.parseInt(userNbr));
             Map<String, Object> relMap = courseBmo.addCourse(course);
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
@@ -105,6 +101,16 @@ public class IssueController {
 
     }
 
+    private Date formatTimeStrToDate(String time){
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date courseTime = null;
+        try {
+            courseTime = format.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return courseTime;
+    }
     /**
      * 获取所有已发布的课程
      *
@@ -212,7 +218,7 @@ public class IssueController {
         String courseID = MapTool.getString(inMap, "courseID");
         String courseName = MapTool.getString(inMap, "courseName");
         String courseDetail = MapTool.getString(inMap, "courseDetail");
-        String courseTimeStr = MapTool.getString(inMap, "courseTime");
+        String courseTimeStr = MapTool.getString(inMap,"courseTime");
         try {
             courseID.substring(1);//探测非空;
             courseName.substring(1);
@@ -222,13 +228,7 @@ public class IssueController {
         }
         try{
             //给定输出格式
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date courseTime = null;
-            try {
-                courseTime = format.parse(courseTimeStr);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            Date courseTime = formatTimeStrToDate(courseTimeStr);
             Map<String, Object> uMap = (Map<String, Object>) httpSession.getAttribute(sessionID);
             String type_name = MapTool.getString(uMap, "TYPE_NAME");
             if (!"教师".equals(type_name)) {
