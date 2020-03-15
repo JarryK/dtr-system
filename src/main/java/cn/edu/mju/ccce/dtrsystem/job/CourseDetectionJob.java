@@ -42,7 +42,8 @@ public class CourseDetectionJob implements SchedulingConfigurer, Runnable, Trigg
 
     @Override
     public void run() {
-        log.info("执行检测任务：" + new Date());
+        Date nowTime = new Date();
+        log.info("执行检测任务-开始");
         try {
             Map<String, Object> courseListMap = reservationBmo.getCanReservationCourseList();
             boolean courseListMapBoolean = G.bmo.returnMapBool(courseListMap);
@@ -57,20 +58,22 @@ public class CourseDetectionJob implements SchedulingConfigurer, Runnable, Trigg
                 return;
             }
             for (Course c : courseList) {
-                Date nowTime = new Date();
+
                 Date courseTime = c.getCOURSE_TIME();
                 Long i = nowTime.getTime() - courseTime.getTime();
                 if (i > -10 * 60 * 1000) {
                     String courseID = String.valueOf(c.getCOURSE_ID());
-                    Map<String,Object> ralMap = courseBmo.passDueCourse(courseID);
-                    if (!G.bmo.returnMapBool(ralMap)){
-                        log.error("更新状态异常：",G.bmo.returnMapMsg(ralMap));
+                    Map<String, Object> ralMap = courseBmo.passDueCourse(courseID);
+                    if (!G.bmo.returnMapBool(ralMap)) {
+                        log.error("更新状态异常：", G.bmo.returnMapMsg(ralMap));
                     }
                 }
             }
 
         } catch (Exception e) {
             log.error("执行检测任务异常:", e);
+        } finally {
+            log.info("执行检测任务-结束，用时" + (new Date().getTime() - nowTime.getTime()) + "毫秒");
         }
     }
 
