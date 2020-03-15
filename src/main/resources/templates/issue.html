@@ -116,7 +116,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="stuNameListModelLabel">学生预约列表</h5>
+                <h5 class="modal-title" id="stuNameListModelLabel">学生列表</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -221,11 +221,8 @@
         <td class="align-middle">{{$value.course_DONE_STU_NBR}}/{{$value.course_STU_NBR}}</td>
         <!--<td class="align-middle">{{$value.place}}</td>-->
         <td class="align-middle">
-            <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
-                  data-courseid="{{$value.course_ID}}">详情</a>
-            </p>
-            <p><a href="javascript:;" class="text-decoration-none font-italic reservation-btn"
-                  data-courseid="{{$value.course_ID}}">预约</a></p>
+            <p><a href="javascript:;" class="text-decoration-none font-italic student-done-det-btn"
+                  data-courseid="{{$value.course_ID}}">学生名单</a></p>
         </td>
     </tr>
     {{/each}}{{/if}}
@@ -413,6 +410,26 @@
                             var stuNameList = data.userList;
                             if (stuNameList.length == 0) {
                                 App.topAlert("暂无预约",4);
+                                return;
+                            }
+                            // 先填充数据
+                            issue.paddingStuNameList(stuNameList)
+                                .then(function () {issue.el('#stuNameListModel').modal('show');return this;})
+                                .then(function (){issue.tableClick(); return this;}); //后置触发
+                        }
+                    });
+                });
+                issue.el('.student-done-det-btn').off('click').on('click', function () {
+                    var courseID = $(this).data('courseid');
+                    $.post('/dtr/issue/getDoneCourseStu', {
+                        courseID: courseID
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            var stuNameList = data.userList;
+                            if (stuNameList.length == 0) {
+                                App.topAlert("暂无记录",4);
                                 return;
                             }
                             // 先填充数据

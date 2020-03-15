@@ -168,7 +168,7 @@ public class IssueController {
         }
     }
 
-    /**
+     /**
      * 获得已预约本课程的学生名单
      *
      * @param inMap
@@ -185,6 +185,38 @@ public class IssueController {
         }
         try {
             Map<String, Object> relMap = courseBmo.getCourseStuList(courseID);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Map<String, Object>> userList = (List<Map<String, Object>>) MapTool.getObject(relMap, "userList");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("userList", userList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询异常：", e);
+            return G.page.returnMap(false, "查询异常");
+        }
+    }
+
+    /**
+     * 获得已完成课程的学生名单
+     *
+     * @param inMap
+     * @return
+     */
+    @RequestMapping("/getDoneCourseStu")
+    @ResponseBody
+    public Map<String, Object> getDoneCourseStu(@RequestBody Map<String, Object> inMap) {
+        String courseID = MapTool.getString(inMap, "courseID");
+        try {
+            courseID.substring(1);//探测非空;
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空");
+        }
+        try {
+            Map<String, Object> relMap = courseBmo.getDoneCourseStuList(courseID);
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean) {
                 String msg = G.bmo.returnMapMsg(relMap);

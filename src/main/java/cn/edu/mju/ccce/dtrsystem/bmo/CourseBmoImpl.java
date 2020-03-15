@@ -216,12 +216,46 @@ public class CourseBmoImpl implements CourseBmo {
         }
     }
 
+    /**
+     * 获取预约课程的学生列表
+     * @param courseID
+     * @return
+     */
     @Override
     public Map<String, Object> getCourseStuList(String courseID) {
         try {
             List<Reservation> reservationList = new ArrayList<>();
             try {
                 reservationList = reservationDao.selectAllReservationRecordByCourseID(courseID);
+            } catch (NullPointerException e) {
+                return G.bmo.returnMap(false, "查询为空");
+            }
+            List<Map<String, Object>> userList = new ArrayList<>();
+            for (Reservation r : reservationList) {
+                long stuNbr = r.getUSER_NBR();
+                Map<String, Object> user = loginDao.selectUserAllMsgByUserNbr(String.valueOf(stuNbr));
+                userList.add(user);
+            }
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("userList", userList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("获取学生预约信息异常：", e);
+            return G.bmo.returnMap(false, "获取学生预约信息异常");
+        }
+    }
+
+    /**
+     * 获取已完成课程的学生列表
+     * @param courseID
+     * @return
+     */
+    @Override
+    public Map<String, Object> getDoneCourseStuList(String courseID) {
+        try {
+            List<Reservation> reservationList = new ArrayList<>();
+            try {
+                reservationList = reservationDao.selectAllDoneReservationRecordByCourseID(courseID);
             } catch (NullPointerException e) {
                 return G.bmo.returnMap(false, "查询为空");
             }

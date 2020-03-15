@@ -233,7 +233,7 @@ public class ReservationController {
     }
 
     /**
-     * 获取所有的预约记录
+     * 获取自己所有的预约记录
      *
      * @param inMap
      * @param httpSession

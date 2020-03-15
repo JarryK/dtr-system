@@ -68,10 +68,17 @@ public interface CourseBmo {
 
     /**
      * 获取预约课程的学生列表
-     * @param course
+     * @param courseID
      * @return
      */
     public Map<String,Object> getCourseStuList(String course);
+
+    /**
+     * 获取已完成课程的学生列表
+     * @param courseID
+     * @return
+     */
+    public Map<String,Object> getDoneCourseStuList(String courseID);
 
     /**
      * 特殊，定时检测job专用

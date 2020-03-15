@@ -44,9 +44,15 @@ public interface ReservationDao {
     public List<Reservation> selectAllReservationRecordByCourseID(String courseID);
 
     /**
+     * 根据课程ID查询所有已完成的预约记录
+     * @param courseID
+     * @return
+     */
+    public List<Reservation> selectAllDoneReservationRecordByCourseID(String courseID);
+
+    /**
      * 根据courseID改变预约课程预约状态
      * @param courseID
      */
     public int updateReservationCourseStatusByCourseID(String courseID,String userNbr,String status);
-
 }
