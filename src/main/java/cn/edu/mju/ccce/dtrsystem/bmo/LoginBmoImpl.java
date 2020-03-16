@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,11 @@ public class LoginBmoImpl implements LoginBmo{
     @Qualifier("cn.edu.mju.ccce.dtrsystem.dao.LoginDao")
     protected LoginDao loginDao;
 
+    /**
+     * 验证登录
+     * @param inMap
+     * @return map key=msg
+     */
     @Override
     public Map<String,Object> chackLogin(Map<String, Object> inMap) {
         try{

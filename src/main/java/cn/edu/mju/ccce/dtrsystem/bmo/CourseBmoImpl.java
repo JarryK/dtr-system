@@ -115,7 +115,7 @@ public class CourseBmoImpl implements CourseBmo {
      * 根据老师Nbr获取可预约的课程列表
      *
      * @param teacherNbr
-     * @return
+     * @return map key=courseList
      */
     @Override
     public Map<String, Object> getCourseListByTeacherNbr(String teacherNbr) {
@@ -139,7 +139,7 @@ public class CourseBmoImpl implements CourseBmo {
      * 根据老师Nbr获取已完成的课程列表
      *
      * @param teacherNbr
-     * @return
+     * @return map key=courseDoneList
      */
     @Override
     public Map<String, Object> getCourseDoneListByTeacherNbr(String teacherNbr) {
@@ -219,7 +219,7 @@ public class CourseBmoImpl implements CourseBmo {
     /**
      * 获取预约课程的学生列表
      * @param courseID
-     * @return
+     * @return map key=userList
      */
     @Override
     public Map<String, Object> getCourseStuList(String courseID) {
@@ -248,7 +248,7 @@ public class CourseBmoImpl implements CourseBmo {
     /**
      * 获取已完成课程的学生列表
      * @param courseID
-     * @return
+     * @return map key=userList
      */
     @Override
     public Map<String, Object> getDoneCourseStuList(String courseID) {

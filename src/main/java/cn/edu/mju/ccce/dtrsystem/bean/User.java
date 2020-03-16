@@ -1,8 +1,11 @@
 package cn.edu.mju.ccce.dtrsystem.bean;
 
+import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <b>项目名称：</b>dtr-system<br>
@@ -159,5 +162,25 @@ public class User implements Serializable {
         result = 31 * result + (CREAT_TIME != null ? CREAT_TIME.hashCode() : 0);
         result = 31 * result + (UPDATE_TIME != null ? UPDATE_TIME.hashCode() : 0);
         return result;
+    }
+
+    /**
+     * 获取在线用户信息
+     *
+     * @param httpSession
+     * @return map  <p>key=USER_NBR</p><p>key=USER_NAME</p><p>key=USER_SEX </p><p>key=TYPE_NAME</p>
+     */
+    public static Map<String, Object> getUserMap(HttpSession httpSession) {
+        try {
+            String sessionID = httpSession.getId();
+            //session里面最好改成用户类,不过比较懒  先放着
+            Map<String, Object> uMgs = (Map<String, Object>) httpSession.getAttribute(sessionID);
+            if (uMgs.isEmpty()) {
+                return new HashMap<>();
+            }
+            return uMgs;
+        } catch (Exception e) {
+            return new HashMap<>();
+        }
     }
 }

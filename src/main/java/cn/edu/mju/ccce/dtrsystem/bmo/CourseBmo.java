@@ -40,14 +40,14 @@ public interface CourseBmo {
     /**
      * 根据老师Nbr获取可预约的课程列表
      * @param teacherNbr
-     * @return
+     * @return map key=courseList
      */
     public Map<String,Object> getCourseListByTeacherNbr(String teacherNbr);
 
     /**
      * 根据老师Nbr获取已完成的课程列表
      * @param teacherNbr
-     * @return
+     * @return map key=courseDoneList
      */
     public Map<String,Object> getCourseDoneListByTeacherNbr(String teacherNbr);
 
@@ -69,14 +69,14 @@ public interface CourseBmo {
     /**
      * 获取预约课程的学生列表
      * @param courseID
-     * @return
+     *  @return map key=userList
      */
-    public Map<String,Object> getCourseStuList(String course);
+    public Map<String,Object> getCourseStuList(String courseID);
 
     /**
      * 获取已完成课程的学生列表
      * @param courseID
-     * @return
+     * @return map key=userList
      */
     public Map<String,Object> getDoneCourseStuList(String courseID);
 
