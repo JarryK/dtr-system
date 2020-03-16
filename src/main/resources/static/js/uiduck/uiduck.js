@@ -1,4 +1,3 @@
-
 /***
  * Author:nicezz
  * E-mail:hzdz163@163.com
@@ -7,21 +6,29 @@
  * The copyright of this program follows the principle of creative Commons, you can use,
  * modify and distribute this program for free, but this annotation cannot be deleted,
  * please indicate the original author.
- * github https://github.com/nicez2/uiduck 
- * uiduck MIT License By https://www.uiduck.com 
+ * github https://github.com/nicez2/uiduck
+ * uiduck MIT License By https://www.uiduck.com
  */
 uiduck = {
     templateId: "",
-    url: { url: "", type: "", data: {} },
+    url: {url: "", type: "", data: {}},
     data: [],
-    autoNext: { time: 2000, showPage: true },
-    style: { size: "mini", stripe: false, tbClass: "", trClass: "", thClass: "", tdClass: "" },
-    topBar: { templateId: "search", kwLight: true, kwSplite: false, kwSpliteList: [] },
-    rightTool: { templateId: "", title: "", width: "" },
-    loading: { icon: "loading", shade: false, shadeColor: "white" },
-    language: { tag: "Chinese", options: [] },
+    autoNext: {time: 2000, showPage: true},
+    style: {size: "mini", stripe: false, tbClass: "", trClass: "", thClass: "", tdClass: ""},
+    topBar: {templateId: "search", kwLight: true, kwSplite: false, kwSpliteList: []},
+    rightTool: {templateId: "", title: "", width: ""},
+    loading: {icon: "loading", shade: false, shadeColor: "white"},
+    language: {tag: "Chinese", options: []},
     page: true,
-    pageOptions: { style: "", limit: "", dataType: "back", limits: ['5', '10', '15', '20', '25', '30'], layout: ["total", "home", "prev", "next", "last", "set", "jump"], index: 0, count: 0 },
+    pageOptions: {
+        style: "",
+        limit: "",
+        dataType: "back",
+        limits: ['5', '10', '15', '20', '25', '30'],
+        layout: ["total", "home", "prev", "next", "last", "set", "jump"],
+        index: 0,
+        count: 0
+    },
     fieldOptions: [],
     udKey: 'uiduck_' + (new Date()).valueOf(),
     setOptions: function (b) {
@@ -49,11 +56,9 @@ uiduck = {
             var lan = (navigator.language || navigator.browserLanguage).toLowerCase();
             if (lan.indexOf('zh') >= 0) {
                 uiduck.language.tag = 'Chinese'
-            }
-            else if (lan.indexOf('en') >= 0) {
+            } else if (lan.indexOf('en') >= 0) {
                 uiduck.language.tag = 'English'
-            }
-            else {
+            } else {
                 uiduck.language.tag = 'English'
             }
         } else if (b.language.tag == 'Chinese') {
@@ -73,7 +78,7 @@ uiduck = {
         }
         uiduck.language.options = uiduck.language(uiduck);
         if (b.style == undefined) {
-            uiduck.style = { tbClass: "uiduck-table", trClass: "", thClass: "", tdClass: "" }
+            uiduck.style = {tbClass: "uiduck-table", trClass: "", thClass: "", tdClass: ""}
         } else {
             if (b.style.tbClass == undefined) {
                 b.style.tbClass = 'uiduck-table';
@@ -192,11 +197,6 @@ uiduck = {
                 }
             }, uiduck.autoNext.time)
         }
-        console.log('%cHi uiduck', "color:black;font-weight:bold;");
-        console.log('%c官网 http://uiduck.com', "color:blue;");
-        console.log('%cGithub https://github.com/nicez2/uiduck', "color:blue;");
-        //可删除
-        console.log('%c本程序的版权遵循创作共用原则，你可以免费使用、修改、发布本程序，但顶部注释不可删除并请注明原作者', "color:gray;");
         uiduck.pageOptions.index = 0;
         uiduck.render(uiduck, refresh);
     },
@@ -338,7 +338,10 @@ uiduck = {
                     uiduckJL = e.data;
                 } else {
                     if (f) {
-                        uiduck.url.data = { "limit": parseInt(e.pageOptions.limit), "page": parseInt(e.pageOptions.index + 1) };
+                        uiduck.url.data = {
+                            "limit": parseInt(e.pageOptions.limit),
+                            "page": parseInt(e.pageOptions.index + 1)
+                        };
                         uiduck.getAjaxData(e, false);
                     }
                     uiduckJL = uiduck.data;
@@ -387,6 +390,8 @@ uiduck = {
                                 h += "<td  class=" + e.style.tdClass + ">" + uiduckFO[k].computed[uiduckJL[i][keys]] + "</td>";
                             } else if (uiduckFO[k].type == 'image') {
                                 h += "<td  class=" + e.style.tdClass + "><img style='width:" + uiduckFO[k].width + ";height:" + uiduckFO[k].height + "' src=" + uiduckJL[i][keys] + "></td>";
+                            } else if (uiduckFO[k].type == 'time') {
+                                h += "<td  class=" + e.style.tdClass + ">" + uiduck.timeFormat(uiduckJL[i][keys]) + "</td>";
                             } else {
                                 h += "<td  class=" + e.style.tdClass + ">" + uiduckJL[i][keys] + "</td>";
                             }
@@ -412,6 +417,8 @@ uiduck = {
                                     h += "<td  class=" + e.style.tdClass + ">" + uiduckFO[k].computed[uiduckJL[i][keys]] + "</td>";
                                 } else if (uiduckFO[k].type == 'image') {
                                     h += "<td  class=" + e.style.tdClass + "><img style='width:" + uiduckFO[k].width + ";height:" + uiduckFO[k].height + "' src=" + uiduckJL[i][keys] + "></td>";
+                                } else if (uiduckFO[k].type == 'time') {
+                                    h += "<td  class=" + e.style.tdClass + ">" + uiduck.timeFormat(uiduckJL[i][keys]) + "</td>";
                                 } else {
                                     h += "<td  class=" + e.style.tdClass + ">" + uiduckJL[i][keys] + "</td>";
                                 }
@@ -456,6 +463,8 @@ uiduck = {
                                             h += "<td  class=" + e.style.tdClass + ">" + uiduckFO[k].computed[uiduckJL[i][keys]] + "</td>";
                                         } else if (uiduckFO[k].type == 'image') {
                                             h += "<td  class=" + e.style.tdClass + "><img style='width:" + uiduckFO[k].width + ";height:" + uiduckFO[k].height + "' src=" + uiduckJL[i][keys] + "></td>";
+                                        } else if (uiduckFO[k].type == 'time') {
+                                            h += "<td  class=" + e.style.tdClass + ">" + uiduck.timeFormat(uiduckJL[i][keys]) + "</td>";
                                         } else {
                                             h += "<td  class=" + e.style.tdClass + ">" + uiduckJL[i][keys] + "</td>";
                                         }
@@ -718,7 +727,8 @@ uiduck = {
                 if (e.pageOptions.index <= parseInt(e.pageOptions.count - 2)) {
                     if (e.pageOptions.layout.indexOf('next') != -1) {
                         g += '<a class="layui-laypage-next" onclick="uiduck.nextPage();" >' + e.language.options.udNext + '</a>';
-                    } if (e.pageOptions.layout.indexOf('last') != -1) {
+                    }
+                    if (e.pageOptions.layout.indexOf('last') != -1) {
                         g += '<a onclick="uiduck.lastPage();" >' + e.language.options.udLast + '</a>';
                     }
                 } else {
@@ -933,19 +943,88 @@ uiduck = {
     language: function (b) {
         var options = {};
         if (b.language.tag == 'Chinese') {
-            options = { "udHome": "首页", "udTotal": "共", "udList": "条", "udPrev": "上一页", "udNext": "下一页", "udLast": "尾页", "udGo": "前往", "udPage": "页", "udSub": "确定", "udNodata": "暂无数据" };
+            options = {
+                "udHome": "首页",
+                "udTotal": "共",
+                "udList": "条",
+                "udPrev": "上一页",
+                "udNext": "下一页",
+                "udLast": "尾页",
+                "udGo": "前往",
+                "udPage": "页",
+                "udSub": "确定",
+                "udNodata": "暂无数据"
+            };
         } else if (b.language.tag == 'English') {
-            options = { "udHome": "Home", "udTotal": "Total item", "udList": "item", "udPrev": "Prev", "udNext": "Next", "udLast": "Last", "udGo": "Jump to ", "udPage": "page", "udSub": "Ok", "udNodata": "Sorry no data" };
+            options = {
+                "udHome": "Home",
+                "udTotal": "Total item",
+                "udList": "item",
+                "udPrev": "Prev",
+                "udNext": "Next",
+                "udLast": "Last",
+                "udGo": "Jump to ",
+                "udPage": "page",
+                "udSub": "Ok",
+                "udNodata": "Sorry no data"
+            };
         } else if (b.language.tag == 'Japanese') {
-            options = { "udHome": "トップページ", "udTotal": "トータル", "udList": "くだり", "udPrev": "前のページ", "udNext": "次のページ", "udLast": "最終ページ", "udGo": "ジャンプして", "udPage": "ページ", "udSub": "さだま·る", "udNodata": "データなし" };
+            options = {
+                "udHome": "トップページ",
+                "udTotal": "トータル",
+                "udList": "くだり",
+                "udPrev": "前のページ",
+                "udNext": "次のページ",
+                "udLast": "最終ページ",
+                "udGo": "ジャンプして",
+                "udPage": "ページ",
+                "udSub": "さだま·る",
+                "udNodata": "データなし"
+            };
         } else if (b.language.tag == 'French') {
-            options = { "udHome": "Accueil", "udTotal": "Total d'entrées", "udList": "item", "udPrev": "Page précédente", "udNext": "Page suivante", "udLast": "Dernière page", "udGo": "Aller à", "udPage": "Page", "udSub": "Déterminer", "udNodata": "Aucune donnée" };
+            options = {
+                "udHome": "Accueil",
+                "udTotal": "Total d'entrées",
+                "udList": "item",
+                "udPrev": "Page précédente",
+                "udNext": "Page suivante",
+                "udLast": "Dernière page",
+                "udGo": "Aller à",
+                "udPage": "Page",
+                "udSub": "Déterminer",
+                "udNodata": "Aucune donnée"
+            };
         } else if (b.language.tag == 'Korean') {
-            options = { "udHome": "홈", "udTotal": "합계", "udList": "조", "udPrev": "이전 페이지", "udNext": "다음 페이지", "udLast": "마지막 페이지", "udGo": "로 이동", "udPage": "페이지", "udSub": "결정", "udNodata": "데이터가 없습니다" };
+            options = {
+                "udHome": "홈",
+                "udTotal": "합계",
+                "udList": "조",
+                "udPrev": "이전 페이지",
+                "udNext": "다음 페이지",
+                "udLast": "마지막 페이지",
+                "udGo": "로 이동",
+                "udPage": "페이지",
+                "udSub": "결정",
+                "udNodata": "데이터가 없습니다"
+            };
         } else if (b.language.tag == 'Spanish') {
-            options = { "udHome": "Inicio", "udTotal": "Total", "udList": "item", "udPrev": "Página anterior", "udNext": "Página siguiente", "udLast": "Ultima pagina", "udGo": "Saltar a", "udPage": "Pagina", "udSub": "Determinar", "udNodata": "Sin datos" };
+            options = {
+                "udHome": "Inicio",
+                "udTotal": "Total",
+                "udList": "item",
+                "udPrev": "Página anterior",
+                "udNext": "Página siguiente",
+                "udLast": "Ultima pagina",
+                "udGo": "Saltar a",
+                "udPage": "Pagina",
+                "udSub": "Determinar",
+                "udNodata": "Sin datos"
+            };
         }
         return options;
+    },
+    timeFormat: function (time) {
+        return new Date(time).format('yyyy-MM-dd hh:mm:ss');
     }
 };
 if (!Array.indexOf) {
