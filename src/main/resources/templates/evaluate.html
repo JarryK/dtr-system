@@ -21,7 +21,7 @@
 
     <!--以下为两个必须div元素-->
     <script type="text/html" id="barDemo">
-        <button class="uiduck-btn get-msg-btn" >获取此行数据</button>
+        <a href="javascript:;" class="get-msg-btn text-decoration-none font-italic">评价</a>
     </script>
     <div id="ud-top" style="display: none">
         <h3>当前设置为微信字段，通过ud-keyWord属性指定相关列的key</h3>
@@ -109,12 +109,13 @@
             },
             // 获取所有的数据列表
             getClassList: function () {
-                $.post('/dtr/rese/getList', {}).done(function (data) {
+                $.post('/dtr/rese/getSelfHistory', {}).done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {
-                        var dataList = data.courseList;
-                        evaluate.initializationTable(dataList).then(function () {evaluate.panelClick()});
+                        var doneList = data.reservationDoneList;
+                        evaluate.initializationTable(doneList).then()
+                        return;
                     }
                 });
             },
@@ -150,11 +151,16 @@
                                 title: "序号"
                             },
                             {
-                                key: "COURSE_TYPE_NAME",
-                                title: "课程类型"
+                                key: "course_NAME",
+                                title: "课程名"
                             }, {
-                                key: "COURSE_TEACHER_NAME",
+                                key: "course_TEACHER_NAME",
                                 title: "任课老师"
+                            },
+                            {
+                                key: "course_TIME",
+                                title: "课程时间",
+                                type: "time"
                             }]
                     });
                     uiduck.setData(dataList, false);
