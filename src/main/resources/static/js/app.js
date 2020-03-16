@@ -52,6 +52,24 @@ var App = function () {
     };
     // page_turn页面跳转函数集
     var page_turn_functions = (function () {
+        // 笨方法，不过能用就好了
+        $("#header-goto-issue").off('click').on('click', function () {
+            App.goIssueByNewPage();
+        });
+        $("#header-goto-reservation").off('click').on('click', function () {
+            App.goReservationByNewPage();
+        });
+        $("#header-goto-evaluate").off('click').on('click', function () {
+            App.goEvaluateByNewPage();
+        });
+        $("#header-goto-history").off('click').on('click', function () {
+            App.goHistoryByNewPage();
+        });
+        $("#header-loginOut").off('click').on('click', function () {
+            var uName =$('#header-userDropdown').data('uName');
+            var uNbr = $('#header-userDropdown').data('uNbr');
+            App.loginOut(uNbr, uName);
+        });
         return {
             //在自身窗口打开
             goLoginBySelf: function () {
@@ -141,6 +159,11 @@ var App = function () {
             formatDateString: function (value) {
                 return new Date(value).format('yyyy-MM-dd hh:mm:ss');
             },
+            returnRowData:function(e) {
+                var index =$(e).parent().attr("ud-index");
+                console.log(uiduck.data[index]);
+                return uiduck.data[index];
+            }
         }
     })();
     // utils常用ui函数集
@@ -318,31 +341,10 @@ var App = function () {
         }
     })();
     // 顶部跳转
-    var top_menu_click = (function () {
-        // 笨方法，不过能用就好了
-        $("#header-goto-issue").off('click').on('click', function () {
-            App.goIssueByNewPage();
-        });
-        $("#header-goto-reservation").off('click').on('click', function () {
-            App.goReservationByNewPage();
-        });
-        $("#header-goto-evaluate").off('click').on('click', function () {
-            App.goEvaluateByNewPage();
-        });
-        $("#header-goto-history").off('click').on('click', function () {
-            App.goHistoryByNewPage();
-        });
-        $("#header-loginOut").off('click').on('click', function () {
-            var uName =$('#header-userDropdown').data('uName');
-            var uNbr = $('#header-userDropdown').data('uNbr');
-            App.loginOut(uNbr, uName);
-        });
-    })();
     return {
         init: function () {
             // 初始化全局设置
-            return App.bindEvents()
-                .then(function () { top_menu_click(); return this});// 都加载完了再加载顶部跳转按钮，防止没有及时绑定按钮事件
+            return App.bindEvents();
         },
         bindEvents:function(){
             return $.Deferred(function (defer) {

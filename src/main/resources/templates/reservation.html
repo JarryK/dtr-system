@@ -100,7 +100,6 @@
                     <th>类型</th>
                     <th>老师</th>
                     <th>课程名</th>
-                    <th>操作</th>
                 </tr>
                 </thead>
                 <tbody id="rese-class-doneHistoryMsg-container"></tbody>
@@ -155,10 +154,6 @@
         <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
         <td class="align-middle">{{$value.course_TEACHER_NAME}}</td>
         <td class="align-middle">{{$value.course_NAME}}</td>
-        <td class="align-middle">
-            <p><a href="javascript:;" class="text-decoration-none font-italic cancel-reservation-btn"
-                  data-index={{$value.index}}>评价</a></p>
-        </td>
     </tr>
     {{/each}}{{/if}}
 </script>

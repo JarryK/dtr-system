@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>评价系统</title>
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
+    <link rel="stylesheet" type="text/css" href="/js/uiduck/uiduck.css">
+</head>
+<body>
+<div th:replace="header :: header"></div>
+<div class="container function">
+    <br>
+    <div id="table" class="shadow">
+
+    </div>
+    <!--        onClick=uiduck.getRow(this);-->
+
+    <!--以下为两个必须div元素-->
+    <script type="text/html" id="barDemo">
+        <button class="uiduck-btn get-msg-btn" >获取此行数据</button>
+    </script>
+    <div id="ud-top" style="display: none">
+        <h3>当前设置为微信字段，通过ud-keyWord属性指定相关列的key</h3>
+        <input id="search" ud-keyWord="COURSE_TEACHER_NAME" class="uiduck-input"/>
+        <button class="uiduck-btn set-data">搜索</button>
+    </div>
+    <br>
+</div>
+</div>
+<!--  模板开始  -->
+<script type="text/html" id="rese-class-msg-art">
+    {{ if courseList && courseList.length>0 }}{{each courseList}}
+    <tr>
+        <th class="align-middle" scope="row">{{$index+1}}</th>
+        <td class="align-middle">{{$value.COURSE_TIME | formatDateString }}</td>
+        <td class="align-middle">{{$value.COURSE_TYPE_NAME}}</td>
+        <td class="align-middle">{{$value.COURSE_NAME}}</td>
+        <td class="align-middle">{{$value.COURSE_TEACHER_NAME}}</td>
+        <td class="align-middle">{{$value.COURSE_DONE_STU_NBR}}/{{$value.COURSE_STU_NBR}}</td>
+        <!--<td class="align-middle">{{$value.place}}</td>-->
+        <td class="align-middle">
+            <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
+                  data-courseid="{{$value.COURSE_ID}}">详情</a>
+            </p>
+            <p><a href="javascript:;" class="text-decoration-none font-italic reservation-btn"
+                  data-courseid="{{$value.COURSE_ID}}">预约</a></p>
+        </td>
+    </tr>
+    {{/each}}{{/if}}
+</script>
+<script type="text/html" id="rese-class-historyMsg-art">
+    {{ if historyList && historyList.length>0 }}{{each historyList}}
+    <tr>
+        <th class="align-middle" scope="row">{{$index+1}}</th>
+        <td class="align-middle">{{$value.course_TIME | formatDateString }}</td>
+        <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
+        <td class="align-middle">{{$value.course_TEACHER_NAME}}</td>
+        <td class="align-middle">{{$value.course_NAME}}</td>
+        <td class="align-middle">
+            <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
+                  data-courseid={{$value.course_ID}}>详情</a>
+            </p>
+            <p><a href="javascript:;" class="text-decoration-none font-italic cancel-reservation-btn"
+                  data-courseid={{$value.course_ID}}>取消</a></p>
+        </td>
+    </tr>
+    {{/each}}{{/if}}
+</script>
+<script type="text/html" id="rese-class-doneHistoryMsg-art">
+    {{ if doneHistoryList && doneHistoryList.length>0 }}{{each doneHistoryList}}
+    <tr>
+        <th class="align-middle" scope="row">{{$index+1}}</th>
+        <td class="align-middle">{{$value.course_TIME | formatDateString }}</td>
+        <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
+        <td class="align-middle">{{$value.course_TEACHER_NAME}}</td>
+        <td class="align-middle">{{$value.course_NAME}}</td>
+    </tr>
+    {{/each}}{{/if}}
+</script>
+<!--  模板结束  -->
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
+<script src="/js/uiduck/uiduck.js"></script>
+<script src="/js/uiduck/json2.js"></script>
+<script src="/js/app.js"></script>
+<script>
+    // template 时间日期格式功能
+    template.helper('formatDateString', function (value) {
+        return new Date(value).format('yyyy-MM-dd hh:mm:ss');
+    });
+    var evaluate = (function () {
+        var bindEvents = function () {
+            App.getUserMsg();
+            evaluate.getClassList();
+        };
+        return {
+            data: {},
+            el: function (expr) {
+                return $(expr ? expr : 'body');
+            },
+            init: function () {
+                bindEvents();
+                return this
+            },
+            // 获取所有的数据列表
+            getClassList: function () {
+                $.post('/dtr/rese/getList', {}).done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        var dataList = data.courseList;
+                        evaluate.initializationTable(dataList).then(function () {evaluate.panelClick()});
+                    }
+                });
+            },
+            //  后置才能触发的按钮
+            panelClick: function () {
+                evaluate.el(".get-msg-btn").off('click').on('click',function () {
+                   var data = App.returnRowData($(this));
+                   alert(data.COURSE_TYPE_NAME);
+                });
+                // evaluate.el(".set-data").off('click').on('click',function (e,f) {
+                //     uiduck.data = e;
+                //     if (f) {
+                //         uiduck.pageOptions.index = 0;
+                //         uiduck.pageOptions.count = 0;
+                //         uiduck.render(uiduck, true);
+                //     } else {
+                //         uiduck.render(uiduck, false);
+                //     }
+                // });
+            },
+            initializationTable:function (dataList) {
+                return $.Deferred(function (defer) {
+                    uiduck.setOptions({
+                        templateId: "table",
+                        style: {tbClass: "table text-center table-striped"},
+                        topBar: {templateId: "search", kwLight: true},
+                        rightTool: {templateId: "barDemo", title: "操作", width: "100px"},
+                        loading: { icon: "loading",blur: 3, time: 1000},
+                        page: true,
+                        fieldOptions: [
+                            {
+                                index: true,
+                                title: "序号"
+                            },
+                            {
+                                key: "COURSE_TYPE_NAME",
+                                title: "课程类型"
+                            }, {
+                                key: "COURSE_TEACHER_NAME",
+                                title: "任课老师"
+                            }]
+                    });
+                    uiduck.setData(dataList, false);
+                    defer.resolve();
+                }).promise();
+            },
+
+        }
+    })();
+    $(function () {
+        evaluate.init();
+    });
+
+</script>
+</body>
+</html>
