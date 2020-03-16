@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.mju.ccce.dtrsystem.dao.ReservationDao">
-    <resultMap id="CourseMap" type="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
+    <resultMap id="ReservationMap" type="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
         <result property="RESERVATION_ID" column="RESERVATION_ID"/>
         <result property="COURSE_ID" column="COURSE_ID"/>
         <result property="COURSE_TIME" column="COURSE_TIME"/>
