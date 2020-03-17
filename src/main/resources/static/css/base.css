@@ -70,3 +70,7 @@ ul {
 }
 
 /* 公用container定义结束 */
+
+.modal-content{
+    top: 7rem;
+}

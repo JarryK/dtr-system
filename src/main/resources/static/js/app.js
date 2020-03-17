@@ -1,5 +1,7 @@
 document.write("<script src='/js/SweetAlert2.js'></script>");
 document.write("<script src='/js/template.js'></script>");
+document.write("<link href='/js/star/jquery.raty.css' />");
+document.write("<script src='/js/star/jquery.raty.js'></script>");
 var App = function () {
     // 全局设置
     var globalSetting = function () {
@@ -291,7 +293,6 @@ var App = function () {
                 //     })
                 // },
                 // 检验后端返回的数据成功or失败，并可以控制在屏幕顶部提示
-
                 // 设置时间输入框
                 setInputBoxForTime: function (_id_or_class) {
                     $(_id_or_class).datetimepicker({
@@ -305,8 +306,7 @@ var App = function () {
                         // endDate
                         language: 'zh-CN'
                     });
-                }
-                ,
+                },
             }
         })();
     // utils检验函数集

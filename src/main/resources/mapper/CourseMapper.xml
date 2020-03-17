@@ -136,7 +136,7 @@
     <select id="selectCourseByID" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
         SELECT <include refid="sl_Course" />
         FROM course
-        WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND COURSE_STATUS ='0'
+        WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR}
     </select>
 
     <update id="upDateCourseDoneStuNbr" parameterType="java.lang.String">

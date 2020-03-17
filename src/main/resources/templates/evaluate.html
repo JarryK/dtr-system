@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>评价系统</title>
     <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/evaluate.css">
     <link rel="stylesheet" type="text/css" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
     <link rel="stylesheet" type="text/css" href="/js/uiduck/uiduck.css">
 </head>
@@ -29,59 +30,36 @@
         <button class="uiduck-btn set-data">搜索</button>
     </div>
     <br>
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="evaluateModal" data-backdrop="static" tabindex="-1" role="dialog"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">评价</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h5>过程评分：<span id="star"></span>&nbsp;&nbsp;<span id="grade">0</span>分</h5>
+                    </div>
+                    <div>
+                        <h5> 您的评价</h5>
+                        <textarea class="form-control" id="classEvaluate" cols="30" rows="7"
+                                  style="resize:none"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-no">取消</button>
+                    <button type="button" class="btn btn-primary modal-yes">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </div>
-<!--  模板开始  -->
-<script type="text/html" id="rese-class-msg-art">
-    {{ if courseList && courseList.length>0 }}{{each courseList}}
-    <tr>
-        <th class="align-middle" scope="row">{{$index+1}}</th>
-        <td class="align-middle">{{$value.COURSE_TIME | formatDateString }}</td>
-        <td class="align-middle">{{$value.COURSE_TYPE_NAME}}</td>
-        <td class="align-middle">{{$value.COURSE_NAME}}</td>
-        <td class="align-middle">{{$value.COURSE_TEACHER_NAME}}</td>
-        <td class="align-middle">{{$value.COURSE_DONE_STU_NBR}}/{{$value.COURSE_STU_NBR}}</td>
-        <!--<td class="align-middle">{{$value.place}}</td>-->
-        <td class="align-middle">
-            <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
-                  data-courseid="{{$value.COURSE_ID}}">详情</a>
-            </p>
-            <p><a href="javascript:;" class="text-decoration-none font-italic reservation-btn"
-                  data-courseid="{{$value.COURSE_ID}}">预约</a></p>
-        </td>
-    </tr>
-    {{/each}}{{/if}}
-</script>
-<script type="text/html" id="rese-class-historyMsg-art">
-    {{ if historyList && historyList.length>0 }}{{each historyList}}
-    <tr>
-        <th class="align-middle" scope="row">{{$index+1}}</th>
-        <td class="align-middle">{{$value.course_TIME | formatDateString }}</td>
-        <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
-        <td class="align-middle">{{$value.course_TEACHER_NAME}}</td>
-        <td class="align-middle">{{$value.course_NAME}}</td>
-        <td class="align-middle">
-            <p><a href="javascript:;" class="detailed text-decoration-none font-italic"
-                  data-courseid={{$value.course_ID}}>详情</a>
-            </p>
-            <p><a href="javascript:;" class="text-decoration-none font-italic cancel-reservation-btn"
-                  data-courseid={{$value.course_ID}}>取消</a></p>
-        </td>
-    </tr>
-    {{/each}}{{/if}}
-</script>
-<script type="text/html" id="rese-class-doneHistoryMsg-art">
-    {{ if doneHistoryList && doneHistoryList.length>0 }}{{each doneHistoryList}}
-    <tr>
-        <th class="align-middle" scope="row">{{$index+1}}</th>
-        <td class="align-middle">{{$value.course_TIME | formatDateString }}</td>
-        <td class="align-middle">{{$value.course_TYPE_NAME}}</td>
-        <td class="align-middle">{{$value.course_TEACHER_NAME}}</td>
-        <td class="align-middle">{{$value.course_NAME}}</td>
-    </tr>
-    {{/each}}{{/if}}
-</script>
-<!--  模板结束  -->
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
@@ -97,6 +75,30 @@
         var bindEvents = function () {
             App.getUserMsg();
             evaluate.getClassList();
+            evaluate.el('.modal-yes').off('click').on('click', function () {
+                var course_ID = evaluate.el('.modal-yes').data('course_ID');
+                var evaluateDetail = evaluate.el('#classEvaluate').val();
+                var evaluateScore = evaluate.el('#grade').data('grade');
+                $.post('/dtr/eval/insert', {
+                    courseID: course_ID,
+                    evaluateDetail: evaluateDetail,
+                    evaluateScore: evaluateScore
+                }).done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        App.alert("提交成功", '', 1, function () {
+                            evaluate.clearModal();
+                            evaluate.el('#evaluateModal').modal('hide');
+                        });
+                        return;
+                    }
+                });
+            });
+            evaluate.el('.modal-no').off('click').on('click', function () {
+                evaluate.el('#evaluateModal').modal('hide');
+            });
+
         };
         return {
             data: {},
@@ -114,16 +116,45 @@
                         return;
                     } else {
                         var doneList = data.reservationDoneList;
-                        evaluate.initializationTable(doneList).then()
+                        evaluate.initializationTable(doneList).then(function () {
+                            evaluate.panelClick();
+                            return this;
+                        });
                         return;
                     }
                 });
             },
+            showEvaluateModal: function () {
+                return $.Deferred(function (defer) {
+                    evaluate.el("#star").raty({
+                        path: '/js/star/images/',
+                        starOff: 'star-off.png',
+                        starOn: 'star-on.png',
+                        starHalf: 'star-half.png',
+                        targetKeep: true,
+                        space: false,
+                        number: 10,
+                        click: function (score, evt) {
+                            evaluate.el('#grade').html(score);
+                            evaluate.el('#grade').data('grade', score);
+                        }
+                    });
+                    evaluate.clearModal();
+                    evaluate.el('#evaluateModal').modal('show');
+                    defer.resolve();
+                }).promise();
+            },
+            clearModal: function () {
+                evaluate.el('#classEvaluate').val('');
+                evaluate.el('#grade').html("0");
+            },
             //  后置才能触发的按钮
             panelClick: function () {
-                evaluate.el(".get-msg-btn").off('click').on('click',function () {
-                   var data = App.returnRowData($(this));
-                   alert(data.COURSE_TYPE_NAME);
+                evaluate.el(".get-msg-btn").off('click').on('click', function () {
+                    var data = App.returnRowData($(this));
+                    var course_ID = data.course_ID;
+                    evaluate.el('.modal-yes').data('course_ID', course_ID);
+                    evaluate.showEvaluateModal();
                 });
                 // evaluate.el(".set-data").off('click').on('click',function (e,f) {
                 //     uiduck.data = e;
@@ -136,14 +167,14 @@
                 //     }
                 // });
             },
-            initializationTable:function (dataList) {
+            initializationTable: function (dataList) {
                 return $.Deferred(function (defer) {
                     uiduck.setOptions({
                         templateId: "table",
                         style: {tbClass: "table text-center table-striped"},
                         topBar: {templateId: "search", kwLight: true},
                         rightTool: {templateId: "barDemo", title: "操作", width: "100px"},
-                        loading: { icon: "loading",blur: 3, time: 1000},
+                        loading: {icon: "loading", blur: 3, time: 1000},
                         page: true,
                         fieldOptions: [
                             {

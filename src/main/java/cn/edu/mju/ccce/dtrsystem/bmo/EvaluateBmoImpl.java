@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Map;
 
@@ -56,8 +57,10 @@ public class EvaluateBmoImpl implements EvaluateBmo {
             }
             Course c = (Course) MapTool.getObject(courseMap, "courseDet");
             String course_name = c.getCOURSE_NAME();
+            BigInteger evaluateNbr = c.getEVALUATE_NBR();
             e.setCREAT_TIME(new Date());
             e.setCOURSE_NAME(course_name);
+            e.setEVALUATE_NBR(evaluateNbr);
             e.setEVALUATE_STATUS(0);
             int insert = evaluateDao.insert(e);
             if (insert > 0) {

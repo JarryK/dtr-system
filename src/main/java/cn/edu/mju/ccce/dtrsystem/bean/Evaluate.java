@@ -1,6 +1,7 @@
 package cn.edu.mju.ccce.dtrsystem.bean;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
 public class Evaluate implements Serializable {
     private static final long serialVersionUID = -4947935210818989461L;
     private long EVALUATE_ID;// int(16) NOT NULL AUTO_INCREMENT COMMENT '表ID，自增',
-    private long EVALUATE_NBR;// int(16) DEFAULT NULL COMMENT '表NBR，可重复',
+    private BigInteger EVALUATE_NBR;// int(16) DEFAULT NULL COMMENT '表NBR，可重复',
     private long COURSE_ID;// bigint(17) DEFAULT NULL COMMENT '表ID',
     private String COURSE_NAME;// varchar(16) DEFAULT NULL COMMENT '课程名',
     private int USER_NBR;// bigint(17) DEFAULT NULL COMMENT '用NBR',
@@ -32,11 +33,11 @@ public class Evaluate implements Serializable {
         this.EVALUATE_ID = EVALUATE_ID;
     }
 
-    public long getEVALUATE_NBR() {
+    public BigInteger getEVALUATE_NBR() {
         return EVALUATE_NBR;
     }
 
-    public void setEVALUATE_NBR(long EVALUATE_NBR) {
+    public void setEVALUATE_NBR(BigInteger EVALUATE_NBR) {
         this.EVALUATE_NBR = EVALUATE_NBR;
     }
 
@@ -120,11 +121,12 @@ public class Evaluate implements Serializable {
         Evaluate evaluate = (Evaluate) o;
 
         if (EVALUATE_ID != evaluate.EVALUATE_ID) return false;
-        if (EVALUATE_NBR != evaluate.EVALUATE_NBR) return false;
         if (COURSE_ID != evaluate.COURSE_ID) return false;
         if (USER_NBR != evaluate.USER_NBR) return false;
         if (Double.compare(evaluate.EVALUATE_SCORE, EVALUATE_SCORE) != 0) return false;
         if (EVALUATE_STATUS != evaluate.EVALUATE_STATUS) return false;
+        if (EVALUATE_NBR != null ? !EVALUATE_NBR.equals(evaluate.EVALUATE_NBR) : evaluate.EVALUATE_NBR != null)
+            return false;
         if (COURSE_NAME != null ? !COURSE_NAME.equals(evaluate.COURSE_NAME) : evaluate.COURSE_NAME != null)
             return false;
         if (USER_NAME != null ? !USER_NAME.equals(evaluate.USER_NAME) : evaluate.USER_NAME != null) return false;
@@ -139,7 +141,7 @@ public class Evaluate implements Serializable {
         int result;
         long temp;
         result = (int) (EVALUATE_ID ^ (EVALUATE_ID >>> 32));
-        result = 31 * result + (int) (EVALUATE_NBR ^ (EVALUATE_NBR >>> 32));
+        result = 31 * result + (EVALUATE_NBR != null ? EVALUATE_NBR.hashCode() : 0);
         result = 31 * result + (int) (COURSE_ID ^ (COURSE_ID >>> 32));
         result = 31 * result + (COURSE_NAME != null ? COURSE_NAME.hashCode() : 0);
         result = 31 * result + USER_NBR;

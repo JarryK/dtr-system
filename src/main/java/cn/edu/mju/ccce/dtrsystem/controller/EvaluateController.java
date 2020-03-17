@@ -44,12 +44,10 @@ public class EvaluateController {
     @ResponseBody
     public Map<String, Object> insert(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
         String courseID = MapTool.getString(inMap, "courseID");
-        String evaluateNbr = MapTool.getString(inMap, "evaluateNbr");
         String evaluateDetail = MapTool.getString(inMap, "evaluateDetail");
         String evaluateScore = MapTool.getString(inMap, "evaluateScore");
         try {
             courseID.substring(1);//探测非空
-            evaluateNbr.substring(1);
             evaluateDetail.substring(1);
             evaluateScore.substring(1);
         } catch (Exception e) {
@@ -60,11 +58,14 @@ public class EvaluateController {
             if (uMsg.isEmpty()) {
                 return G.page.returnMap(false, "请先登录");
             }
+            String userName = MapTool.getString(uMsg,"USER_NAME");
+            String userNbr = MapTool.getString(uMsg,"USER_NBR");
             Evaluate e = new Evaluate();
             e.setCOURSE_ID(Long.parseLong(courseID));
-            e.setEVALUATE_NBR(Long.parseLong(evaluateNbr));
             e.setEVALUATE_DETAIL(evaluateDetail);
             e.setEVALUATE_SCORE(Double.parseDouble(evaluateScore));
+            e.setUSER_NBR(Integer.parseInt(userNbr));
+            e.setUSER_NAME(userName);
             Map<String,Object> relMap = evaluateBmo.createEvaluate(e);
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean) {
