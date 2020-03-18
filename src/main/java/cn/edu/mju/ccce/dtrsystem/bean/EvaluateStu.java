@@ -6,12 +6,12 @@ import java.util.Date;
 
 /**
  * <b>项目名称：</b>dtr-system<br>
- * <b>类名称：</b>cn.edu.mju.ccce.dtrsystem.bean.Evaluate<br>
+ * <b>类名称：</b>cn.edu.mju.ccce.dtrsystem.bean.EvaluateStu<br>
  * <b>创建人：</b>yuks<br>
  * <b>类描述：</b><br>
  * <b>创建时间：</b>2020-03-16 12:31<br>
  */
-public class Evaluate implements Serializable {
+public class EvaluateStu implements Serializable {
     private static final long serialVersionUID = -4947935210818989461L;
     private long EVALUATE_ID;// int(16) NOT NULL AUTO_INCREMENT COMMENT '表ID，自增',
     private BigInteger EVALUATE_NBR;// int(16) DEFAULT NULL COMMENT '表NBR，可重复',
@@ -118,22 +118,22 @@ public class Evaluate implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Evaluate evaluate = (Evaluate) o;
+        EvaluateStu evaluateStu = (EvaluateStu) o;
 
-        if (EVALUATE_ID != evaluate.EVALUATE_ID) return false;
-        if (COURSE_ID != evaluate.COURSE_ID) return false;
-        if (USER_NBR != evaluate.USER_NBR) return false;
-        if (Double.compare(evaluate.EVALUATE_SCORE, EVALUATE_SCORE) != 0) return false;
-        if (EVALUATE_STATUS != evaluate.EVALUATE_STATUS) return false;
-        if (EVALUATE_NBR != null ? !EVALUATE_NBR.equals(evaluate.EVALUATE_NBR) : evaluate.EVALUATE_NBR != null)
+        if (EVALUATE_ID != evaluateStu.EVALUATE_ID) return false;
+        if (COURSE_ID != evaluateStu.COURSE_ID) return false;
+        if (USER_NBR != evaluateStu.USER_NBR) return false;
+        if (Double.compare(evaluateStu.EVALUATE_SCORE, EVALUATE_SCORE) != 0) return false;
+        if (EVALUATE_STATUS != evaluateStu.EVALUATE_STATUS) return false;
+        if (EVALUATE_NBR != null ? !EVALUATE_NBR.equals(evaluateStu.EVALUATE_NBR) : evaluateStu.EVALUATE_NBR != null)
             return false;
-        if (COURSE_NAME != null ? !COURSE_NAME.equals(evaluate.COURSE_NAME) : evaluate.COURSE_NAME != null)
+        if (COURSE_NAME != null ? !COURSE_NAME.equals(evaluateStu.COURSE_NAME) : evaluateStu.COURSE_NAME != null)
             return false;
-        if (USER_NAME != null ? !USER_NAME.equals(evaluate.USER_NAME) : evaluate.USER_NAME != null) return false;
-        if (EVALUATE_DETAIL != null ? !EVALUATE_DETAIL.equals(evaluate.EVALUATE_DETAIL) : evaluate.EVALUATE_DETAIL != null)
+        if (USER_NAME != null ? !USER_NAME.equals(evaluateStu.USER_NAME) : evaluateStu.USER_NAME != null) return false;
+        if (EVALUATE_DETAIL != null ? !EVALUATE_DETAIL.equals(evaluateStu.EVALUATE_DETAIL) : evaluateStu.EVALUATE_DETAIL != null)
             return false;
-        if (CREAT_TIME != null ? !CREAT_TIME.equals(evaluate.CREAT_TIME) : evaluate.CREAT_TIME != null) return false;
-        return UPDATE_TIME != null ? UPDATE_TIME.equals(evaluate.UPDATE_TIME) : evaluate.UPDATE_TIME == null;
+        if (CREAT_TIME != null ? !CREAT_TIME.equals(evaluateStu.CREAT_TIME) : evaluateStu.CREAT_TIME != null) return false;
+        return UPDATE_TIME != null ? UPDATE_TIME.equals(evaluateStu.UPDATE_TIME) : evaluateStu.UPDATE_TIME == null;
     }
 
     @Override

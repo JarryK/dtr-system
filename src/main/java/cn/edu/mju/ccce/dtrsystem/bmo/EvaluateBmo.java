@@ -1,6 +1,6 @@
 package cn.edu.mju.ccce.dtrsystem.bmo;
 
-import cn.edu.mju.ccce.dtrsystem.bean.Evaluate;
+import cn.edu.mju.ccce.dtrsystem.bean.EvaluateStu;
 
 import java.util.Map;
 
@@ -18,5 +18,13 @@ public interface EvaluateBmo {
      * @param e
      * @return
      */
-    public Map<String,Object> createEvaluate (Evaluate e);
+    public Map<String,Object> createEvaluateStu(EvaluateStu e);
+
+    /**
+     * 查找评价记录
+     * @param courseID
+     * @param userNbr
+     * @return map key=EvaluateStu
+     */
+    public Map<String,Object> getEvaluateStu(String courseID, String userNbr);
 }

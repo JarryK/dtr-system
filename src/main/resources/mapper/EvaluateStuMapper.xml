@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.edu.mju.ccce.dtrsystem.dao.EvaluateDao">
-    <resultMap id="EvaluateMap" type="cn.edu.mju.ccce.dtrsystem.bean.Evaluate">
+<mapper namespace="cn.edu.mju.ccce.dtrsystem.dao.EvaluateStuDao">
+    <resultMap id="EvaluateMap" type="cn.edu.mju.ccce.dtrsystem.bean.EvaluateStu">
         <result property="EVALUATE_ID" column="EVALUATE_ID"/>
         <result property="EVALUATE_NBR" column="EVALUATE_NBR"/>
         <result property="COURSE_ID" column="COURSE_ID"/>
@@ -13,7 +13,7 @@
         <result property="CREAT_TIME" column="CREAT_TIME"/>
         <result property="UPDATE_TIME" column="UPDATE_TIME"/>
     </resultMap>
-    <sql id="sl_Evaluate">
+    <sql id="sl_EvaluateStu">
         <![CDATA[
          EVALUATE_ID,
          EVALUATE_NBR,
@@ -28,8 +28,8 @@
          UPDATE_TIME
         ]]>
     </sql>
-    <insert id="insert" useGeneratedKeys="true" keyProperty="EVALUATE_ID" parameterType="cn.edu.mju.ccce.dtrsystem.bean.Evaluate">
-        INSERT INTO evaluate
+    <insert id="insert" useGeneratedKeys="true" keyProperty="EVALUATE_ID" parameterType="cn.edu.mju.ccce.dtrsystem.bean.EvaluateStu">
+        INSERT INTO evaluate_stu
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="EVALUATE_NBR != null">
                 EVALUATE_NBR,
@@ -95,6 +95,11 @@
             </if>
         </trim>
     </insert>
+    <select id="selectEvaluate" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.EvaluateStu">
+        select  <include refid="sl_EvaluateStu" />
+        FROM evaluate_stu
+        WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND USER_NBR = #{userID,jdbcType=VARCHAR}
+    </select>
     <update id="updateCourse" parameterType="cn.edu.mju.ccce.dtrsystem.bean.Course">
         UPDATE course
         <set><trim suffixOverrides=",">

@@ -1,10 +1,10 @@
 package cn.edu.mju.ccce.dtrsystem.bmo;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
-import cn.edu.mju.ccce.dtrsystem.bean.Evaluate;
+import cn.edu.mju.ccce.dtrsystem.bean.EvaluateStu;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
-import cn.edu.mju.ccce.dtrsystem.dao.EvaluateDao;
+import cn.edu.mju.ccce.dtrsystem.dao.EvaluateStuDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,8 @@ public class EvaluateBmoImpl implements EvaluateBmo {
 
 
     @Autowired
-    @Qualifier("cn.edu.mju.ccce.dtrsystem.dao.EvaluateDao")
-    protected EvaluateDao evaluateDao;
+    @Qualifier("cn.edu.mju.ccce.dtrsystem.dao.EvaluateStuDao")
+    protected EvaluateStuDao evaluateStuDao;
 
 
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.CourseBmoImpl")
@@ -47,8 +47,20 @@ public class EvaluateBmoImpl implements EvaluateBmo {
      * @return
      */
     @Override
-    public Map<String, Object> createEvaluate(Evaluate e) {
+    public Map<String, Object> createEvaluateStu(EvaluateStu e) {
         try {
+            String courseID = String.valueOf(e.getCOURSE_ID());
+            String userNbr = String.valueOf(e.getUSER_NBR());
+            Map<String,Object> eMap = getEvaluateStu(courseID,userNbr);
+            boolean eMapBoolean = G.bmo.returnMapBool(eMap);
+            if (!eMapBoolean) {
+                String msg = G.bmo.returnMapMsg(eMap);
+                return G.bmo.returnMap(false, msg);
+            }
+            EvaluateStu eS = (EvaluateStu) MapTool.getObject(eMap,"EvaluateStu");
+            if (!"".equals(eS.getCOURSE_NAME())){
+                return G.bmo.returnMap(false, "课程已评价");
+            }
             Map<String, Object> courseMap = courseBmo.getCourseDetByID(String.valueOf(e.getCOURSE_ID()));
             boolean relMapBoolean = G.bmo.returnMapBool(courseMap);
             if (!relMapBoolean) {
@@ -62,7 +74,7 @@ public class EvaluateBmoImpl implements EvaluateBmo {
             e.setCOURSE_NAME(course_name);
             e.setEVALUATE_NBR(evaluateNbr);
             e.setEVALUATE_STATUS(0);
-            int insert = evaluateDao.insert(e);
+            int insert = evaluateStuDao.insert(e);
             if (insert > 0) {
                 return G.bmo.returnMap(true, "ok");
             }
@@ -70,6 +82,33 @@ public class EvaluateBmoImpl implements EvaluateBmo {
         } catch (Exception ex) {
             log.error("创建评价记录异常：", ex);
             return G.bmo.returnMap(false, "创建评价记录异常");
+        }
+    }
+
+    /**
+     * 查找评价记录
+     * @param courseID
+     * @param userNbr
+     * @return map key=EvaluateStu
+     */
+    @Override
+    public Map<String, Object> getEvaluateStu(String courseID, String userNbr) {
+        try {
+            EvaluateStu e = new EvaluateStu();
+            try {
+                e = evaluateStuDao.selectEvaluate(courseID, userNbr);
+            } catch (NullPointerException ex) {
+                return G.bmo.returnMap(false, "查询为空！");
+            }
+            if ("".equals(e.getCOURSE_NAME())) {
+                return G.bmo.returnMap(false, "查询为空！");
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("EvaluateStu",e);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询评价记录异常：", e);
+            return G.bmo.returnMap(false, "查询评价记录异常");
         }
     }
 }
