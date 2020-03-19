@@ -505,14 +505,14 @@ uiduck = {
             $("#" + uiduck.udKey).css(' -moz-filter', 'blur(' + e.loading.blur + 'px)');
             $("#" + uiduck.udKey).css('transition', 'filter .5s');
         }
-        var loadingHtml = '<img id="ud-loading" style="position: absolute;' + position + ';width: ' + Width + '; height: ' + Width + '; z-index: 1003" src="/js/uiduck/assets/' + uiduck.loading.icon + '.gif" />';
+        var loadingHtml = '<img class="ud-loading" style="position: absolute;' + position + ';width: ' + Width + '; height: ' + Width + '; z-index: 1003" src="/js/uiduck/assets/' + uiduck.loading.icon + '.gif" />';
         $("#" + uiduck.templateId).append(loadingHtml);
-        $("#ud-loading").css('display', 'block');
+        $(".ud-loading").css('display', 'block');
         $(".uiduck_tr").css('visibility', 'visible');
     },
     hideLoading: function (e) {
         setTimeout(function () {
-            $("#ud-loading").css('display', 'none');
+            $(".ud-loading").css('display', 'none');
             if (uiduck.loading.shade) {
                 $("#ud-shade").remove();
             }

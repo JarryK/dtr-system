@@ -46,13 +46,13 @@ public class EvaluateController {
         String courseID = MapTool.getString(inMap, "courseID");
         String evaluateDetail = MapTool.getString(inMap, "evaluateDetail");
         String evaluateScore = MapTool.getString(inMap, "evaluateScore");
-        try {
-            courseID.substring(1);//探测非空
-            evaluateDetail.substring(1);
-            evaluateScore.substring(1);
-        } catch (Exception e) {
-            return G.page.returnMap(false, "输入为空！");
-        }
+//        try {
+//            courseID.substring(1);//探测非空
+//            evaluateDetail.substring(1);
+//            evaluateScore.substring(1);
+//        } catch (Exception e) {
+//            return G.page.returnMap(false, "输入为空！");
+//        }
         try {
             Map<String, Object> uMsg = User.getUserMap(httpSession);
             if (uMsg.isEmpty()) {
@@ -111,8 +111,8 @@ public class EvaluateController {
             returnMap.put("evaluateStu",e);
             return returnMap;
         } catch (Exception e) {
-            log.error("新建评价异常",e);
-            return G.page.returnMap(false, "新建评价异常");
+            log.error("查询评价异常",e);
+            return G.page.returnMap(false, "查询评价异常");
         }
     }
 

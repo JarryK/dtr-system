@@ -317,7 +317,7 @@ var App = function () {
                 if (typeof (_response) !== 'object' || _response == null
                     || typeof (_response['health']) !== 'object' || _response['health'] == null) {
                     if (_tips) {
-                        App.topTips('arguments error!');
+                        App.topAlert('arguments error!');
                     }
                     return false;
                 }

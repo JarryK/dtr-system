@@ -51,14 +51,14 @@ public class EvaluateBmoImpl implements EvaluateBmo {
         try {
             String courseID = String.valueOf(e.getCOURSE_ID());
             String userNbr = String.valueOf(e.getUSER_NBR());
-            Map<String,Object> eMap = getEvaluateStu(courseID,userNbr);
+            Map<String, Object> eMap = getEvaluateStu(courseID, userNbr);
             boolean eMapBoolean = G.bmo.returnMapBool(eMap);
-            if (!eMapBoolean) {
+            if (eMapBoolean) {
                 String msg = G.bmo.returnMapMsg(eMap);
                 return G.bmo.returnMap(false, msg);
             }
-            EvaluateStu eS = (EvaluateStu) MapTool.getObject(eMap,"EvaluateStu");
-            if (!"".equals(eS.getCOURSE_NAME())){
+            EvaluateStu eS = (EvaluateStu) MapTool.getObject(eMap, "EvaluateStu");
+            if (eS != null) {
                 return G.bmo.returnMap(false, "课程已评价");
             }
             Map<String, Object> courseMap = courseBmo.getCourseDetByID(String.valueOf(e.getCOURSE_ID()));
@@ -87,6 +87,7 @@ public class EvaluateBmoImpl implements EvaluateBmo {
 
     /**
      * 查找评价记录
+     *
      * @param courseID
      * @param userNbr
      * @return map key=EvaluateStu
@@ -97,14 +98,12 @@ public class EvaluateBmoImpl implements EvaluateBmo {
             EvaluateStu e = new EvaluateStu();
             try {
                 e = evaluateStuDao.selectEvaluate(courseID, userNbr);
+                e.getCOURSE_NAME();
             } catch (NullPointerException ex) {
                 return G.bmo.returnMap(false, "查询为空！");
             }
-            if ("".equals(e.getCOURSE_NAME())) {
-                return G.bmo.returnMap(false, "查询为空！");
-            }
-            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
-            returnMap.put("EvaluateStu",e);
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("EvaluateStu", e);
             return returnMap;
         } catch (Exception e) {
             log.error("查询评价记录异常：", e);

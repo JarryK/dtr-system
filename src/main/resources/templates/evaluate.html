@@ -15,18 +15,15 @@
 <div th:replace="header :: header"></div>
 <div class="container function">
     <br/>
-    <div id="table" class="shadow">
-
+    <div id="selfTable" class="shadow">
     </div>
-    <!--        onClick=uiduck.getRow(this);-->
-
     <!--以下为两个必须div元素-->
     <script type="text/html" id="barDemo">
         <a href="javascript:;" class="set-msg-btn text-decoration-none font-italic">点击评价</a>
         <br/>
-        <a href="javascript:;" class="get-msg-btn text-decoration-none font-italic">评价详情</a>
+        <a href="javascript:;" class="get-msg-btn text-decoration-none font-italic">老师评价</a>
     </script>
-    <div id="ud-top" style="display: none">
+    <div id="ud-top" style="display: none">-->
         <h3>当前设置为微信字段，通过ud-keyWord属性指定相关列的key</h3>
         <input id="search" ud-keyWord="COURSE_TEACHER_NAME" class="uiduck-input"/>
         <button class="uiduck-btn set-data">搜索</button>
@@ -55,30 +52,30 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary modal-no close-modal">取消</button>
-                    <button type="button" class="btn btn-primary modal-yes">确定</button>
+                    <button type="button" class="btn btn-primary classEvaluate-modal-yes">确定</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade bd-example-modal-lg" id="detailModal" data-backdrop="static" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-lg" id="teaModal" data-backdrop="static" tabindex="-1" role="dialog"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel">评价</h5>
+                    <h5 class="modal-title" id="teaModalLabel">评价</h5>
                     <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div>
-                        <h5>过程评分：<span id="detailStar"></span>&nbsp;&nbsp;<span class="grade" id="detailGrade">0</span>分
+                        <h5> 过程评分：<span id="teaStar"></span>&nbsp;&nbsp;<span class="grade" id="teaGrade">0</span>分
                         </h5>
                     </div>
                     <div>
                         <h5> 您的评价</h5>
-                        <textarea class="form-control input" id="detailEvaluate" cols="30" rows="7"
-                                  style="resize:none" readonly="readonly"></textarea>
+                        <textarea class="form-control input" id="teaEvaluate" cols="30" rows="7"
+                                  style="resize:none"></textarea>
                     </div>
                 </div>
             </div>
@@ -101,9 +98,12 @@
         var bindEvents = function () {
             App.getUserMsg();
             evaluate.getClassList();
-            evaluate.el('.modal-yes').off('click').on('click', function () {
-                var course_ID = evaluate.el('.modal-yes').data('course_ID');
+            evaluate.el('.classEvaluate-modal-yes').off('click').on('click', function () {
+                var course_ID = evaluate.el('.classEvaluate-modal-yes').data('course_ID');
                 var evaluateDetail = evaluate.el('#classEvaluate').val();
+                // if (evaluateDetail.length<5){
+                //     return App.topAlert("不得少于五个字",2);
+                // }
                 var evaluateScore = evaluate.el('#grade').data('grade');
                 $.post('/dtr/eval/insert', {
                     courseID: course_ID,
@@ -148,35 +148,57 @@
                         return;
                     } else {
                         var doneList = data.reservationDoneList;
-                        evaluate.initializationTable(doneList).then(function () {
-                            evaluate.panelClick();
-                            return this;
-                        });
+                        evaluate.initializationTable(doneList)
+                            .then(function () { evaluate.panelClick();return this;});
                         return;
                     }
                 });
             },
-            showEvaluateModal: function () {
-                return $.Deferred(function (defer) {
-                    evaluate.el("#star").raty({
-                        path: '/js/star/images/',
-                        starOff: 'star-off.png',
-                        starOn: 'star-on.png',
-                        starHalf: 'star-half.png',
-                        targetKeep: true,
-                        space: false,
-                        number: 10,
-                        click: function (score, evt) {
-                            evaluate.el('#grade').html(score);
-                            evaluate.el('#grade').data('grade', score);
-                        }
-                    });
-                    evaluate.clearModal();
-                    evaluate.el('#evaluateModal').modal('show');
-                    defer.resolve();
-                }).promise();
+            showEvaluateModal: function (s, d) {
+                if (s != null || d != null) {
+                    return $.Deferred(function (defer) {
+                        evaluate.el("#star").raty({
+                            path: '/js/star/images/',
+                            starOff: 'star-off.png',
+                            starOn: 'star-on.png',
+                            starHalf: 'star-half.png',
+                            targetKeep: true,
+                            space: false,
+                            number: 10,
+                            score: s,
+                            readOnly: true
+                        });
+                        evaluate.el('#grade').html(s);
+                        evaluate.el('#classEvaluate').val(d);
+                        evaluate.el('#classEvaluate').attr("readonly", "true");
+                        evaluate.el('#evaluateModal').modal('show');
+                        evaluate.el('.classEvaluate-modal-yes').attr("disabled", true);
+                        defer.resolve();
+                    }).promise();
+                } else {
+                    return $.Deferred(function (defer) {
+                        evaluate.el("#star").raty({
+                            path: '/js/star/images/',
+                            starOff: 'star-off.png',
+                            starOn: 'star-on.png',
+                            starHalf: 'star-half.png',
+                            targetKeep: true,
+                            space: false,
+                            number: 10,
+                            click: function (score, evt) {
+                                evaluate.el('#grade').html(score);
+                                evaluate.el('#grade').data('grade', score);
+                            }
+                        });
+                        evaluate.clearModal();
+                        evaluate.el('#classEvaluate').removeAttr("readonly");
+                        evaluate.el('.classEvaluate-modal-yes').removeAttr("disabled");
+                        evaluate.el('#evaluateModal').modal('show');
+                        defer.resolve();
+                    }).promise();
+                }
             },
-            showDetailModal: function (s,d) {
+            showTeaModal: function (s, d) {
                 return $.Deferred(function (defer) {
                     evaluate.el("#detailStar").raty({
                         path: '/js/star/images/',
@@ -189,9 +211,9 @@
                         score: s,
                         readOnly: true
                     });
-                    evaluate.el('#detailGrade').html(s)
-                    evaluate.el('#detailEvaluate').val(d)
-                    evaluate.el('#detailModal').modal('show');
+                    evaluate.el('#teaGrade').html(s);
+                    evaluate.el('#teaEvaluate').val(d);
+                    evaluate.el('#teaModal').modal('show');
                     defer.resolve();
                 }).promise();
             },
@@ -204,39 +226,42 @@
                 evaluate.el(".set-msg-btn").off('click').on('click', function () {
                     var data = App.returnRowData($(this));
                     var course_ID = data.course_ID;
-                    evaluate.el('.modal-yes').data('course_ID', course_ID);
-                    evaluate.showEvaluateModal();
+                    $.post('/dtr/eval/view', {
+                        courseID: course_ID
+                    }).done(function (data) {
+                        var evaluateStu = data.evaluateStu;
+                        if (evaluateStu === undefined) {
+                            evaluate.el('.classEvaluate-modal-yes').data('course_ID', course_ID);
+                            evaluate.showEvaluateModal();
+                        } else {
+                            evaluate.showEvaluateModal(evaluateStu.evaluate_SCORE, evaluateStu.evaluate_DETAIL);
+                            App.topAlert("已评价", 4);
+                        }
+                        return;
+                    });
                 });
                 evaluate.el(".get-msg-btn").off('click').on('click', function () {
                     var data = App.returnRowData($(this));
                     var courseID = data.course_ID;
+                    var courseTEACHERNBR = data.course_TEACHER_NBR;
                     $.post('/dtr/eval/view', {
-                        courseID:courseID
+                        courseID: courseID,
+                        courseTEACHERNBR:courseTEACHERNBR
                     }).done(function (data) {
                         if (!App.checker(data)) {
                             return;
                         } else {
                             var evaluateStu = data.evaluateStu;
-                            evaluate.showDetailModal(evaluateStu.evaluate_SCORE,evaluateStu.evaluate_DETAIL);
+                            evaluate.showTeaModal(evaluateStu.evaluate_SCORE, evaluateStu.evaluate_DETAIL);
                             return;
                         }
                     });
                 });
-                // evaluate.el(".set-data").off('click').on('click',function (e,f) {
-                //     uiduck.data = e;
-                //     if (f) {
-                //         uiduck.pageOptions.index = 0;
-                //         uiduck.pageOptions.count = 0;
-                //         uiduck.render(uiduck, true);
-                //     } else {
-                //         uiduck.render(uiduck, false);
-                //     }
-                // });
             },
             initializationTable: function (dataList) {
                 return $.Deferred(function (defer) {
                     uiduck.setOptions({
-                        templateId: "table",
+                        templateId: "selfTable",
                         style: {tbClass: "table text-center table-striped", tdClass: "align-middle"},
                         topBar: {templateId: "search", kwLight: true},
                         rightTool: {templateId: "barDemo", title: "操作", width: "100px"},
@@ -264,7 +289,6 @@
                     defer.resolve();
                 }).promise();
             },
-
         }
     })();
     $(function () {
