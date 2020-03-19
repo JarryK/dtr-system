@@ -101,9 +101,9 @@
             evaluate.el('.classEvaluate-modal-yes').off('click').on('click', function () {
                 var course_ID = evaluate.el('.classEvaluate-modal-yes').data('course_ID');
                 var evaluateDetail = evaluate.el('#classEvaluate').val();
-                // if (evaluateDetail.length<5){
-                //     return App.topAlert("不得少于五个字",2);
-                // }
+                if (evaluateDetail.length < 5) {
+                    return App.topAlert("不得少于五个字", 2);
+                }
                 var evaluateScore = evaluate.el('#grade').data('grade');
                 $.post('/dtr/eval/insert', {
                     courseID: course_ID,
@@ -149,7 +149,10 @@
                     } else {
                         var doneList = data.reservationDoneList;
                         evaluate.initializationTable(doneList)
-                            .then(function () { evaluate.panelClick();return this;});
+                            .then(function () {
+                                evaluate.panelClick();
+                                return this;
+                            });
                         return;
                     }
                 });
@@ -246,7 +249,7 @@
                     var courseTEACHERNBR = data.course_TEACHER_NBR;
                     $.post('/dtr/eval/view', {
                         courseID: courseID,
-                        courseTEACHERNBR:courseTEACHERNBR
+                        courseTEACHERNBR: courseTEACHERNBR
                     }).done(function (data) {
                         if (!App.checker(data)) {
                             return;

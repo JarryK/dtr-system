@@ -1,6 +1,7 @@
 package cn.edu.mju.ccce.dtrsystem.bmo;
 
 import cn.edu.mju.ccce.dtrsystem.bean.EvaluateStu;
+import cn.edu.mju.ccce.dtrsystem.bean.EvaluateTea;
 
 import java.util.Map;
 
@@ -14,17 +15,32 @@ import java.util.Map;
 public interface EvaluateBmo {
 
     /**
-     * 创建一条新的评价记录
+     * 学生创建一条新的评价记录
      * @param e
      * @return
      */
-    public Map<String,Object> createEvaluateStu(EvaluateStu e);
+    public Map<String,Object> createStudentEvaluate(EvaluateStu e);
 
     /**
-     * 查找评价记录
+     * 学生查找评价记录
      * @param courseID
      * @param userNbr
-     * @return map key=EvaluateStu
+     * @return map key=EvaluateStu class=EvaluateStu
      */
-    public Map<String,Object> getEvaluateStu(String courseID, String userNbr);
+    public Map<String,Object> getStudentEvaluate(String courseID, String userNbr);
+
+    /**
+     * 老师创建一条评价记录
+     * @param e
+     * @return
+     */
+    public Map<String,Object> createTeacherEvaluate(EvaluateTea e);
+
+    /**
+     * 老师查找指定学生评价记录
+     * @param courseID
+     * @param studentNbr
+     * @return map key=EvaluateTea
+     */
+    public Map<String,Object> getTeacherEvaluate(String courseID,String studentNbr);
 }
