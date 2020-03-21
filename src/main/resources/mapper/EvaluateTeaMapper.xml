@@ -103,9 +103,9 @@
             </if>
         </trim>
     </insert>
-    <select id="selectEvaluate" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.EvaluateTea">
-        select  <include refid="sl_EvaluateTea" />
-        FROM evaluate_tea
+    <select id="selectEvaluate" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.EvaluateStu">
+        select *
+        FROM evaluate_stu
         WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND USER_NBR = #{userNbr,jdbcType=VARCHAR}
     </select>
     <update id="updateCourse" parameterType="cn.edu.mju.ccce.dtrsystem.bean.Course">

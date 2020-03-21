@@ -138,7 +138,8 @@ public class EvaluateController {
                 returnMap.put("evaluateStu", e);
                 return returnMap;
             } else if ("教师".equals(userType)) {
-                Map<String, Object> relMap = evaluateBmo.getTeacherEvaluate(courseID, userNbr);
+                String stuNbr = MapTool.getString(inMap, "stuNbr");
+                Map<String, Object> relMap = evaluateBmo.getTeacherEvaluate(courseID, stuNbr);
                 boolean relMapBoolean = G.bmo.returnMapBool(relMap);
                 if (!relMapBoolean) {
                     String msg = G.bmo.returnMapMsg(relMap);

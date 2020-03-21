@@ -170,7 +170,7 @@ public class EvaluateBmoImpl implements EvaluateBmo {
     @Override
     public Map<String, Object> getTeacherEvaluate(String courseID, String studentNbr) {
         try {
-            EvaluateTea e = new EvaluateTea();
+            EvaluateStu e = new EvaluateStu();
             try {
                 e = evaluateTeaDao.selectEvaluate(courseID, studentNbr);
                 e.getCOURSE_NAME();

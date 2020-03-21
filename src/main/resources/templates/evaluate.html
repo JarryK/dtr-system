@@ -15,7 +15,9 @@
 <div th:replace="header :: header"></div>
 <div class="container function">
     <br/>
-    <div id="selfTable" class="shadow">
+    <div id="teaTable" class="shadow">
+    </div>
+    <div id="stuTable" class="shadow">
     </div>
     <!--以下为两个必须div元素-->
     <script type="text/html" id="barDemo">
@@ -29,6 +31,9 @@
         <button class="uiduck-btn set-data">搜索</button>
     </div>
     <br/>
+    <script type="text/html" id="teaDemo">
+        <a href="javascript:;" class="stuList-btn text-decoration-none font-italic">学生详情</a>
+    </script>
     <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="evaluateModal" data-backdrop="static" tabindex="-1" role="dialog"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -57,9 +62,9 @@
             </div>
         </div>
     </div>
-    <div class="modal fade bd-example-modal-lg" id="teaModal" data-backdrop="static" tabindex="-1" role="dialog"
+    <div class="modal fade" id="teaModal" data-backdrop="static" tabindex="-1" role="dialog"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog " role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="teaModalLabel">评价</h5>
@@ -73,16 +78,63 @@
                         </h5>
                     </div>
                     <div>
-                        <h5> 您的评价</h5>
+                        <h5> 对您的评价</h5>
                         <textarea class="form-control input" id="teaEvaluate" cols="30" rows="7"
-                                  style="resize:none"></textarea>
+                                  style="resize:none" readonly="readonly"></textarea>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="modal fade bd-example-modal-lg" id="stuListModal" data-backdrop="static" tabindex="-1" role="dialog"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stuListModalLabel">学生列表</h5>
+                    <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table text-center table-striped  shadow">
+                        <thead>
+                        <tr>
+                            <th scope="col">序号</th>
+                            <th scope="col">学号</th>
+                            <th scope="col">姓名</th>
+                            <th scope="col">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="stu-list-msg-container">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    <!--                <button type="button" class="btn btn-primary">Save changes</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</div>
+<script type="text/html" id="stu-list-msg-art">
+    {{ if stuList && stuList.length>0 }}{{each stuList}}
+    <tr>
+        <th class="align-middle" scope="row">{{$index+1}}</th>
+        <td class="align-middle">{{$value.USER_NBR}}</td>
+        <td class="align-middle">{{$value.USER_NAME}}</td>
+        <td class="align-middle">
+            <p style="margin-bottom: 0px;"><a href="javascript:;" class="view-evaluate text-decoration-none student-detMsg"
+                  data-courseid="{{$value.course_ID}}" data-stunbr="{{$value.USER_NBR}}">查看评价</a>
+            </p>
+            <p style="margin-bottom: 0px;"><a href="javascript:;" class="set-stu-evaluate text-decoration-none student-detMsg"
+                                              data-courseid="{{$value.course_ID}}" data-stunbr="{{$value.USER_NBR}}">写评价</a>
+            </p>
+        </td>
+    </tr>
+    {{/each}}{{/if}}
+</script>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
@@ -96,8 +148,18 @@
     });
     var evaluate = (function () {
         var bindEvents = function () {
-            App.getUserMsg();
-            evaluate.getClassList();
+            App.getUserMsg(function (nbr,name,type) {
+                if("学生" === type){
+                    evaluate.getStuClassList();
+                }else if("教师" === type){
+                    evaluate.getTeaClassList();
+                }else {
+                    App.alert('提示','没有权限',2,function () {
+                        App.goHomeBySelf();
+                    })
+                }
+
+            });
             evaluate.el('.classEvaluate-modal-yes').off('click').on('click', function () {
                 var course_ID = evaluate.el('.classEvaluate-modal-yes').data('course_ID');
                 var evaluateDetail = evaluate.el('#classEvaluate').val();
@@ -130,7 +192,6 @@
                     evaluate.clearModal();
                 });
             });
-
         };
         return {
             data: {},
@@ -141,19 +202,38 @@
                 bindEvents();
                 return this
             },
-            // 获取所有的数据列表
-            getClassList: function () {
+            getStuClassList: function () {
                 $.post('/dtr/rese/getSelfHistory', {}).done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {
                         var doneList = data.reservationDoneList;
-                        evaluate.initializationTable(doneList)
+                        if (doneList == null){
+                            evaluate.el("#stuTable").html('<h4 style="text-align: center;">暂无记录</h4>');
+                            App.topAlert("暂无记录",4);
+                            return;
+                        }
+                        evaluate.paddingStuTable(doneList)
                             .then(function () {
                                 evaluate.panelClick();
                                 return this;
                             });
                         return;
+                    }
+                });
+            },
+            getTeaClassList:function(){
+                $.post('/dtr/issue/getSelfIssue').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        var courseDoneList = data.courseDoneList;
+                        if (!data.noIssueDoneList === '') {
+                            evaluate.el("#teaTable").html("<h4  style='text-align: center'>" + data.noIssueList + "</h4>")
+                        } else {
+                            evaluate.paddingTeaTable(courseDoneList);
+                        }
+                        evaluate.panelClick();
                     }
                 });
             },
@@ -203,7 +283,7 @@
             },
             showTeaModal: function (s, d) {
                 return $.Deferred(function (defer) {
-                    evaluate.el("#detailStar").raty({
+                    evaluate.el("#teaStar").raty({
                         path: '/js/star/images/',
                         starOff: 'star-off.png',
                         starOn: 'star-on.png',
@@ -260,11 +340,69 @@
                         }
                     });
                 });
+                evaluate.el(".stuList-btn").off('click').on('click', function () {
+                    var data = App.returnRowData($(this));
+                    var course_ID = data.course_ID;
+                    $.post('/dtr/issue/getDoneCourseStu', {
+                        courseID: course_ID
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            var stuNameList = data.userList;
+                            if (stuNameList.length == 0) {
+                                App.topAlert("暂无记录",4);
+                                return;
+                            }
+                            // 先填充数据
+                            evaluate.el('#stu-list-msg-container').data("courseID",course_ID);
+                            evaluate.paddingStuNameList(stuNameList)
+                                .then(function () {evaluate.el('#stuListModal').modal('show');return this;})
+                                .then(function (){evaluate.panelClick(); return this;}); //后置触发
+                        }
+                    });
+                });
+                evaluate.el(".view-evaluate").off('click').on('click', function () {
+                    var courseID =  evaluate.el('#stu-list-msg-container').data("courseID");
+                    var stuNbr =  $(this).data('stunbr');
+                    $.post('/dtr/eval/view', {
+                        courseID: courseID,
+                        stuNbr: stuNbr
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            var evaluateStu = data.evaluateStu;
+                            evaluate.showTeaModal(evaluateStu.evaluate_SCORE, evaluateStu.evaluate_DETAIL);
+                            return;
+                        }
+                    });
+                });
+                evaluate.el(".set-msg-btn").off('click').on('click', function () {
+                    var courseID =  evaluate.el('#stu-list-msg-container').data("courseID");
+                    var stuNbr =  $(this).data('stunbr');
+                    $.post('/dtr/eval/view', {
+                        courseID: courseID,
+                        stuNbr: stuNbr
+                    }).done(function (data) {
+                        var evaluateStu = data.evaluateStu;
+                        if (evaluateStu === undefined) {
+                            evaluate.el('.classEvaluate-modal-yes').data('course_ID', course_ID);
+                            evaluate.showEvaluateModal();
+                        } else {
+                            evaluate.showEvaluateModal(evaluateStu.evaluate_SCORE, evaluateStu.evaluate_DETAIL);
+                            App.topAlert("已评价", 4);
+                        }
+                        return;
+                    });
+                });
+
+                set-stu-evaluate
             },
-            initializationTable: function (dataList) {
+            paddingStuTable: function (dataList) {
                 return $.Deferred(function (defer) {
                     uiduck.setOptions({
-                        templateId: "selfTable",
+                        templateId: "stuTable",
                         style: {tbClass: "table text-center table-striped", tdClass: "align-middle"},
                         topBar: {templateId: "search", kwLight: true},
                         rightTool: {templateId: "barDemo", title: "操作", width: "100px"},
@@ -289,6 +427,45 @@
                             }]
                     });
                     uiduck.setData(dataList, false);
+                    defer.resolve();
+                }).promise();
+            },
+            paddingTeaTable: function (dataList) {
+                return $.Deferred(function (defer) {
+                    uiduck.setOptions({
+                        templateId: "teaTable",
+                        style: {tbClass: "table text-center table-striped", tdClass: "align-middle"},
+                        topBar: {templateId: "search", kwLight: true},
+                        rightTool: {templateId: "teaDemo", title: "操作", width: "100px"},
+                        loading: {icon: "loading", blur: 3, time: 1000},
+                        page: true,
+                        fieldOptions: [
+                            {
+                                index: true,
+                                title: "序号"
+                            },
+                            {
+                                key: "course_NAME",
+                                title: "课程名"
+                            }, {
+                                key: "course_TYPE_NAME",
+                                title: "类型"
+                            },{
+                                key: "course_DONE_STU_NBR",
+                                title: "预约人数"
+                            },{
+                                key: "course_TIME",
+                                title: "课程时间",
+                                type: "time"
+                            }]
+                    });
+                    uiduck.setData(dataList, false);
+                    defer.resolve();
+                }).promise();
+            },
+            paddingStuNameList: function (userList) {
+                return $.Deferred(function (defer) {
+                    evaluate.el("#stu-list-msg-container").html(template('stu-list-msg-art', {stuList: userList}));
                     defer.resolve();
                 }).promise();
             },

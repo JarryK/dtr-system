@@ -54,6 +54,7 @@ var App = function () {
     };
     // page_turn页面跳转函数集
     var page_turn_functions = (function () {
+        // 顶部跳转
         // 笨方法，不过能用就好了
         $("#header-goto-issue").off('click').on('click', function () {
             App.goIssueByNewPage();
@@ -124,6 +125,13 @@ var App = function () {
     })();
     // utils工具函数集
     var utils_functions = (function () {
+        $(document).on('show.bs.modal', '.modal', function(event) {
+            $(this).appendTo($('body'));
+        }).on('shown.bs.modal', '.modal.in', function(event) {
+            App.setModalsAndBackdropsOrder();
+        }).on('hidden.bs.modal', '.modal', function(event) {
+            App.setModalsAndBackdropsOrder();
+        });
         return {
             loginOut: function (uNbr, uName) {
                 App.selectAlert('操作提示', "用户" + uName + "确定退出吗?", 3, function () {
@@ -165,6 +173,16 @@ var App = function () {
                 var index =$(e).parent().attr("ud-index");
                 console.log(uiduck.data[index]);
                 return uiduck.data[index];
+            },
+            setModalsAndBackdropsOrder:function() {
+                var modalZIndex = 1040;
+                $('.modal.in').each(function(index) {
+                    var $modal = $(this);
+                    modalZIndex++;
+                    $modal.css('zIndex', modalZIndex);
+                    $modal.next('.modal-backdrop.in').addClass('hidden').css('zIndex', modalZIndex - 1);
+                });
+                $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
             }
         }
     })();
@@ -340,7 +358,6 @@ var App = function () {
             }
         }
     })();
-    // 顶部跳转
     return {
         init: function () {
             // 初始化全局设置

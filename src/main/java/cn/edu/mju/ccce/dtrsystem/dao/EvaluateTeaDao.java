@@ -22,10 +22,10 @@ public interface EvaluateTeaDao {
     public int insert (EvaluateTea evaluate);
 
     /**
-     * 获取指定学生指定老师评价
+     * 获取学生对课程的评价
      * @param courseID
      * @param userNbr
      * @return
      */
-    public EvaluateTea selectEvaluate (String courseID, String userNbr);
+    public EvaluateStu selectEvaluate (String courseID, String userNbr);
 }
