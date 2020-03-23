@@ -160,6 +160,7 @@
 <script>
     var home = (function () {
         var bindEvents = function () {
+            App.setWhere('home');
             App.getUserMsg(function (uNbr,uName,type) {
                 home.el('#userMsg').data("uNbr",uNbr);
                 home.el('.userName').html(uName+"("+type+")");

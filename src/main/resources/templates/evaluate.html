@@ -148,6 +148,7 @@
     });
     var evaluate = (function () {
         var bindEvents = function () {
+            App.setWhere('evaluate');
             App.getUserMsg(function (nbr,name,type) {
                 evaluate.el('.classEvaluate-modal-yes').data('type',type);
                 if("学生" === type){

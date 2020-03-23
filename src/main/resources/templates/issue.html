@@ -286,6 +286,7 @@
     });
     var issue = (function () {
         var bindEvents = function () {
+            App.setWhere("issue");
             App.getUserMsg(function (uNbr, uName, uType) {
                 if (!App.isTeacher(uType)) {
                     App.alert("错误", "当前用户无权限", 2, function () {
@@ -394,11 +395,11 @@
                         } else {
                             issue.el("#issue-done-class-msg-container").html(template('issue-done-class-msg-art', {courseDoneList: courseDoneList}))
                         }
-                        issue.tableClick();
+                        issue.panelClick();
                     }
                 });
             },
-            tableClick: function () {
+            panelClick: function () {
                 issue.el('.student-det-btn').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
                     $.post('/dtr/issue/getCourseStu', {
@@ -415,7 +416,7 @@
                             // 先填充数据
                             issue.paddingStuNameList(stuNameList)
                                 .then(function () {issue.el('#stuNameListModel').modal('show');return this;})
-                                .then(function (){issue.tableClick(); return this;}); //后置触发
+                                .then(function (){issue.panelClick(); return this;}); //后置触发
                         }
                     });
                 });
@@ -435,7 +436,7 @@
                             // 先填充数据
                             issue.paddingStuNameList(stuNameList)
                                 .then(function () {issue.el('#stuNameListModel').modal('show');return this;})
-                                .then(function (){issue.tableClick(); return this;}); //后置触发
+                                .then(function (){issue.panelClick(); return this;}); //后置触发
                         }
                     });
                 });
@@ -453,7 +454,7 @@
                             // 先填充数据
                             issue.paddingCourseDetail(data.courseDet)
                                 .then(function () {issue.el('#courseMsgModel').modal('show');return this})
-                                .then(function (){issue.tableClick(); return this;}); //后置触发
+                                .then(function (){issue.panelClick(); return this;}); //后置触发
                         }
                     });
                 });

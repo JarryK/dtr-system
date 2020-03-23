@@ -939,6 +939,7 @@ uiduck = {
             uiduck.pageOptions.index = 0;
             uiduck.render(uiduck);
         }
+        App.panelClick();
     },
     language: function (b) {
         var options = {};

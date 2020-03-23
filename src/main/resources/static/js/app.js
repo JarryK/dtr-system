@@ -2,6 +2,7 @@ document.write("<script src='/js/SweetAlert2.js'></script>");
 document.write("<script src='/js/template.js'></script>");
 document.write("<link href='/js/star/jquery.raty.css' />");
 document.write("<script src='/js/star/jquery.raty.js'></script>");
+document.write("<dic id='where' style='display: none'></dic>");
 var App = function () {
     // 全局设置
     var globalSetting = function () {
@@ -183,6 +184,25 @@ var App = function () {
                     $modal.next('.modal-backdrop.in').addClass('hidden').css('zIndex', modalZIndex - 1);
                 });
                 $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
+            },
+            panelClick:function () {
+                var where = App.getWhere();
+                switch (where) {
+                    case "issue":
+                        return issue.panelClick();
+                    case "evaluate":
+                        return evaluate.panelClick();
+                    case "reservation":
+                        return reservation.panelClick();
+                    default:
+                        return;
+                }
+            },
+            setWhere:function (where) {
+                $('#where').data('where',where);
+            },
+            getWhere:function () {
+                return  $('#where').data('where');
             }
         }
     })();

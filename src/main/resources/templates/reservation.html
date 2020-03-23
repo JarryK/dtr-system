@@ -169,6 +169,7 @@
     });
     var reservation = (function () {
         var bindEvents = function () {
+            App.setWhere('reservation');
             App.getUserMsg();
             reservation.getClassList();
             reservation.el('.reservationsHistory-tab').off('click').on('click',function () {
