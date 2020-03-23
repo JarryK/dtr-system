@@ -27,5 +27,5 @@ public interface EvaluateTeaDao {
      * @param userNbr
      * @return
      */
-    public EvaluateStu selectEvaluate (String courseID, String userNbr);
+    public EvaluateTea selectEvaluate (String courseID, String userNbr);
 }

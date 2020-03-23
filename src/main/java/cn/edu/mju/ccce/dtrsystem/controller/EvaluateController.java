@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -104,15 +105,15 @@ public class EvaluateController {
     }
 
     /**
-     * 查看评价
+     * 查看学生评价
      *
      * @param inMap
      * @param httpSession
      * @return
      */
-    @RequestMapping("/view")
+    @RequestMapping("/view-stu")
     @ResponseBody
-    public Map<String, Object> view(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+    public Map<String, Object> viewStu(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
         String courseID = MapTool.getString(inMap, "courseID");
         try {
             courseID.substring(1);//探测非空
@@ -126,32 +127,81 @@ public class EvaluateController {
             }
             String userNbr = MapTool.getString(uMsg, "USER_NBR");
             String userType = MapTool.getString(uMsg, "TYPE_NAME");
+            Map<String, Object> relMap = new HashMap<>();
             if ("学生".equals(userType)) {
-                Map<String, Object> relMap = evaluateBmo.getStudentEvaluate(courseID, userNbr);
+                relMap = evaluateBmo.getStudentEvaluate(courseID, userNbr);
                 boolean relMapBoolean = G.bmo.returnMapBool(relMap);
                 if (!relMapBoolean) {
                     String msg = G.bmo.returnMapMsg(relMap);
                     return G.page.returnMap(false, msg);
                 }
-                EvaluateStu e = (EvaluateStu) MapTool.getObject(relMap, "EvaluateStu");
-                Map<String, Object> returnMap = G.page.returnMap(true, "ok");
-                returnMap.put("evaluateStu", e);
-                return returnMap;
             } else if ("教师".equals(userType)) {
                 String stuNbr = MapTool.getString(inMap, "stuNbr");
-                Map<String, Object> relMap = evaluateBmo.getTeacherEvaluate(courseID, stuNbr);
+                relMap = evaluateBmo.getStudentEvaluate(courseID, stuNbr);
                 boolean relMapBoolean = G.bmo.returnMapBool(relMap);
                 if (!relMapBoolean) {
                     String msg = G.bmo.returnMapMsg(relMap);
                     return G.page.returnMap(false, msg);
                 }
-                EvaluateStu e = (EvaluateStu) MapTool.getObject(relMap, "EvaluateTea");
-                Map<String, Object> returnMap = G.page.returnMap(true, "ok");
-                returnMap.put("evaluateStu", e);
-                return returnMap;
             } else {
                 return G.page.returnMap(false, "用户权限错误！查询失败");
             }
+            EvaluateStu e = (EvaluateStu) MapTool.getObject(relMap, "EvaluateStu");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("evaluateStu", e);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询评价异常", e);
+            return G.page.returnMap(false, "查询评价异常");
+        }
+    }
+
+    /**
+     * 查看老师评价
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("/view-tea")
+    @ResponseBody
+    public Map<String, Object> viewTea(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String courseID = MapTool.getString(inMap, "courseID");
+        try {
+            courseID.substring(1);//探测非空
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空！");
+        }
+        try {
+            Map<String, Object> uMsg = User.getUserMap(httpSession);
+            if (uMsg.isEmpty()) {
+                return G.page.returnMap(false, "请先登录");
+            }
+            String userNbr = MapTool.getString(uMsg, "USER_NBR");
+            String userType = MapTool.getString(uMsg, "TYPE_NAME");
+            Map<String, Object> relMap = new HashMap<>();
+            if ("学生".equals(userType)) {
+                relMap = evaluateBmo.getTeacherEvaluate(courseID, userNbr);
+                boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+                if (!relMapBoolean) {
+                    String msg = G.bmo.returnMapMsg(relMap);
+                    return G.page.returnMap(false, msg);
+                }
+
+            } else if ("教师".equals(userType)) {
+                String stuNbr = MapTool.getString(inMap, "stuNbr");
+                relMap = evaluateBmo.getTeacherEvaluate(courseID, stuNbr);
+                boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+                if (!relMapBoolean) {
+                    String msg = G.bmo.returnMapMsg(relMap);
+                    return G.page.returnMap(false, msg);
+                }
+            } else {
+                return G.page.returnMap(false, "用户权限错误！查询失败");
+            }
+            EvaluateTea e = (EvaluateTea) MapTool.getObject(relMap, "EvaluateTea");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("evaluateTea", e);
+            return returnMap;
         } catch (Exception e) {
             log.error("查询评价异常", e);
             return G.page.returnMap(false, "查询评价异常");

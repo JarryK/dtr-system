@@ -31,7 +31,7 @@
         ]]>
     </sql>
     <insert id="insert" useGeneratedKeys="true" keyProperty="EVALUATE_ID" parameterType="cn.edu.mju.ccce.dtrsystem.bean.EvaluateTea">
-        INSERT INTO evaluate_stu
+        INSERT INTO evaluate_tea
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="COURSE_ID != null">
                 COURSE_ID,
@@ -103,9 +103,9 @@
             </if>
         </trim>
     </insert>
-    <select id="selectEvaluate" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.EvaluateStu">
-        select *
-        FROM evaluate_stu
+    <select id="selectEvaluate" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.EvaluateTea">
+        select  <include refid="sl_EvaluateTea" />
+        FROM evaluate_tea
         WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND USER_NBR = #{userNbr,jdbcType=VARCHAR}
     </select>
     <update id="updateCourse" parameterType="cn.edu.mju.ccce.dtrsystem.bean.Course">

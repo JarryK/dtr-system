@@ -22,7 +22,7 @@ public interface EvaluateBmo {
     public Map<String,Object> createStudentEvaluate(EvaluateStu e);
 
     /**
-     * 学生查找评价记录
+     * 查找学生评价记录
      * @param courseID
      * @param userNbr
      * @return map key=EvaluateStu class=EvaluateStu

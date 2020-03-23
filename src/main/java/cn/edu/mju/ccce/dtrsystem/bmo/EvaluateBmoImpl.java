@@ -96,7 +96,7 @@ public class EvaluateBmoImpl implements EvaluateBmo {
     }
 
     /**
-     * 查找评价记录
+     * 查找学生评价记录
      *
      * @param courseID
      * @param userNbr
@@ -128,7 +128,7 @@ public class EvaluateBmoImpl implements EvaluateBmo {
             String studentNbr = String.valueOf(e.getUSER_NBR());
             Map<String, Object> eMap = getTeacherEvaluate(courseID, studentNbr);
             boolean eMapBoolean = G.bmo.returnMapBool(eMap);
-            if (eMapBoolean) {
+            if (!eMapBoolean) {
                 String msg = G.bmo.returnMapMsg(eMap);
                 return G.bmo.returnMap(false, msg);
             }
@@ -136,8 +136,8 @@ public class EvaluateBmoImpl implements EvaluateBmo {
             if (eS != null) {
                 return G.bmo.returnMap(false, "课程已评价");
             }
-            Map<String,Object> userMap = loginDao.selectUserAllMsgByUserNbr(studentNbr);
-            String userName = MapTool.getString(userMap,"USER_NAME");
+            Map<String, Object> userMap = loginDao.selectUserAllMsgByUserNbr(studentNbr);
+            String userName = MapTool.getString(userMap, "USER_NAME");
             Map<String, Object> courseMap = courseBmo.getCourseDetByID(String.valueOf(e.getCOURSE_ID()));
             boolean relMapBoolean = G.bmo.returnMapBool(courseMap);
             if (!relMapBoolean) {
@@ -154,7 +154,7 @@ public class EvaluateBmoImpl implements EvaluateBmo {
             if (insert > 0) {
                 return G.bmo.returnMap(true, "ok");
             }
-            return G.bmo.returnMap(false,"创建失败");
+            return G.bmo.returnMap(false, "创建失败");
         } catch (Exception ex) {
             log.error("创建评价记录异常：", ex);
             return G.bmo.returnMap(false, "创建评价记录异常");
@@ -162,7 +162,8 @@ public class EvaluateBmoImpl implements EvaluateBmo {
     }
 
     /**
-     * 老师查找指定学生评价记录
+     * 查找老师评价记录
+     *
      * @param courseID
      * @param studentNbr
      * @return map key=EvaluateTea
@@ -170,12 +171,12 @@ public class EvaluateBmoImpl implements EvaluateBmo {
     @Override
     public Map<String, Object> getTeacherEvaluate(String courseID, String studentNbr) {
         try {
-            EvaluateStu e = new EvaluateStu();
+            EvaluateTea e = new EvaluateTea();
             try {
                 e = evaluateTeaDao.selectEvaluate(courseID, studentNbr);
                 e.getCOURSE_NAME();
             } catch (NullPointerException ex) {
-                return G.bmo.returnMap(false, "查询为空！");
+                return G.bmo.returnMap(true, "查询为空！");
             }
             Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
             returnMap.put("EvaluateTea", e);
