@@ -84,6 +84,7 @@
 </div>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/app.js"></script>
+<script src="/js/background/quietflow.min.js"></script>
 <script>
     var login = (function () {
         var bindEvents = function () {
@@ -206,6 +207,15 @@
                         });
                     }
                 });
+            });
+            login.el("body").quietflow({
+                theme: "bouncingBalls",
+                specificColors : [
+                    "rgba(255, 10, 50, .5)",
+                    "rgba(10, 255, 50, .5)",
+                    "rgba(10, 50, 255, .5)",
+                    "rgba(0, 0, 0, .5)"
+                ]
             });
         };
         return {
