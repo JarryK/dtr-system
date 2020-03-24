@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>历史记录</title>
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/evaluate.css">
+    <link rel="stylesheet" type="text/css" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
+    <link rel="stylesheet" type="text/css" href="/js/uiduck/uiduck.css">
+</head>
+<body>
+<div th:replace="header :: header"></div>
+<div class="container function">
+    <br/>
+    <div id="teaTable" class="shadow">
+    </div>
+    <div id="stuTable" class="shadow">
+    </div>
+    <!--以下为两个必须div元素-->
+    <script type="text/html" id="barDemo">
+        <a href="javascript:;" class="set-msg-btn text-decoration-none font-italic">点击评价</a>
+        <br/>
+        <a href="javascript:;" class="get-msg-btn text-decoration-none font-italic">老师评价</a>
+    </script>
+    <div id="ud-top" style="display: none">-->
+        <h3>当前设置为微信字段，通过ud-keyWord属性指定相关列的key</h3>
+        <input id="search" ud-keyWord="COURSE_TEACHER_NAME" class="uiduck-input"/>
+        <button class="uiduck-btn set-data">搜索</button>
+    </div>
+    <br/>
+    <script type="text/html" id="teaDemo">
+        <a href="javascript:;" class="stuList-btn text-decoration-none font-italic">学生详情</a>
+    </script>
+</div>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
+<script src="/js/uiduck/uiduck.js"></script>
+<script src="/js/uiduck/json2.js"></script>
+<script src="/js/app.js"></script>
+<script>
+    var history = (function () {
+        var bindEvents = function () {
+            App.setWhere('history');
+            App.getUserMsg(function (nbr,name,type) {
+                if("学生" === type){
+                    evaluate.getStuHistory();
+                }else if("教师" === type){
+                    evaluate.getTeaHistory();
+                }else {
+                    App.alert('提示','没有权限',2,function () {
+                        App.goHomeBySelf();
+                    })
+                }
+            });
+        };
+        return {
+            data: {},
+            el: function (expr) {
+                return $(expr ? expr : 'body');
+            },
+            init: function () {
+                bindEvents();
+                return this
+            },
+            getStuHistory: function () {
+                $.post('/dtr/rese/getSelfHistory', {}).done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        return;
+                    }
+                });
+            },
+            getTeaHistory:function(){
+                $.post('/dtr/issue/getSelfIssue').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        evaluate.panelClick();
+                    }
+                });
+            },
+            //  后置才能触发的按钮
+            panelClick: function () {
+
+            }
+        }
+    })();
+    $(function () {
+        history.init();
+    });
+</script>
+</body>
+</html>

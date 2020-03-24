@@ -1,3 +1,8 @@
+html, body {
+    position: relative;
+    height: 100%;
+}
+
 /* 头部样式开始 */
 
 header {
@@ -10,10 +15,12 @@ header {
 .headervisible {
     background-color: #3E3D3D;
 }
-.font-white{
+
+.font-white {
     color: white !important;
 
 }
+
 header div {
     display: inline-block;
 }
@@ -24,7 +31,8 @@ header div {
     height: 80px;
     margin-right: 200px;
 }
-.top-menu ul{
+
+.top-menu ul {
     line-height: 62px;
 }
 
@@ -38,24 +46,40 @@ header div {
 
 .myCarousel {
     width: 100%;
-    height: 500px;
+    /*height: 834px;*/
     /* background: url("/images/topimges/img1.jpg") no-repeat; */
     background-color: #70a1ff;
     background-size: cover;
     overflow: hidden;
-    z-index: 5555;
+    /*z-index: 5555;*/
 }
 
 .myCarousel h1 {
     margin-top: 10rem;
 }
 
+div#title {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    top: 8rem;
+}
+
 .scroll {
     position: absolute;
-    /* bottom: 0; */
+    bottom: 0;
     left: 50%;
-    top: 428px;
     margin-left: -12px;
+}
+
+.birds {
+    /*background: rgba(100%, 100%, 100%, 0.1) !important;*/
+    height: 48px !important;
+    width: 48px !important;
+    margin: 25px 0 !important;
+    background: url("/images/angrybirds_48px.png") top !important;
+    background-size: cover;
+    border-radius: 12% !important;
 }
 
 /* 顶部图片结束 */
@@ -65,6 +89,7 @@ header div {
 .container.menu_box {
     margin-top: 25px;
 }
+
 .grey-box-icon {
     background: #f6f6f6;
     padding: 15px 20px 20px 20px;
@@ -80,13 +105,20 @@ header div {
     margin-bottom: 31px;
 }
 
+.container.menu_box {
+    position: absolute;
+    top: 25%;
+    /*left: 15%;*/
+}
+
 /* 功能区域结束 */
 
 /* 系统简介开始 */
 
-.hseparator{
+.hseparator {
     margin: 0;
 }
+
 .about {
     width: 100%;
     padding: 140px 0 0 0;
@@ -165,6 +197,25 @@ img {
     max-width: 100%;
 }
 
+/* 以上于2020-03-24已弃用 */
+.swiper-button-prev, .swiper-button-next {
+    position: absolute;
+    margin: 5rem;
+}
+.about-slide {
+    top: 10rem;
+    padding:0 10rem;
+}
+.swiper-about-pagination{
+    bottom: 150px !important;
+    position: absolute;
+    width: 100%;
+    /* padding: 0 50px; */
+    /* left: 50%; */
+    text-align: center;
+}
+
+
 /* 系统简介结束 */
 
 /* 页面尾部开始 */
@@ -173,10 +224,13 @@ footer {
     background-color: #3E3D3D;
     width: 100%;
     padding: 45px 0;
+    bottom: 0;
+    position: absolute;
 }
 
 footer p {
     color: white;
     margin-bottom: 0 !important;
 }
-/* 页面尾部开始 */
+
+/* 页面尾部结束 */
