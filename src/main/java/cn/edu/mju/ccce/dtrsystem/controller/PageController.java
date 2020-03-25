@@ -52,4 +52,9 @@ public class PageController {
         return "evaluate";
     }
 
+    @RequestMapping("animate/homeBackground")
+    public String homeBackground(){
+        return "animate/homeBackground";
+    }
+
 }

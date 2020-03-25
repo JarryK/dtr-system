@@ -14,6 +14,7 @@
 
 <body>
 
+<iframe id="homeBackground" height="100%" width="100%" src="/dtr/animate/homeBackground"></iframe>
 <div class="swiper-container" style=" width: 100%;height: 100%;">
     <header class="header shadow-sm rounded">
         <div class="top-menu">
@@ -33,8 +34,8 @@
                         <a class="dropdown-item " id="userLoginOut" href="javascript:;">退出</a>
                     </div>
                 </li>
-                <li class="nav-item header"><a class="nav-link header-font">帮助</a></li>
-                <li class="nav-item header"><a class="nav-link header-font" cherf="#about">关于我们</a></li>
+                <li class="nav-item header"><a class="nav-link header-font top-help">帮助</a></li>
+                <li class="nav-item header"><a class="nav-link header-font top-about">关于我们</a></li>
             </ul>
         </div>
     </header>
@@ -65,7 +66,7 @@
                     <div class="col-md-3">
                         <div class="grey-box-icon">
                             <div class="icon-box-top grey-box-icon-pos">
-                                <img src="/images/guide/reservation.png" alt="">
+                                <canvas id="clock" width="128" height="128" style="background-color: #eee;border-radius: 50%;"></canvas>
                             </div>
                             <!--icon box top -->
                             <h4>预约课程</h4>
@@ -107,15 +108,65 @@
             <div class="swiper-about-container">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide about-slide">
-                        <img src="/images/aboutUs.png">
-                        <p class="about_txt">
-                            诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
-                        </p></div>
-                    <div class="swiper-slide about-slide">
-                        <h2>Donec pede justo fringilla aliquet vulputate eget</h2>
-                        <p>cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus.</p>
+                        <div class="about-body">
+                            <h4 style="text-align: center;">
+                                <img src="/images/aboutUs.png" style="height: 50px;"> 简介
+                            </h4>
+                            <div>
+                                <p class="about_txt" style=" text-indent: 2em;">
+                                    诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="swiper-slide about-slide">Slide 10</div>
+                    <div class="swiper-slide about-slide">
+                        <div class="about-body">
+                            <h4 style="text-align: center;">
+                                <img src="/images/guide/issue.png" style="height: 50px;"> 发布课程
+                            </h4>
+                            <div>
+                                <p class="about_txt" style=" text-indent: 2em;">
+                                    诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide about-slide">
+                        <div class="about-body">
+                            <h4 style="text-align: center;">
+                                <img src="/images/guide/reservation.png" style="height: 50px;"> 预约课程
+                            </h4>
+                            <div>
+                                <p class="about_txt" style=" text-indent: 2em;">
+                                    诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide about-slide">
+                        <div class="about-body">
+                            <h4 style="text-align: center;">
+                                <img src="/images/guide/evaluate.png" style="height: 50px;"> 课程评价
+                            </h4>
+                            <div>
+                                <p class="about_txt" style=" text-indent: 2em;">
+                                    诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide about-slide">
+                        <div class="about-body">
+                            <h4 style="text-align: center;">
+                                <img src="/images/guide/history.png" style="height: 50px;"> 历史记录
+                            </h4>
+                            <div>
+                                <p class="about_txt" style=" text-indent: 2em;">
+                                    诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- Add Pagination -->
                 <div class="swiper-about-pagination"></div>
@@ -140,6 +191,7 @@
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
 <script src="/js/background/quietflow.min.js"></script>
 <script src="/js/swiper/swiper.min.js"></script>
+<script src="/js/timebox/clock-canvas.min.js"></script>
 <script src="/js/app.js"></script>
 
 <script>
@@ -211,6 +263,7 @@
                     });
                     var swiperAbout = new Swiper('.swiper-about-container', {
                         direction: 'horizontal',
+                        loop: true,
                         autoplay: {
                             delay: 5000,
                             stopOnLastSlide: false,
@@ -224,7 +277,19 @@
                             clickable: true,
                         },
                     });
-
+                    home.el('.top-help').off('click').on('click', function () {
+                        swiperAll.slideTo(3);
+                    });
+                    $("#clock").drawClock(
+                        //{
+                        // hCol: 'xxx',// 时针颜色
+                        // mCol: 'xxx', // 时针颜色
+                        // sCol: 'xxx', // 时针颜色
+                        // isNumCol: 'xxx', // 数字所在的点颜色
+                        // noNumCol: 'xxx', // 非数字所在的点颜色
+                        // dCol: 'xxx', // 中心圈颜色
+                        //}
+                    );
                     defer.resolve();
                 }).promise();
             }

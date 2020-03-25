@@ -10,6 +10,7 @@ header {
     height: 80px;
     position: fixed;
     z-index: 5;
+    cursor:default !important;
 }
 
 .headervisible {
@@ -44,25 +45,11 @@ header div {
 
 /* 顶部图片开始 */
 
-.myCarousel {
-    width: 100%;
-    /*height: 834px;*/
-    /* background: url("/images/topimges/img1.jpg") no-repeat; */
-    background-color: #70a1ff;
-    background-size: cover;
-    overflow: hidden;
-    /*z-index: 5555;*/
-}
-
-.myCarousel h1 {
-    margin-top: 10rem;
-}
-
 div#title {
     position: absolute;
     width: 100%;
     z-index: 1;
-    top: 8rem;
+    bottom: 5rem;
 }
 
 .scroll {
@@ -96,8 +83,12 @@ div#title {
     text-align: center;
     margin-top: 113px;
     position: relative;
-    min-height: 229px;
+    min-height: 270px;
     border-radius: 0.3rem;
+}
+
+.icon-box-top.grey-box-icon-pos {
+    height: 128px;
 }
 
 .grey-box-icon-pos {
@@ -115,6 +106,7 @@ div#title {
 
 /* 系统简介开始 */
 
+/* 于2020-03-24已弃用 */
 .hseparator {
     margin: 0;
 }
@@ -197,14 +189,15 @@ img {
     max-width: 100%;
 }
 
-/* 以上于2020-03-24已弃用 */
+/* 于2020-03-24已弃用 */
+
 .swiper-button-prev, .swiper-button-next {
     position: absolute;
     margin: 5rem;
 }
 .about-slide {
     top: 10rem;
-    padding:0 10rem;
+    padding:0 13rem;
 }
 .swiper-about-pagination{
     bottom: 150px !important;
@@ -214,7 +207,16 @@ img {
     /* left: 50%; */
     text-align: center;
 }
-
+.about-body{
+    padding: 30px 50px;
+    background: rgba(100%,100%,100%,0.8);
+    border-radius: 15px;
+    height: 370px !important;
+    overflow: auto;
+}
+.about-body p{
+    font-size: 22px;
+}
 
 /* 系统简介结束 */
 
@@ -234,3 +236,7 @@ footer p {
 }
 
 /* 页面尾部结束 */
+
+#homeBackground{
+    position: fixed;
+}
