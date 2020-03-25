@@ -335,7 +335,7 @@
                 var className = issue.el('#className').val();
                 var stuNbr = issue.el('#stuNbr').val();
                 var classContent = issue.el('#classContent').val();
-                $.post('/dtr/issue/insert', {
+                $.loadJSON('/dtr/issue/insert', {
                     courseName: className,
                     typeName: classType,
                     courseDetail: classContent,
@@ -379,7 +379,7 @@
                 issue.el('.inputContent').html('');
             },
             getCourseList: function () {
-                $.post('/dtr/issue/getSelfIssue').done(function (data) {
+                $.loadJSON('/dtr/issue/getSelfIssue').done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {
@@ -402,7 +402,7 @@
             panelClick: function () {
                 issue.el('.student-det-btn').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
-                    $.post('/dtr/issue/getCourseStu', {
+                    $.loadJSON('/dtr/issue/getCourseStu', {
                         courseID: courseID
                     }).done(function (data) {
                         if (!App.checker(data)) {
@@ -422,7 +422,7 @@
                 });
                 issue.el('.student-done-det-btn').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
-                    $.post('/dtr/issue/getDoneCourseStu', {
+                    $.loadJSON('/dtr/issue/getDoneCourseStu', {
                         courseID: courseID
                     }).done(function (data) {
                         if (!App.checker(data)) {
@@ -445,7 +445,7 @@
                 });
                 issue.el('.compile-btn').off('click').on('click',function () {
                     var courseID = $(this).data('courseid');
-                    $.post('/dtr/rese/getCourseDet', {
+                    $.loadJSON('/dtr/rese/getCourseDet', {
                         courseID: courseID
                     }).done(function (data) {
                         if (!App.checker(data)) {
@@ -463,7 +463,7 @@
                     var course_name =  issue.el("#course_name").val();
                     var course_detail = issue.el("#course_detail").val();
                     var course_time = issue.el("#course_time").val() + ':00';
-                    $.post('/dtr/issue/updateCourse', {
+                    $.loadJSON('/dtr/issue/updateCourse', {
                         courseID: courseID,
                         courseName:course_name,
                         courseDetail:course_detail,
@@ -479,7 +479,7 @@
                 issue.el('.del-course').off('click').on('click',function () {
                     var courseID = $(this).data('courseid');
                     App.selectAlert("操作提示","确定取消吗？",3,function () {
-                        $.post('/dtr/issue/cancelCourse', {
+                        $.loadJSON('/dtr/issue/cancelCourse', {
                             courseID: courseID
                         }).done(function (data) {
                             if (!App.checker(data)) {

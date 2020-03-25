@@ -192,7 +192,7 @@
                 reservation.getDoneHistory();
             },
             getCanReservationList: function () {
-                $.post('/dtr/rese/getList').done(function (data) {
+                $.loadJSON('/dtr/rese/getList').done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {
@@ -203,7 +203,7 @@
                 });
             },
             getHistoryList: function () {
-                $.post('/dtr/rese/getSelfHistory', {}).done(function (data) {
+                $.loadJSON('/dtr/rese/getSelfHistory', {}).done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {
@@ -218,7 +218,7 @@
                 });
             },
             getDoneHistory: function () {
-                $.post('/dtr/rese/getSelfHistory', {}).done(function (data) {
+                $.loadJSON('/dtr/rese/getSelfHistory', {}).done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {
@@ -237,7 +237,7 @@
             panelClick: function () {
                 reservation.el('.detailed').off('click').on('click', function () {
                     var index = $(this).data("courseid");
-                    $.post('/dtr/rese/getCourseDet', {
+                    $.loadJSON('/dtr/rese/getCourseDet', {
                         courseID: index
                     }).done(function (data) {
                         if (!App.checker(data)) {
@@ -250,7 +250,7 @@
                 });
                 reservation.el('.reservation-btn').off('click').on('click', function () {
                     var index = $(this).data("courseid");
-                    $.post('/dtr/rese/reseCourse', {
+                    $.loadJSON('/dtr/rese/reseCourse', {
                         courseID: index
                     }).done(function (data) {
                         if (!App.checker(data)) {
@@ -265,7 +265,7 @@
                 reservation.el('.cancel-reservation-btn').off('click').on('click', function () {
                     var index = $(this).data("courseid");
                     App.selectAlert('操作提示','确定吗',4,function(){
-                        $.post('/dtr/rese/unReseCourse', {
+                        $.loadJSON('/dtr/rese/unReseCourse', {
                             courseID: index
                         }).done(function (data) {
                             if (!App.checker(data)) {

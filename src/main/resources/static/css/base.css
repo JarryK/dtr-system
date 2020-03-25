@@ -74,3 +74,19 @@ ul {
 .modal-content{
     top: 7rem;
 }
+
+.loader-masker {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #333;
+    opacity: 0.7 !important;
+}
+.loader-loading{
+    position: fixed;
+    color: #eeeeee;
+    top: 50%;
+    left: 45%;
+}

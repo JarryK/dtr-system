@@ -67,7 +67,7 @@
                 return this
             },
             getStuHistory: function () {
-                $.post('/dtr/rese/getSelfHistory', {}).done(function (data) {
+                $.loadJSON('/dtr/rese/getSelfHistory', {}).done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {
@@ -76,7 +76,7 @@
                 });
             },
             getTeaHistory:function(){
-                $.post('/dtr/issue/getSelfIssue').done(function (data) {
+                $.loadJSON('/dtr/issue/getSelfIssue').done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {

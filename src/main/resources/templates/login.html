@@ -194,7 +194,7 @@
                 var uNbr = $.trim(login.el("#userName").val());
                 var uPass = login.el("#userPass").val();
                 // var uType = login.el("#userType").val();
-                $.post("/dtr/user/check", {
+                $.loadJSON("/dtr/user/check", {
                     uNbr: uNbr,
                     uPass: uPass,
                     // uType: uType

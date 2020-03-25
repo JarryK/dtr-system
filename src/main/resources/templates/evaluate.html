@@ -170,7 +170,7 @@
                 var evaluateScore = evaluate.el('#grade').data('grade');
                 var userType =  evaluate.el('.classEvaluate-modal-yes').data('type');
                 if ("学生" === userType){
-                    $.post('/dtr/eval/insert', {
+                    $.loadJSON('/dtr/eval/insert', {
                         courseID: course_ID,
                         evaluateDetail: evaluateDetail,
                         evaluateScore: evaluateScore
@@ -187,7 +187,7 @@
                     });
                 }else if ("教师" === userType){
                     var stuNbr = evaluate.el('.classEvaluate-modal-yes').data('stunbr');
-                    $.post('/dtr/eval/insert', {
+                    $.loadJSON('/dtr/eval/insert', {
                         courseID: course_ID,
                         evaluateDetail: evaluateDetail,
                         evaluateScore: evaluateScore,
@@ -226,7 +226,7 @@
                 return this
             },
             getStuClassList: function () {
-                $.post('/dtr/rese/getSelfHistory', {}).done(function (data) {
+                $.loadJSON('/dtr/rese/getSelfHistory', {}).done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {
@@ -246,7 +246,7 @@
                 });
             },
             getTeaClassList:function(){
-                $.post('/dtr/issue/getSelfIssue').done(function (data) {
+                $.loadJSON('/dtr/issue/getSelfIssue').done(function (data) {
                     if (!App.checker(data)) {
                         return;
                     } else {
@@ -332,7 +332,7 @@
                 evaluate.el(".set-msg-btn").off('click').on('click', function () {
                     var data = App.returnRowData($(this));
                     var course_ID = data.course_ID;
-                    $.post('/dtr/eval/view-stu', {
+                    $.loadJSON('/dtr/eval/view-stu', {
                         courseID: course_ID
                     }).done(function (data) {
                         var evaluateStu = data.evaluateStu;
@@ -349,7 +349,7 @@
                 evaluate.el(".get-msg-btn").off('click').on('click', function () {
                     var data = App.returnRowData($(this));
                     var courseID = data.course_ID;
-                    $.post('/dtr/eval/view-tea', {
+                    $.loadJSON('/dtr/eval/view-tea', {
                         courseID: courseID,
                     }).done(function (data) {
                         if (!App.checker(data)) {
@@ -367,7 +367,7 @@
                 evaluate.el(".stuList-btn").off('click').on('click', function () {
                     var data = App.returnRowData($(this));
                     var course_ID = data.course_ID;
-                    $.post('/dtr/issue/getDoneCourseStu', {
+                    $.loadJSON('/dtr/issue/getDoneCourseStu', {
                         courseID: course_ID
                     }).done(function (data) {
                         if (!App.checker(data)) {
@@ -389,7 +389,7 @@
                 evaluate.el(".view-evaluate").off('click').on('click', function () {
                     var courseID =  evaluate.el('#stu-list-msg-container').data("courseID");
                     var stuNbr =  $(this).data('stunbr');
-                    $.post('/dtr/eval/view-stu', {
+                    $.loadJSON('/dtr/eval/view-stu', {
                         courseID: courseID,
                         stuNbr: stuNbr
                     }).done(function (data) {
@@ -408,7 +408,7 @@
                 evaluate.el(".set-stu-evaluate ").off('click').on('click', function () {
                     var courseID =  evaluate.el('#stu-list-msg-container').data("courseID");
                     var stuNbr =  $(this).data('stunbr');
-                    $.post('/dtr/eval/view-tea', {
+                    $.loadJSON('/dtr/eval/view-tea', {
                         courseID: courseID,
                         stuNbr: stuNbr
                     }).done(function (data) {
@@ -433,7 +433,7 @@
                         style: {tbClass: "table text-center table-striped", tdClass: "align-middle"},
                         topBar: {templateId: "search", kwLight: true},
                         rightTool: {templateId: "barDemo", title: "操作", width: "100px"},
-                        loading: {icon: "loading", blur: 3, time: 1000},
+                        loading: {icon: "loading", blur: 3, time: 50},
                         page: true,
                         fieldOptions: [
                             {
