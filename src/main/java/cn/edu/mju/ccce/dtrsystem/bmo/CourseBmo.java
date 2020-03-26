@@ -87,4 +87,11 @@ public interface CourseBmo {
      * @return
      */
     public Map<String,Object> passDueCourse (String courseID);
+
+    /**
+     * 获取发布历史记录
+     * @param teacherNbr
+     * @return map key=courseList
+     */
+    public Map<String,Object> getAllHistory(String teacherNbr);
 }

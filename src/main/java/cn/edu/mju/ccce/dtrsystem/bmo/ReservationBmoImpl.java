@@ -79,7 +79,7 @@ public class ReservationBmoImpl implements ReservationBmo {
                 if (insert <= 0){
                     return G.bmo.returnMap(false,"预约失败");
                 }
-                int i = courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr + 1), courseID);
+                int i = courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr + 1), courseID,nowTime);
                 if (i <= 0){
                     return G.bmo.returnMap(false,"预约失败");
                 }
@@ -186,11 +186,15 @@ public class ReservationBmoImpl implements ReservationBmo {
                 return G.bmo.returnMap(false, "不能取消即将开课的课程");
             }
             int doneStuNbr = course.getCOURSE_DONE_STU_NBR();
-            int up = reseDao.updateReservationCourseStatusByCourseID(courseID,userNbr,status);
+            Reservation r = new Reservation();
+            r.setRESERVATION_STATUS(Long.parseLong(status));
+            r.setCOURSE_ID(Long.parseLong(courseID));
+            r.setUSER_NBR(Long.parseLong(userNbr));
+            int up = reseDao.updateReservationCourseStatusByCourseID(r);
             if (up <= 0){
                 return G.bmo.returnMap(false,"取消失败");
             }
-            int i = courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr - 1), courseID);
+            int i = courseDao.upDateCourseDoneStuNbr(String.valueOf(doneStuNbr - 1), courseID,nowTime);
             if (i <= 0){
                 return G.bmo.returnMap(false,"取消失败");
             }
@@ -200,5 +204,32 @@ public class ReservationBmoImpl implements ReservationBmo {
             return G.bmo.returnMap(false,"更改预约状态异常");
         }
     }
+    }
+
+    /**
+     * 获取预约历史记录
+     * @param userNbr
+     * @return map key=reservationList
+     */
+    @Override
+    public Map<String, Object> getAllHistory(String userNbr) {
+        try{
+            List<Reservation> reservationList = new ArrayList<>();
+            try{
+                reservationList = reseDao.selectReservationHistory(userNbr);
+            }catch (NullPointerException e){
+                return G.bmo.returnMap(true, "空");
+            }
+            if (reservationList.isEmpty()){
+                return G.bmo.returnMap(true, "空");
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("reservationList",reservationList);
+            return returnMap;
+
+        }catch (Exception e){
+            log.error("查询历史记录异常:",e);
+            return G.bmo.returnMap(false, "查询历史记录异常");
+        }
     }
 }

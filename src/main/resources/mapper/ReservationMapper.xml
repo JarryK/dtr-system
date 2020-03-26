@@ -144,9 +144,15 @@
         WHERE COURSE_TEACHER_NBR = #{teacherNbr,jdbcType=VARCHAR} AND RESERVATION_STATUS = '1'
     </select>
 
-    <update id="updateReservationCourseStatusByCourseID" parameterType="java.lang.String">
-        UPDATE reservation SET RESERVATION_STATUS = #{status,jdbcType=VARCHAR}
-        WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND USER_NBR = #{userNbr,jdbcType=VARCHAR}
+    <update id="updateReservationCourseStatusByCourseID" parameterType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
+        UPDATE reservation SET RESERVATION_STATUS = #{RESERVATION_STATUS,jdbcType=VARCHAR}
+        WHERE COURSE_ID = #{COURSE_ID,jdbcType=VARCHAR} AND USER_NBR = #{USER_NBR,jdbcType=VARCHAR} AND UPDATE_TIME= #{UPDATE_TIME,jdbcType=TIMESTAMP}
     </update>
+
+    <select id="selectReservationHistory" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
+        SELECT <include refid="sl_Reservation" />
+        FROM reservation
+        WHERE USER_NBR = #{userNbr,jdbcType=NUMERIC}  ORDER BY COURSE_TIME
+    </select>
 
 </mapper>

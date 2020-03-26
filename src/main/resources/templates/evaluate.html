@@ -496,6 +496,15 @@
                     defer.resolve();
                 }).promise();
             },
+            getHistory: function () {
+                $.loadJSON('/dtr/his/getHistory',{date:1}).done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        return;
+                    }
+                });
+            },
         }
     })();
     $(function () {

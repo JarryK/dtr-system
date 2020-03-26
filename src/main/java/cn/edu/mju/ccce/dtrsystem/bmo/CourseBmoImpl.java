@@ -176,11 +176,11 @@ public class CourseBmoImpl implements CourseBmo {
             }
             if (!reservationList.isEmpty()) {
                 for (Reservation r : reservationList) {
-                    String userNbr = String.valueOf(r.getUSER_NBR());
-                    reservationDao.updateReservationCourseStatusByCourseID(courseID, userNbr, "2");
+                    r.setRESERVATION_STATUS(2);
+                    reservationDao.updateReservationCourseStatusByCourseID(r);
                 }
             }
-            int i = courseDao.upDateCourseDoneStuNbr("0", courseID);
+            int i = courseDao.upDateCourseDoneStuNbr("0", courseID, new Date());
             if (i <= 0) {
                 return G.bmo.returnMap(false, "取消失败");
             }
@@ -218,6 +218,7 @@ public class CourseBmoImpl implements CourseBmo {
 
     /**
      * 获取预约课程的学生列表
+     *
      * @param courseID
      * @return map key=userList
      */
@@ -247,6 +248,7 @@ public class CourseBmoImpl implements CourseBmo {
 
     /**
      * 获取已完成课程的学生列表
+     *
      * @param courseID
      * @return map key=userList
      */
@@ -277,6 +279,7 @@ public class CourseBmoImpl implements CourseBmo {
     /**
      * 特殊，定时检测job专用
      * 控制课程过期
+     *
      * @param courseID
      * @return
      */
@@ -291,11 +294,11 @@ public class CourseBmoImpl implements CourseBmo {
             }
             if (!reservationList.isEmpty()) {
                 for (Reservation r : reservationList) {
-                    String userNbr = String.valueOf(r.getUSER_NBR());
-                    reservationDao.updateReservationCourseStatusByCourseID(courseID, userNbr, "1");
+                    r.setRESERVATION_STATUS(1);
+                    reservationDao.updateReservationCourseStatusByCourseID(r);
                 }
             }
-            int i = courseDao.upDateCourseDoneStuNbr("0", courseID);
+            int i = courseDao.upDateCourseDoneStuNbr("0", courseID, new Date());
             if (i <= 0) {
                 return G.bmo.returnMap(false, "过期失败");
             }
@@ -308,6 +311,32 @@ public class CourseBmoImpl implements CourseBmo {
         } catch (Exception e) {
             log.error("课程过期异常：", e);
             return G.bmo.returnMap(false, "课程过期异常");
+        }
+    }
+
+    /**
+     * 获取发布历史记录
+     * @param teacherNbr
+     * @return map key=courseList
+     */
+    @Override
+    public Map<String, Object> getAllHistory(String teacherNbr) {
+        try {
+            List<Course> courseList = new ArrayList<>();
+            try {
+                courseList = courseDao.selectHistory(teacherNbr);
+            } catch (NullPointerException e){
+                return G.bmo.returnMap(true,"空");
+            }
+            if (courseList.isEmpty()){
+                return G.bmo.returnMap(true,"空");
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("courseList",courseList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询课程历史记录异常：",e);
+            return G.bmo.returnMap(false,"查询课程历史记录异常");
         }
     }
 

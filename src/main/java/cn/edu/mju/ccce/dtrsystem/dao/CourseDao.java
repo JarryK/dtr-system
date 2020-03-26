@@ -3,6 +3,7 @@ package cn.edu.mju.ccce.dtrsystem.dao;
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public interface CourseDao {
      * @param courseDoneStuNbr
      * @return
      */
-    public int upDateCourseDoneStuNbr(String courseDoneStuNbr,String courseID);
+    public int upDateCourseDoneStuNbr(String courseDoneStuNbr, String courseID, Date upTime);
 
     /**
      * 获取老师的课程列表
@@ -61,4 +62,11 @@ public interface CourseDao {
      * @return
      */
     public int updateCourse(Course course);
+
+    /**
+     * 获取历史记录
+     * @param teacherNbr
+     * @return
+     */
+    public List<Course> selectHistory(String teacherNbr);
 }

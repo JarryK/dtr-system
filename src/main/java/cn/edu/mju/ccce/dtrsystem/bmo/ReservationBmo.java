@@ -32,7 +32,7 @@ public interface ReservationBmo {
     public Map<String,Object> getAllReservationCourseByUserNbr (String userNbr);
 
     /**
-     * 获取用户所有预约未上课的历史记录
+     * 获取用户所有完成的记录
      * @param userNbr
      * @return map key=reservationDoneList
      */
@@ -46,4 +46,10 @@ public interface ReservationBmo {
      */
     public Map<String,Object> updateReservationCourseStatus (String courseID,String userNbr,String status);
 
+    /**
+     * 获取预约历史记录
+     * @param userNbr
+     * @return map key=reservationList
+     */
+    public Map<String,Object> getAllHistory(String userNbr);
 }

@@ -52,7 +52,13 @@ public interface ReservationDao {
 
     /**
      * 根据courseID改变预约课程预约状态
-     * @param courseID
+     * @param R
      */
-    public int updateReservationCourseStatusByCourseID(String courseID,String userNbr,String status);
+    public int updateReservationCourseStatusByCourseID(Reservation R);
+
+    /**
+     * 获取预约历史记录（所有状态的）
+     * @return
+     */
+    public List<Reservation> selectReservationHistory(String userNbr);
 }
