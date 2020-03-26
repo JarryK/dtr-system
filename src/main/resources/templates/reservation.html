@@ -169,8 +169,6 @@
     });
     var reservation = (function () {
         var bindEvents = function () {
-            App.setWhere('reservation');
-            App.getUserMsg();
             reservation.getClassList();
             reservation.el('.reservationsHistory-tab').off('click').on('click',function () {
                 reservation.getClassList();
@@ -182,7 +180,8 @@
                 return $(expr ? expr : 'body');
             },
             init: function () {
-                bindEvents();
+                App.getUserMsg().then(function () {App.setWhere('reservation');return this;})
+                    .then(function(){bindEvents();return this});
                 return this
             },
             // 获取所有的数据列表

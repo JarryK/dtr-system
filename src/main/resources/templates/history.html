@@ -15,7 +15,7 @@
 <div th:replace="header :: header"></div>
 <div class="container function">
     <br/>
-    <div id="teaTable" class="shadow">
+    <div id="historyTable" class="shadow">
     </div>
     <div id="stuTable" class="shadow">
     </div>
@@ -31,7 +31,7 @@
         <button class="uiduck-btn set-data">搜索</button>
     </div>
     <br/>
-    <script type="text/html" id="teaDemo">
+    <script type="text/html" id="history">
         <a href="javascript:;" class="stuList-btn text-decoration-none font-italic">学生详情</a>
     </script>
 </div>
@@ -42,16 +42,9 @@
 <script src="/js/uiduck/json2.js"></script>
 <script src="/js/app.js"></script>
 <script>
-    // template 时间日期格式功能
-    template.helper('formatDateString', function (value) {
-        return new Date(value).format('yyyy-MM-dd hh:mm:ss');
-    });
     // history是js的保留字段，重起名
     var historyPage = (function () {
         var bindEvents = function () {
-            App.setWhere('historyPage');
-            App.getUserMsg();
-            historyPage.getHistory();
         };
         return {
             data: {},
@@ -60,6 +53,9 @@
             },
             init: function () {
                 bindEvents();
+                App.getUserMsg()
+                    .then(function () { App.setWhere('historyPage');return this;})
+                    .then(function () {historyPage.getHistory();return this;});
                 return this
             },
             getHistory: function () {
@@ -70,6 +66,39 @@
                         return;
                     }
                 });
+            },
+            paddingTeaTable: function (dataList) {
+                return $.Deferred(function (defer) {
+                    uiduck.setOptions({
+                        templateId: "historyTable",
+                        style: {tbClass: "table text-center table-striped", tdClass: "align-middle"},
+                        topBar: {templateId: "search", kwLight: true},
+                        rightTool: {templateId: "historyDemo", title: "操作", width: "100px"},
+                        loading: {icon: "loading", blur: 3, time: 1000},
+                        page: true,
+                        fieldOptions: [
+                            {
+                                index: true,
+                                title: "序号"
+                            },
+                            {
+                                key: "course_NAME",
+                                title: "课程名"
+                            }, {
+                                key: "course_TYPE_NAME",
+                                title: "类型"
+                            },{
+                                key: "course_DONE_STU_NBR",
+                                title: "预约人数"
+                            },{
+                                key: "course_TIME",
+                                title: "课程时间",
+                                type: "time"
+                            }]
+                    });
+                    uiduck.setData(dataList, false);
+                    defer.resolve();
+                }).promise();
             },
         }
     })();

@@ -66,7 +66,7 @@
                     <div class="col-md-3">
                         <div class="grey-box-icon">
                             <div class="icon-box-top grey-box-icon-pos">
-                                <canvas id="clock" width="128" height="128" style="background-color: #eee;border-radius: 50%;"></canvas>
+                                <canvas id="clock" width="128" height="128" style="background-color: #ffffff;border-radius: 50%;"></canvas>
                             </div>
                             <!--icon box top -->
                             <h4>预约课程</h4>
@@ -197,12 +197,6 @@
 <script>
     var home = (function () {
         var bindEvents = function () {
-            App.setWhere('home');
-            App.getUserMsg(function (uNbr, uName, type) {
-                home.el('#userMsg').data("uNbr", uNbr);
-                home.el('.userName').html(uName + "(" + type + ")");
-                home.el('#userMsg').data("uName", uName);
-            });
             $(window).on('scroll', function () {
                 var scrollTop = $(window).scrollTop();
                 if (scrollTop >= 420) {
@@ -237,14 +231,14 @@
                 return $(expr ? expr : 'body');
             },
             init: function () {
-                home.pageCssInit().then(
-                    function () {
-                        bindEvents();
-                        return this
-                    });
+                App.getUserMsg(function (uNbr, uName, type) {
+                    home.el('#userMsg').data("uNbr", uNbr);
+                    home.el('.userName').html(uName + "(" + type + ")");
+                    home.el('#userMsg').data("uName", uName);
+                }).then(function () {App.setWhere('home');return this}).then(function () { home.pageCssInit();return this}).then(function () { bindEvents();return this});
                 return this
             },
-            pageCssInit: function () {
+            swiperAllInit:function (){
                 return $.Deferred(function (defer) {
                     var swiperAll = new Swiper('.swiper-container', {
                         direction: 'vertical',
@@ -261,6 +255,14 @@
                             },
                         },
                     });
+                    home.el('.top-help').off('click').on('click', function () {
+                        swiperAll.slideTo(3);
+                    });
+                    defer.resolve();
+                }).promise();
+            },
+            swiperAboutInit:function (){
+                return $.Deferred(function (defer) {
                     var swiperAbout = new Swiper('.swiper-about-container', {
                         direction: 'horizontal',
                         loop: true,
@@ -277,9 +279,11 @@
                             clickable: true,
                         },
                     });
-                    home.el('.top-help').off('click').on('click', function () {
-                        swiperAll.slideTo(3);
-                    });
+                    defer.resolve();
+                }).promise();
+            },
+            clockInit:function (){
+                return $.Deferred(function (defer) {
                     $("#clock").drawClock(
                         //{
                         // hCol: 'xxx',// 时针颜色
@@ -292,6 +296,9 @@
                     );
                     defer.resolve();
                 }).promise();
+            },
+            pageCssInit: function () {
+                home.clockInit().then(function () {home.swiperAllInit()}).then(function(){home.swiperAboutInit();return this;});
             }
         }
     })();

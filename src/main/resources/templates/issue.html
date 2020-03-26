@@ -286,15 +286,6 @@
     });
     var issue = (function () {
         var bindEvents = function () {
-            App.setWhere("issue");
-            App.getUserMsg(function (uNbr, uName, uType) {
-                if (!App.isTeacher(uType)) {
-                    App.alert("错误", "当前用户无权限", 2, function () {
-                        App.goHomeBySelf();
-                    })
-                }
-            });
-            App.setInputBoxForTime('#settime');
             issue.el("[data-toggle='tooltip']").tooltip();
             issue.el('#commitClassMsg').off('click').on('click', function () {
                 var time = issue.el('#settime').val();
@@ -363,7 +354,15 @@
                 return $(expr ? expr : 'body');
             },
             init: function () {
-                bindEvents();
+                App.getUserMsg(function (uNbr, uName, uType) {
+                    if (!App.isTeacher(uType)) {
+                        App.alert("错误", "当前用户无权限", 2, function () {
+                            App.goHomeBySelf();
+                        })
+                    }
+                }).then(function () {App.setWhere("issue");return this})
+                    .then(function () {App.setInputBoxForTime('#settime');return this})
+                    .then(function () {bindEvents();return this});
                 return this
             },
             inputClear: function () {

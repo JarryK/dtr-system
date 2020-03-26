@@ -88,7 +88,6 @@
 <script>
     var login = (function () {
         var bindEvents = function () {
-            App.setWhere('login');
             login.el(".input input").focus(function () {
                 $(this).parent(".input").each(function () {
                     $("label", this).css({
@@ -224,6 +223,7 @@
                 return $(expr ? expr : 'body');
             },
             init: function () {
+                App.setWhere('login');
                 bindEvents();
                 return;
             },

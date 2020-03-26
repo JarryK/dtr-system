@@ -148,19 +148,6 @@
     });
     var evaluate = (function () {
         var bindEvents = function () {
-            App.setWhere('evaluate');
-            App.getUserMsg(function (nbr,name,type) {
-                evaluate.el('.classEvaluate-modal-yes').data('type',type);
-                if("学生" === type){
-                    evaluate.getStuClassList();
-                }else if("教师" === type){
-                    evaluate.getTeaClassList();
-                }else {
-                    App.alert('提示','没有权限',2,function () {
-                        App.goHomeBySelf();
-                    })
-                }
-            });
             evaluate.el('.classEvaluate-modal-yes').off('click').on('click', function () {
                 var course_ID = evaluate.el('.classEvaluate-modal-yes').data('course_ID');
                 var evaluateDetail = evaluate.el('#classEvaluate').val();
@@ -223,6 +210,18 @@
             },
             init: function () {
                 bindEvents();
+                App.getUserMsg(function (nbr,name,type) {
+                    evaluate.el('.classEvaluate-modal-yes').data('type',type);
+                    if("学生" === type){
+                        evaluate.getStuClassList();
+                    }else if("教师" === type){
+                        evaluate.getTeaClassList();
+                    }else {
+                        App.alert('提示','没有权限',2,function () {
+                            App.goHomeBySelf();
+                        })
+                    }
+                }).then(function () {App.setWhere('evaluate');return this});
                 return this
             },
             getStuClassList: function () {

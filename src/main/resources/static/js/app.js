@@ -53,12 +53,20 @@ var App = function () {
                 return $.ajax(_options_apply);
             },
             // 调用postJSON发送接收数据，默认使用loader遮罩层
-            loadJSON: function(url, data, options) {
+            loadJSON: function (url, data, options) {
                 var _options = (((typeof options) == 'object' && options != null) ? $.extend(true, {}, options) : {});
-                var _beforeSend_function = $.isFunction(_options.beforeSend)?_options.beforeSend:function(){};
-                var beforeSend_options = {beforeSend: function(){ App.loader(); _beforeSend_function(); }};
+                var _beforeSend_function = $.isFunction(_options.beforeSend) ? _options.beforeSend : function () {
+                };
+                var beforeSend_options = {
+                    beforeSend: function () {
+                        App.loader();
+                        _beforeSend_function();
+                    }
+                };
                 var _options_apply = $.extend(true, {}, _options, beforeSend_options);
-                return $.postJSON(url, data, _options_apply).always(function() { App.removeLoader(); });
+                return $.postJSON(url, data, _options_apply).always(function () {
+                    App.removeLoader();
+                });
             },
             // 页面中最大的层值
             maxZindex: function (el) {
@@ -81,7 +89,7 @@ var App = function () {
     var page_turn_functions = (function () {
         // 顶部跳转
         // 笨方法，不过能用就好了
-        $("#header-goto-home").off('click').on('click',function () {
+        $("#header-goto-home").off('click').on('click', function () {
             App.goHomeBySelf();
         });
         $("#header-goto-issue").off('click').on('click', function () {
@@ -178,21 +186,21 @@ var App = function () {
                 })
             },
             getUserMsg: function (callback) {
-                $.loadJSON('/dtr/user/getUser').done(function (data) {
-                    if (!App.checker(data)) {
-                        App.alert('访问失败', '请先登录', 2, function () {
-                            App.goLoginBySelf();
-                        });
-                    } else {
-                        $('.header-userName').html(data.user.USER_NAME + "(" + data.user.TYPE_NAME + ")");
-                        $('#header-userDropdown').data("uNbr", data.user.USER_NBR);
-                        $('#header-userDropdown').data("uName", data.user.USER_NAME);
-                        if ($.isFunction(callback)) {
-                            callback(data.user.USER_NBR, data.user.USER_NAME, data.user.TYPE_NAME);
-                            return;
+                return $.Deferred(function (defer) {
+                    $.loadJSON('/dtr/user/getUser').done(function (data) {
+                        if (!App.checker(data)) {
+                            App.alert('访问失败', '请先登录', 2, function () {App.goLoginBySelf();});
+                        } else {
+                            $('.header-userName').html(data.user.USER_NAME + "(" + data.user.TYPE_NAME + ")");
+                            $('#header-userDropdown').data("uNbr", data.user.USER_NBR);
+                            $('#header-userDropdown').data("uName", data.user.USER_NAME);
+                            if ($.isFunction(callback)) {
+                                callback(data.user.USER_NBR, data.user.USER_NAME, data.user.TYPE_NAME);
+                            }
                         }
-                    }
-                });
+                        defer.resolve();
+                    });
+                }).promise();
             },
             formatDateString: function (value) {
                 return new Date(value).format('yyyy-MM-dd hh:mm:ss');
@@ -226,7 +234,10 @@ var App = function () {
                 }
             },
             setWhere: function (where) {
-                $('#where').data('where', where);
+                return $.Deferred(function (defer) {
+                    $('#where').data('where', where);
+                    defer.resolve();
+                }).promise();
             },
             getWhere: function () {
                 return $('#where').data('where');
@@ -239,7 +250,7 @@ var App = function () {
             loader: function () {
                 var $loader = $('#loader');
                 if ($loader.length === 0) {
-                    $loader = $('<div id="loader" style="z-index:' + ($.maxZindex() + 1) + ';"><div class="loader-masker fade in" style="z-index: "' + ($.maxZindex() + 1) +';></div><h4 class="loader-loading"><span class="glyphicon glyphicon-user"> <span class="spinner-border" style="font-size: 20px;width: 30px;height: 30px" role="status" aria-hidden="true"></span>Loading... </span></h4></div>').appendTo('body');
+                    $loader = $('<div id="loader" style="z-index:' + ($.maxZindex() + 1) + ';"><div class="loader-masker fade in" style="z-index: "' + ($.maxZindex() + 1) + ';></div><h4 class="loader-loading"><span class="glyphicon glyphicon-user"> <span class="spinner-border" style="font-size: 20px;width: 30px;height: 30px" role="status" aria-hidden="true"></span>Loading... </span></h4></div>').appendTo('body');
                 } else {
                     var _za = $loader.css('z-index');
                     var _czArray = $loader.data('cache-z-index-value-array');
