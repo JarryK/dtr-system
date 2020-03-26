@@ -145,8 +145,8 @@
     </select>
 
     <update id="updateReservationCourseStatusByCourseID" parameterType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
-        UPDATE reservation SET RESERVATION_STATUS = #{RESERVATION_STATUS,jdbcType=VARCHAR}
-        WHERE COURSE_ID = #{COURSE_ID,jdbcType=VARCHAR} AND USER_NBR = #{USER_NBR,jdbcType=VARCHAR} AND UPDATE_TIME= #{UPDATE_TIME,jdbcType=TIMESTAMP}
+        UPDATE reservation SET RESERVATION_STATUS = #{RESERVATION_STATUS,jdbcType=VARCHAR},UPDATE_TIME= #{UPDATE_TIME,jdbcType=TIMESTAMP}
+        WHERE COURSE_ID = #{COURSE_ID,jdbcType=VARCHAR} AND USER_NBR = #{USER_NBR,jdbcType=VARCHAR}
     </update>
 
     <select id="selectReservationHistory" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">

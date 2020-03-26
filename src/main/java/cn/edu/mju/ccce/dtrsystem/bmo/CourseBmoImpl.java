@@ -185,6 +185,7 @@ public class CourseBmoImpl implements CourseBmo {
                 return G.bmo.returnMap(false, "取消失败");
             }
             course.setCOURSE_STATUS(2);
+            course.setUPDATE_TIME(new Date());
             int up = courseDao.updateCourse(course);
             if (up > 0) {
                 return G.bmo.returnMap(true, "ok");
@@ -303,6 +304,7 @@ public class CourseBmoImpl implements CourseBmo {
                 return G.bmo.returnMap(false, "过期失败");
             }
             course.setCOURSE_STATUS(1);
+            course.setUPDATE_TIME(new Date());
             int up = courseDao.updateCourse(course);
             if (up > 0) {
                 return G.bmo.returnMap(true, "ok");

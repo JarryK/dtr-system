@@ -189,16 +189,17 @@ var App = function () {
                 return $.Deferred(function (defer) {
                     $.loadJSON('/dtr/user/getUser').done(function (data) {
                         if (!App.checker(data)) {
-                            App.alert('访问失败', '请先登录', 2, function () {App.goLoginBySelf();});
+                            App.alert('访问失败', '请先登录', 2, function () {App.goLoginBySelf();defer.resolve();});
                         } else {
                             $('.header-userName').html(data.user.USER_NAME + "(" + data.user.TYPE_NAME + ")");
                             $('#header-userDropdown').data("uNbr", data.user.USER_NBR);
                             $('#header-userDropdown').data("uName", data.user.USER_NAME);
+                            $('#header-userDropdown').data("uType", data.user.TYPE_NAME);
                             if ($.isFunction(callback)) {
                                 callback(data.user.USER_NBR, data.user.USER_NAME, data.user.TYPE_NAME);
                             }
+                            defer.resolve();
                         }
-                        defer.resolve();
                     });
                 }).promise();
             },
