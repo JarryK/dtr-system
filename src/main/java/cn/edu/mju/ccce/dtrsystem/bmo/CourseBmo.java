@@ -91,7 +91,7 @@ public interface CourseBmo {
     /**
      * 获取发布历史记录
      * @param teacherNbr
-     * @return map key=courseList
+     * @return map <p>key=courseList<p/><p>key=underwayList<p/><p>key=doneList<p/><p>key=cancelList<p/>
      */
     public Map<String,Object> getAllHistory(String teacherNbr);
 }

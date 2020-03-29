@@ -58,8 +58,14 @@ public class HistoryController {
                     return returnMap;
                 }
                 List<Reservation> reservationList = (List<Reservation>) MapTool.getObject(relMap,"reservationList");
+                List<Reservation> underwayList = (List<Reservation>) MapTool.getObject(relMap,"underwayList");
+                List<Reservation> doneList = (List<Reservation>) MapTool.getObject(relMap,"doneList");
+                List<Reservation> cancelList = (List<Reservation>) MapTool.getObject(relMap,"cancelList");
                 Map<String,Object> returnMap = G.page.returnMap(true, "ok");
                 returnMap.put("reservationList",reservationList);
+                returnMap.put("underwayList",underwayList);
+                returnMap.put("doneList",doneList);
+                returnMap.put("cancelList",cancelList);
                 return returnMap;
             }else if("教师".equals(type)){
                 Map<String,Object> relMap = courseBmo.getAllHistory(userNbr);

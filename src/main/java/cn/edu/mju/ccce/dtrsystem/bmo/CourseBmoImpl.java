@@ -318,8 +318,9 @@ public class CourseBmoImpl implements CourseBmo {
 
     /**
      * 获取发布历史记录
+     *
      * @param teacherNbr
-     * @return map key=courseList
+     * @return map <p>key=courseList<p/><p>key=underwayList<p/><p>key=doneList<p/><p>key=cancelList<p/>
      */
     @Override
     public Map<String, Object> getAllHistory(String teacherNbr) {
@@ -327,18 +328,40 @@ public class CourseBmoImpl implements CourseBmo {
             List<Course> courseList = new ArrayList<>();
             try {
                 courseList = courseDao.selectHistory(teacherNbr);
-            } catch (NullPointerException e){
-                return G.bmo.returnMap(true,"空");
+            } catch (NullPointerException e) {
+                return G.bmo.returnMap(true, "空");
             }
-            if (courseList.isEmpty()){
-                return G.bmo.returnMap(true,"空");
+            if (courseList.isEmpty()) {
+                return G.bmo.returnMap(true, "空");
             }
-            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
-            returnMap.put("courseList",courseList);
+            List<Course> underwayList = new ArrayList<>();
+            List<Course> doneList = new ArrayList<>();
+            List<Course> cancelList = new ArrayList<>();
+            for (Course c : courseList) {
+                int st = c.getCOURSE_STATUS();
+                switch (st) {
+                    case 0:
+                        underwayList.add(c);
+                        break;
+                    case 1:
+                        doneList.add(c);
+                        break;
+                    case 2:
+                        cancelList.add(c);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("courseList", courseList);
+            returnMap.put("underwayList",underwayList);
+            returnMap.put("doneList",doneList);
+            returnMap.put("cancelList",cancelList);
             return returnMap;
         } catch (Exception e) {
-            log.error("查询课程历史记录异常：",e);
-            return G.bmo.returnMap(false,"查询课程历史记录异常");
+            log.error("查询课程历史记录异常：", e);
+            return G.bmo.returnMap(false, "查询课程历史记录异常");
         }
     }
 

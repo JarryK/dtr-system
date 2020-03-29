@@ -187,7 +187,7 @@ public class ReservationBmoImpl implements ReservationBmo {
             }
             int doneStuNbr = course.getCOURSE_DONE_STU_NBR();
             Reservation r = new Reservation();
-            r.setRESERVATION_STATUS(Long.parseLong(status));
+            r.setRESERVATION_STATUS(Integer.parseInt(status));
             r.setCOURSE_ID(Long.parseLong(courseID));
             r.setUSER_NBR(Long.parseLong(userNbr));
             int up = reseDao.updateReservationCourseStatusByCourseID(r);
@@ -209,7 +209,7 @@ public class ReservationBmoImpl implements ReservationBmo {
     /**
      * 获取预约历史记录
      * @param userNbr
-     * @return map key=reservationList
+     * @return map <p>key=reservationList<p/><p>key=underwayList<p/><p>key=doneList<p/><p>key=cancelList<p/>
      */
     @Override
     public Map<String, Object> getAllHistory(String userNbr) {
@@ -223,8 +223,31 @@ public class ReservationBmoImpl implements ReservationBmo {
             if (reservationList.isEmpty()){
                 return G.bmo.returnMap(true, "空");
             }
+            List<Reservation> underwayList = new ArrayList<>();
+            List<Reservation> doneList = new ArrayList<>();
+            List<Reservation> cancelList = new ArrayList<>();
+            // 做个简单分类，难得再查了
+            for (Reservation r: reservationList) {
+                int st = r.getRESERVATION_STATUS();
+                switch (st){
+                    case 0:
+                        underwayList.add(r);
+                        break;
+                    case 1:
+                        doneList.add(r);
+                        break;
+                    case 2:
+                        cancelList.add(r);
+                        break;
+                    default:
+                        break;
+                }
+            }
             Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
             returnMap.put("reservationList",reservationList);
+            returnMap.put("underwayList",underwayList);
+            returnMap.put("doneList",doneList);
+            returnMap.put("cancelList",cancelList);
             return returnMap;
 
         }catch (Exception e){

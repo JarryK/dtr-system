@@ -49,7 +49,7 @@ public interface ReservationBmo {
     /**
      * 获取预约历史记录
      * @param userNbr
-     * @return map key=reservationList
+     * @return map <p>key=reservationList<p/><p>key=underwayList<p/><p>key=doneList<p/><p>key=cancelList<p/>
      */
     public Map<String,Object> getAllHistory(String userNbr);
 }

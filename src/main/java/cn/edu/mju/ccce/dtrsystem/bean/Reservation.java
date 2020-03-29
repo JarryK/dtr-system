@@ -25,7 +25,7 @@ public class Reservation implements Serializable {
     private String COURSE_TEACHER_NAME;//varchar(50) DEFAULT NULL COMMENT '预约课程的任课老师',
     private long USER_NBR;// bigint(17) DEFAULT NULL COMMENT '预约的用户NBR',
     private String USER_NAME;// varchar(64) DEFAULT NULL COMMENT '预约的用户名称',
-    private long RESERVATION_STATUS = 0;// int(1) DEFAULT NULL COMMENT '预约状态 0=正常  1=过期 2=异常',
+    private int RESERVATION_STATUS = 0;// int(1) DEFAULT NULL COMMENT '预约状态 0=正常  1=过期 2=异常',
     private Date CREAT_TIME;// datetime DEFAULT NULL COMMENT '创建时间',
     private Date UPDATE_TIME = new Date();// datetime DEFAULT NULL COMMENT '更新时间',
 
@@ -101,11 +101,11 @@ public class Reservation implements Serializable {
         this.USER_NAME = USER_NAME;
     }
 
-    public long getRESERVATION_STATUS() {
+    public int getRESERVATION_STATUS() {
         return RESERVATION_STATUS;
     }
 
-    public void setRESERVATION_STATUS(long RESERVATION_STATUS) {
+    public void setRESERVATION_STATUS(int RESERVATION_STATUS) {
         this.RESERVATION_STATUS = RESERVATION_STATUS;
     }
 
@@ -159,7 +159,7 @@ public class Reservation implements Serializable {
         result = 31 * result + (COURSE_TEACHER_NAME != null ? COURSE_TEACHER_NAME.hashCode() : 0);
         result = 31 * result + (int) (USER_NBR ^ (USER_NBR >>> 32));
         result = 31 * result + (USER_NAME != null ? USER_NAME.hashCode() : 0);
-        result = 31 * result + (int) (RESERVATION_STATUS ^ (RESERVATION_STATUS >>> 32));
+        result = 31 * result + RESERVATION_STATUS;
         result = 31 * result + (CREAT_TIME != null ? CREAT_TIME.hashCode() : 0);
         result = 31 * result + (UPDATE_TIME != null ? UPDATE_TIME.hashCode() : 0);
         return result;
