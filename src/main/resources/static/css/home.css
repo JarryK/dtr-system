@@ -209,7 +209,7 @@ img {
 }
 .about-body{
     padding: 30px 50px;
-    background: rgba(100%,100%,100%,0.8);
+    background: #fbfbfb;
     border-radius: 15px;
     height: 370px !important;
     overflow: auto;

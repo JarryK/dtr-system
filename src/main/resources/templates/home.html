@@ -53,6 +53,20 @@
                     <div class="col-md-3">
                         <div class="grey-box-icon">
                             <div class="icon-box-top grey-box-icon-pos">
+                                <img src="/images/guide/myself.png" alt="">
+                            </div>
+                            <!--icon box top -->
+                            <h4>个人信息</h4>
+                            <p>编辑您的个人信息</p>
+                            <p><a id="goto-myself" href="javascript:;"><em>点击进入 →</em></a></p>
+                        </div>
+                        <!--grey box -->
+                    </div>
+                    <!--/span3-->
+                     <!--/span3-->
+                    <div class="col-md-3" id="issue-box">
+                        <div class="grey-box-icon">
+                            <div class="icon-box-top grey-box-icon-pos">
                                 <img src="/images/guide/issue.png" alt="">
                             </div>
                             <!--icon box top -->
@@ -63,7 +77,7 @@
                         <!--grey box -->
                     </div>
                     <!--/span3-->
-                    <div class="col-md-3">
+                    <div class="col-md-3" id="reservation-box">
                         <div class="grey-box-icon">
                             <div class="icon-box-top grey-box-icon-pos">
                                 <canvas id="clock" width="128" height="128" style="background-color: #ffffff;border-radius: 50%;"></canvas>
@@ -235,8 +249,23 @@
                     home.el('#userMsg').data("uNbr", uNbr);
                     home.el('.userName').html(uName + "(" + type + ")");
                     home.el('#userMsg').data("uName", uName);
+                    home.el('#userMsg').data("type", type);
+
+                    if(type === "教师" ){
+                        home.el('#reservation-box').hide();
+                    }else {
+                        home.el('#issue-box').hide();
+                    }
                 }).then(function () {App.setWhere('home');return this}).then(function () { home.pageCssInit();return this}).then(function () { bindEvents();return this});
                 return this
+            },
+            show: function () {
+                home.el().show();
+                return this;
+            },
+            hide: function () {
+                home.el().hide();
+                return this;
             },
             swiperAllInit:function (){
                 return $.Deferred(function (defer) {
@@ -283,19 +312,28 @@
                 }).promise();
             },
             clockInit:function (){
-                return $.Deferred(function (defer) {
-                    $("#clock").drawClock(
-                        //{
-                        // hCol: 'xxx',// 时针颜色
-                        // mCol: 'xxx', // 时针颜色
-                        // sCol: 'xxx', // 时针颜色
-                        // isNumCol: 'xxx', // 数字所在的点颜色
-                        // noNumCol: 'xxx', // 非数字所在的点颜色
-                        // dCol: 'xxx', // 中心圈颜色
-                        //}
-                    );
-                    defer.resolve();
-                }).promise();
+                var type = home.el('#userMsg').data("type");
+                if (type !== "教师"){
+                    return $.Deferred(function (defer) {
+                        $("#clock").drawClock(
+                            //{
+                            // hCol: 'xxx',// 时针颜色
+                            // mCol: 'xxx', // 时针颜色
+                            // sCol: 'xxx', // 时针颜色
+                            // isNumCol: 'xxx', // 数字所在的点颜色
+                            // noNumCol: 'xxx', // 非数字所在的点颜色
+                            // dCol: 'xxx', // 中心圈颜色
+                            //}
+                        );
+                        defer.resolve();
+                    }).promise();
+                }else {
+                    return $.Deferred(function (defer) {
+                        defer.resolve();
+                    }).promise();
+                }
+
+
             },
             pageCssInit: function () {
                 home.clockInit().then(function () {home.swiperAllInit()}).then(function(){home.swiperAboutInit();return this;});
