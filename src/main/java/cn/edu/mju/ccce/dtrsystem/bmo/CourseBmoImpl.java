@@ -365,4 +365,27 @@ public class CourseBmoImpl implements CourseBmo {
         }
     }
 
+    /**
+     * 获取所有的课程类别
+     * @return map key=typeList
+     */
+    @Override
+    public Map<String, Object> getAllCourseType() {
+        try{
+            List<Map<String,Object>> typeList = new ArrayList<>();
+            try{
+             typeList = courseTypeDao.selectCourseType();
+
+            }catch (NullPointerException e){
+                return G.bmo.returnMap(false, "空");
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("typeList",typeList);
+            return returnMap;
+        }catch (Exception e){
+            log.error("查询课程类别异常：", e);
+            return G.bmo.returnMap(false, "查询课程类别异常");
+        }
+    }
+
 }

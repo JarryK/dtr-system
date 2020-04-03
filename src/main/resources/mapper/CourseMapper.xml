@@ -205,4 +205,6 @@
         FROM course
         WHERE COURSE_TEACHER_NBR = #{teacherNbr,jdbcType=VARCHAR} ORDER BY COURSE_TIME
     </select>
+    
+
 </mapper>

@@ -58,7 +58,6 @@ public interface CourseBmo {
      */
     public Map<String,Object> cancelCourse (String courseID);
 
-
     /**
      * 更新发布课程信息
      * @param course
@@ -94,4 +93,10 @@ public interface CourseBmo {
      * @return map <p>key=courseList<p/><p>key=underwayList<p/><p>key=doneList<p/><p>key=cancelList<p/>
      */
     public Map<String,Object> getAllHistory(String teacherNbr);
+
+    /**
+     * 获取所有的课程类别
+     * @return map key=typeList
+     */
+    public Map<String,Object> getAllCourseType();
 }
