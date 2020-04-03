@@ -57,4 +57,9 @@ public class PageController {
         return "animate/homeBackground";
     }
 
+    @RequestMapping("admin")
+    public  String admin(){ return "admin/admin-login";}
+
+    @RequestMapping("admin-home")
+    public  String adminHome(){ return "admin/admin";}
 }
