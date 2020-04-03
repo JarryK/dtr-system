@@ -2,7 +2,7 @@
 
 /* 功能区开始 */
 .container {
-    padding-bottom: 1rem;
+    padding: 20px 50px;
 }
 
 .container .row {
@@ -23,4 +23,7 @@ ol.breadcrumb {
     padding-bottom: 15px;
 }
 
+.table p{
+    margin: 0 !important;
+}
 /* 功能区结束 */

@@ -14,12 +14,10 @@ import java.util.Random;
 public class IdGenerator {
 
     public static Long genLongId() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmssSSS");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMddHHmmss");
         String timestamp = sdf.format(Calendar.getInstance().getTime());
-        int maxLength = String.valueOf(Long.MAX_VALUE).length();
-        int genLength = maxLength - timestamp.length();
-        String randomNuber = getRandomNuber(genLength);
-        String string = timestamp + randomNuber;
+        String randomNumber = getRandomNumber(4);//js精度最多17位 超出位数都为0  改成16位
+        String string = timestamp + randomNumber;
         return Long.valueOf(string);
     }
 
@@ -29,7 +27,7 @@ public class IdGenerator {
      * @param m 位数
      * @return String
      */
-    public static String getRandomNuber(int m) {
+    public static String getRandomNumber(int m) {
         Random rd = new Random();
         int number = 1;
         for (int i = 0; i < m; i++) {

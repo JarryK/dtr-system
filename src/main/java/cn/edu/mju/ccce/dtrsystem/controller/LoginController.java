@@ -20,7 +20,7 @@ import java.util.Map;
  * <b>项目名称：</b>dtr-system<br>
  * <b>类名称：</b>cn.edu.mju.ccce.dtrsystem.controller.LoginContronller<br>
  * <b>创建人：</b>yuks<br>
- * <b>类描述：</b><br>
+ * <b>类描述：</b>用户登录控制<br>
  * <b>创建时间：</b>2020-02-02 16:49<br>
  */
 @Controller
@@ -42,13 +42,10 @@ public class LoginController {
         Map<String, Object> returnMap = new HashMap<>();
         String unbr = MapTool.getString(inMap, "uNbr");
         String upass = MapTool.getString(inMap, "uPass");
-        String utype = MapTool.getString(inMap, "uType");
+//        String utype = MapTool.getString(inMap, "uType");
         try {
             unbr.substring(1); // 取1个串，探测非空
             upass.substring(1); // 取1个串，探测非空
-            if (utype.length() <= 0) {
-                utype.substring(1);
-            }
         } catch (Exception e) {
             return G.page.returnMap(false, "输入信息错误！");
         }
@@ -56,14 +53,13 @@ public class LoginController {
             Map<String, Object> userMap = new HashMap<>();
             userMap.put("userNbr", unbr);
             userMap.put("userPass", upass);
-            userMap.put("userType", utype);
             Map<String, Object> relMap = loginBmo.chackLogin(userMap);
             Boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             Map<String, Object> userMsgMap = MapTool.getMap(relMap, "msg");
             if (!relMapBoolean) {
                 return G.page.returnMap(false, "用户名或密码错误！");
             }
-            userMsgMap.put("uNbr",unbr);
+            userMsgMap.put("USER_NBR",unbr);
             session.setAttribute(session.getId(), userMsgMap);
             returnMap = G.page.returnMap(true, "登录成功！");
             returnMap.put("userMsg", userMsgMap);
@@ -101,13 +97,12 @@ public class LoginController {
             if (uMsg.isEmpty()){
                 return G.page.returnMap(false,"用户已退出");
             }
-            String userNbr = MapTool.getString(uMsg,"uNbr");
+            String userNbr = MapTool.getString(uMsg,"USER_NBR");
             if (!userNbr.equals(loginOutUserNbr)){
                 return G.page.returnMap(false,"退出异常");
             }
             session.removeAttribute(sessionID);
             return G.page.returnMap(true, "ok");
-
         } catch (Exception e) {
             return G.page.returnMap(false, "退出失败");
         }

@@ -8,4 +8,9 @@
         WHERE COURSE_TYPE_NAME=#{courseTypeName,jdbcType=VARCHAR} AND COURSE_TYPE_STATUS = 0
     </select>
 
+    <select id="selectCourseType" resultType="java.util.Map">
+        select COURSE_TYPE_ID,COURSE_TYPE_NAME
+        from course_type
+        where COURSE_TYPE_STATUS = 0
+    </select>
 </mapper>

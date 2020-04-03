@@ -4,7 +4,7 @@ document.write("<script src='/js/SweetAlert2.js'></script>");
 
 
 
-var App = function () {
+var Base = function () {
     var bindEvents = function () {
         $.fn.extend({
     
@@ -149,5 +149,5 @@ var App = function () {
     }
 }();
 $(function () {
-    App.init();
+    Base.init();
 });

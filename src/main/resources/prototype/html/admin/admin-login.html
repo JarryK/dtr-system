@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>后台登录</title>
+    <link rel="stylesheet" href="/css/tabris.css">
+    <link rel="stylesheet" href="/css/lib.css">
+    <link rel="stylesheet" href="/css/admin-login.css">
+    <link rel="stylesheet" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
+</head>
+
+<body>
+<div class="backround-animate" >
+    <div class="bg0 pa" style="z-index: -9">
+        <div class="bg1"></div>
+    </div>
+    <div class="hx-box pa" style="z-index: -9">
+        <ul class="pr">
+            <li class="hx-k1 pa0">
+                <span></span>
+            </li>
+            <li class="hx-k2 pa0">
+                <span></span>
+            </li>
+            <li class="hx-k3 pa0">
+                <span></span>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="jumbotron" id="login-box">
+        <h2 class="align-content-around">诊辅系统后台管理登录</h2>
+        <div class="inputbox">
+            <label>用户名</label>
+            <input class="form-control" type="text">
+            <label>密码</label>
+            <input class="form-control" type="password">
+        </div>
+        <button class="btn btn-primary" style="width: 100%;margin-top: 0.5rem" id="login-btn">登录</button>
+</div>
+<script src="/js/jquery-3.1.1.min.js"></script>
+<script src="/js/bootstrap/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
+<script>
+    var login = (function () {
+        var bindEvents = function () {
+            login.el("#login-btn").off('click').on('click', function () {
+                alert('未开放登录！');
+            });
+        };
+        return {
+            data: {},
+            el: function (expr) {
+                return $('#login-box' + ' ' + (expr ? expr : ''));
+            },
+            init: function () {
+                bindEvents();
+                return;
+            },
+            show: function () {
+                login.el().show();
+                return this;
+            },
+            hide: function () {
+                login.el().hide();
+                return this;
+            },
+
+        }
+    })();
+    $(function () {
+        login.init();
+    })
+</script>
+</body>
+
+</html>

@@ -1,6 +1,10 @@
 document.write("<script src='/js/SweetAlert2.js'></script>");
 document.write("<script src='/js/template.js'></script>");
+document.write("<link href='/js/star/jquery.raty.css' />");
+document.write("<script src='/js/star/jquery.raty.js'></script>");
+document.write("<dic id='where' style='display: none'></dic>");
 var App = function () {
+    // 全局设置
     var globalSetting = function () {
         // 扩展时间日期格式功能
         Date.prototype.format = function (fmt) {
@@ -31,7 +35,8 @@ var App = function () {
         // 异步ajax全局参数设定
         $.ajaxSetup({timeout: '120000'});
         $.extend({
-            post: function (url, data, options) {
+            // 默认没有loader遮罩层
+            postJSON: function (url, data, options) {
                 var _url = (((typeof url) == 'string') ? url : undefined);
                 var _data = (((typeof data) == 'object' && data != null) ? JSON.stringify(data) : (((typeof data) == 'string') ? data : undefined));
                 var _options = (((typeof options) == 'object' && options != null) ? $.extend(true, {}, options) : {});
@@ -47,10 +52,63 @@ var App = function () {
                 var _options_apply = $.extend(true, {}, _options_default, _options);
                 return $.ajax(_options_apply);
             },
+            // 调用postJSON发送接收数据，默认使用loader遮罩层
+            loadJSON: function (url, data, options) {
+                var _options = (((typeof options) == 'object' && options != null) ? $.extend(true, {}, options) : {});
+                var _beforeSend_function = $.isFunction(_options.beforeSend) ? _options.beforeSend : function () {
+                };
+                var beforeSend_options = {
+                    beforeSend: function () {
+                        App.loader();
+                        _beforeSend_function();
+                    }
+                };
+                var _options_apply = $.extend(true, {}, _options, beforeSend_options);
+                return $.postJSON(url, data, _options_apply).always(function () {
+                    App.removeLoader();
+                });
+            },
+            // 页面中最大的层值
+            maxZindex: function (el) {
+                var $el = $(el || 'body'), $elArr = $el.andChildren().andChildren().andChildren().add($('div', $el));
+                return Math.max.apply(null, $elArr.map(function () {
+                    if ($(this).css('position') !== 'static') {
+                        return (isNaN($(this).css('z-index')) ? 1 : $(this).css('z-index'));
+                    }
+                }));
+            },
+        });
+        // 扩展$元素能力
+        $.fn.extend({
+            andChildren: function () {
+                return $(this).add($(this).find('>*'));
+            },
         });
     };
-    //page_turn页面跳转函数集
+    // page_turn页面跳转函数集
     var page_turn_functions = (function () {
+        // 顶部跳转
+        // 笨方法，不过能用就好了
+        $("#header-goto-home").off('click').on('click', function () {
+            App.goHomeBySelf();
+        });
+        $("#header-goto-issue").off('click').on('click', function () {
+            App.goIssueBySelf();
+        });
+        $("#header-goto-reservation").off('click').on('click', function () {
+            App.goReservationBySelf();
+        });
+        $("#header-goto-evaluate").off('click').on('click', function () {
+            App.goEvaluateBySelf();
+        });
+        $("#header-goto-history").off('click').on('click', function () {
+            App.goHistoryBySelf();
+        });
+        $("#header-loginOut").off('click').on('click', function () {
+            var uName = $('#header-userDropdown').data('uName');
+            var uNbr = $('#header-userDropdown').data('uNbr');
+            App.loginOut(uNbr, uName);
+        });
         return {
             //在自身窗口打开
             goLoginBySelf: function () {
@@ -61,10 +119,10 @@ var App = function () {
             },
             goIssueBySelf: function () {
                 App.getUserMsg(function (uNbr, uName, uType) {
-                    if (uType == '教师') {
+                    if (App.isTeacher(uType)) {
                         window.open('/dtr/issue', "_self");
                     } else {
-                        App.alert('错误', 2, '没有权限');
+                        App.alert('错误', '没有权限', 2);
                     }
                 });
             },
@@ -83,10 +141,10 @@ var App = function () {
             },
             goIssueByNewPage: function () {
                 App.getUserMsg(function (uNbr, uName, uType) {
-                    if (uType == '教师') {
-                        window.open('/dtr/issue', "_self");
+                    if (App.isTeacher(uType)) {
+                        window.open('/dtr/issue', "_blank");
                     } else {
-                        App.alert('错误', 2, '没有权限');
+                        App.alert('错误', '没有权限', 2);
                     }
                 });
             },
@@ -103,42 +161,127 @@ var App = function () {
     })();
     // utils工具函数集
     var utils_functions = (function () {
+        $(document).on('show.bs.modal', '.modal', function (event) {
+            $(this).appendTo($('body'));
+        }).on('shown.bs.modal', '.modal.in', function (event) {
+            App.setModalsAndBackdropsOrder();
+        }).on('hidden.bs.modal', '.modal', function (event) {
+            App.setModalsAndBackdropsOrder();
+        });
         return {
             loginOut: function (uNbr, uName) {
-                App.selectAlert("用户<span style='color: red'>" + uName + "</span>确定退出吗?", '', 5, function () {
-                    $.post('/dtr/user/loginOut', {
+                App.selectAlert('操作提示', "用户" + uName + "确定退出吗?", 3, function () {
+                    $.loadJSON('/dtr/user/loginOut', {
                         uNbr: uNbr
                     }).done(function (data) {
                         if (!App.checker(data)) {
                             return;
                         } else {
-                            App.topAlert("退出成功！");
-                            window.open("/dtr/login", "_self");
+                            App.topAlert("退出成功！", 1, 1300, function () {
+                                window.open("/dtr/login", "_self");
+                            });
                             return;
                         }
                     });
                 })
             },
             getUserMsg: function (callback) {
-                $.post('/dtr/user/getUser').done(function (data) {
-                    if (!App.checker(data)) {
-                        App.alert('访问失败', 2, '请先登录', function () {
-                            App.goLoginBySelf()
-                        });
-                        return;
-                    } else {
-                        if ($.isFunction(callback)) {
-                            callback(data.user.uNbr, data.user.USER_NAME, data.user.TYPE_NAME);
-                            return;
+                return $.Deferred(function (defer) {
+                    $.loadJSON('/dtr/user/getUser').done(function (data) {
+                        if (!App.checker(data)) {
+                            App.alert('访问失败', '请先登录', 2, function () {App.goLoginBySelf();defer.resolve();});
+                        } else {
+                            $('.header-userName').html(data.user.USER_NAME + "(" + data.user.TYPE_NAME + ")");
+                            $('#header-userDropdown').data("uNbr", data.user.USER_NBR);
+                            $('#header-userDropdown').data("uName", data.user.USER_NAME);
+                            $('#header-userDropdown').data("uType", data.user.TYPE_NAME);
+                            if ($.isFunction(callback)) {
+                                callback(data.user.USER_NBR, data.user.USER_NAME, data.user.TYPE_NAME);
+                            }
+                            defer.resolve();
                         }
-                    }
-                });
+                    });
+                }).promise();
             },
+            formatDateString: function (value) {
+                return new Date(value).format('yyyy-MM-dd hh:mm:ss');
+            },
+            returnRowData: function (e) {
+                var index = $(e).parent().attr("ud-index");
+                console.log(uiduck.data[index]);
+                return uiduck.data[index];
+            },
+            setModalsAndBackdropsOrder: function () {
+                var modalZIndex = 1040;
+                $('.modal.in').each(function (index) {
+                    var $modal = $(this);
+                    modalZIndex++;
+                    $modal.css('zIndex', modalZIndex);
+                    $modal.next('.modal-backdrop.in').addClass('hidden').css('zIndex', modalZIndex - 1);
+                });
+                $('.modal.in:visible:last').focus().next('.modal-backdrop.in').removeClass('hidden');
+            },
+            panelClick: function () {
+                var where = App.getWhere();
+                switch (where) {
+                    case "issue":
+                        return issue.panelClick();
+                    case "evaluate":
+                        return evaluate.panelClick();
+                    case "reservation":
+                        return reservation.panelClick();
+                    default:
+                        return;
+                }
+            },
+            setWhere: function (where) {
+                return $.Deferred(function (defer) {
+                    $('#where').data('where', where);
+                    defer.resolve();
+                }).promise();
+            },
+            getWhere: function () {
+                return $('#where').data('where');
+            }
         }
     })();
     // utils常用ui函数集
     var utils_ui_functions = (function () {
         return {
+            loader: function () {
+                var $loader = $('#loader');
+                if ($loader.length === 0) {
+                    $loader = $('<div id="loader" style="z-index:' + ($.maxZindex() + 1) + ';"><div class="loader-masker fade in" style="z-index: "' + ($.maxZindex() + 1) + ';></div><h4 class="loader-loading"><span class="glyphicon glyphicon-user"> <span class="spinner-border" style="font-size: 20px;width: 30px;height: 30px" role="status" aria-hidden="true"></span>Loading... </span></h4></div>').appendTo('body');
+                } else {
+                    var _za = $loader.css('z-index');
+                    var _czArray = $loader.data('cache-z-index-value-array');
+                    _czArray = $.isArray(_czArray) ? _czArray : [];
+                    _czArray.push(_za);
+                    $loader.css('z-index', +$.maxZindex() + 1);
+                    $loader.data('cache-z-index-value-array', _czArray);
+                }
+                var vivi = +$loader.data('loader-counts-vivi');
+                $loader.data('loader-counts-vivi', '' + ((isNaN(vivi) ? 0 : vivi) + 1));
+                return this;
+            },
+            // 移除遮罩层
+            removeLoader: function (force) {
+                var $loader = $('#loader');
+                if ($loader.length > 0) {
+                    var vivi = +$loader.data('loader-counts-vivi');
+                    vivi = Math.max((isNaN(vivi) ? 0 : vivi) - 1, 0);
+                    if (force || vivi <= 0) {
+                        $loader.removeData('loader-counts-vivi').removeData('cache-z-index-value-array').remove();
+                    } else {
+                        $loader.data('loader-counts-vivi', '' + vivi);
+                        var _czArray = $loader.data('cache-z-index-value-array');
+                        _czArray = $.isArray(_czArray) ? _czArray : [];
+                        $loader.css('z-index', _czArray.pop() || $.maxZindex());
+                        $loader.data('cache-z-index-value-array', _czArray);
+                    }
+                }
+                return this;
+            },
             alertClose: function () {
                 swal.close();
             },
@@ -158,36 +301,25 @@ var App = function () {
                         return;
                 }
             },
-            setDefault: function (item, val) {
-                return this.item = item || val;
-            },
-            alert: function (title = '成功',  text, type = 1,callback) {
-                App.setDefault(title, "成功");
-                var icon = this.checkAlertType(type);
+            alert: function (title = '提示', text = '操作成功', type = 1, callback) {
+                var icon = App.checkAlertType(type);
                 Swal.fire({
                     title: title,
                     text: text,
                     icon: icon,
                     confirmButtonText: '确定',
                     allowEscapeKey: true,
-                    backdrop: `rgba(0,0,0,0.6)`
-                }).then(function (isConfirm) {
-                    try {
-                        //判断 是否 点击的 确定按钮
-                        if (isConfirm.value) {
-                            if ($.isFunction(callback)) {
-                                callback();
-                                return;
-                            }
-                        }
-                    } catch (e) {
-                        alert(e);
+                    backdrop: `rgba(0, 0, 0, 0.6)`
+                }).then(function () {
+                    if ($.isFunction(callback)) {
+                        callback();
+                        return;
                     }
                 });
                 return;
             },
-            selectAlert: function (title = '操作提示', text = '确定吗？', type = 3, callback) {
-                var icon = this.checkAlertType(type);
+            selectAlert: function (title = '操作提示', text = '确定吗', type = 1, callback) {
+                var icon = App.checkAlertType(type);
                 Swal.fire({
                     icon: icon, // 弹框类型
                     title: title, //标题
@@ -207,17 +339,16 @@ var App = function () {
                                 callback();
                                 return;
                             }
-                            Swal.fire("成功", "点击了确定", "success");
                         } else {
-
+                            return;
                         }
                     } catch (e) {
                         alert(e);
                     }
                 });
             },
-            topAlert: function (title = '操作提示', type = 1, timer = 3000) {
-                var icon = this.checkAlertType(type);
+            topAlert: function (title = '操作提示', type = 1, timer = 3000, callback) {
+                var icon = App.checkAlertType(type);
                 Swal.fire({
                     toast: true,
                     position: 'top',
@@ -227,11 +358,17 @@ var App = function () {
                     timer: timer, //毫秒
                     icon: icon,
                     title: title
-                })
+                }).then(function () {
+                    if ($.isFunction(callback)) {
+                        callback();
+                        return;
+                    }
+                });
+                return;
             },
-            msgAlert: function () {
+            msgAlert: function (title, content) {
                 Swal.fire({
-                    title: '<strong>记录</strong>',
+                    title: '<strong>' + title + '</strong>',
                     type: 'info',
                     html: content, // HTML
                     focusConfirm: true, //聚焦到确定按钮
@@ -267,19 +404,18 @@ var App = function () {
             //     })
             // },
             // 检验后端返回的数据成功or失败，并可以控制在屏幕顶部提示
-
             // 设置时间输入框
             setInputBoxForTime: function (_id_or_class) {
                 $(_id_or_class).datetimepicker({
-                    bootcssVer:4,
+                    bootcssVer: 4,
                     format: 'yyyy-mm-dd hh:ii',
                     todayBtn: 'linked',
-                    todayHighlight:true,
-                    autoclose:true,
-                    Integer:1,
-                    startDate:new Date(),
+                    todayHighlight: true,
+                    autoClose: true,
+                    Integer: 1,
+                    startDate: new Date(),
                     // endDate
-                    language:'zh-CN'
+                    language: 'zh-CN'
                 });
             },
         }
@@ -292,7 +428,7 @@ var App = function () {
                 if (typeof (_response) !== 'object' || _response == null
                     || typeof (_response['health']) !== 'object' || _response['health'] == null) {
                     if (_tips) {
-                        App.topTips('arguments error!');
+                        App.topAlert('arguments error!');
                     }
                     return false;
                 }
@@ -310,15 +446,21 @@ var App = function () {
                         return false;
                 }
             },
+            isTeacher: function (type) {
+                return type === '教师';
+            }
         }
     })();
     return {
         init: function () {
             // 初始化全局设置
-            globalSetting($.extend(true, App, utils_functions, utils_ui_functions, utils_checker, page_turn_functions)); // 全局功能设置
-            // 绑定全局事件
-            // bindEvents();
-            return this;
+            return App.bindEvents();
+        },
+        bindEvents: function () {
+            return $.Deferred(function (defer) {
+                globalSetting($.extend(true, App, utils_functions, utils_ui_functions, utils_checker, page_turn_functions)); // 全局功能设置
+                defer.resolve();
+            }).promise();
         },
     }
 }();

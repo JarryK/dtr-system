@@ -1,5 +1,6 @@
 package cn.edu.mju.ccce.dtrsystem.bmo;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -13,7 +14,7 @@ public interface LoginBmo {
     /**
      * 验证登录
      * @param inMap
-     * @return
+     *  @return map key=msg
      */
     Map<String,Object> chackLogin(Map<String,Object> inMap);
 }
