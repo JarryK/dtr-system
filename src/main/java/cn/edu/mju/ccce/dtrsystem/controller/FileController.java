@@ -1,6 +1,8 @@
 package cn.edu.mju.ccce.dtrsystem.controller;
 
+import cn.edu.mju.ccce.dtrsystem.bmo.FileBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
+import cn.edu.mju.ccce.dtrsystem.common.MapTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -9,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import javax.annotation.Resource;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -30,41 +32,63 @@ public class FileController {
      */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+    @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.FileBmoImpl")
+    private FileBmo fileBmo;
+
     @RequestMapping("upload")
     @ResponseBody
     public Map<String, Object> upload(@RequestParam("file") MultipartFile file) throws IOException {
+        if (file.isEmpty()){
+            return G.page.returnMap(false, "上传为空！");
+        }
         String fileName = file.getOriginalFilename();
-        log.info(fileName);
-        String fileType = "";
-        // 文件类型判断
-        if (fileName.length() >= 4) {
-            String strsub = fileName.substring(fileName.length() - 4);
-            if ("xlsx".equals(strsub)) {
-                fileType = ".xlsx";
-            } else {
-                fileType = ".xls";
-            }
-        }
-        String filePath = "C:\\dtr-system\\file\\";
-        File f = new File(filePath);
-        if (!f.exists()) {
-            f.mkdirs();// 不存在路径则进行创建
-        }
-        FileOutputStream out = null;
+        log.info("上传文件名={}",fileName);
+//        String filePath = "C:\\dtr-system\\file\\";
+//        File f = new File(filePath);
+//        if (!f.exists()) {
+//            f.mkdirs();// 不存在路径则进行创建
+//        }
+//        FileOutputStream out = null;
+//        try {
+//            // 重新自定义文件的名称
+//            // 本来打算做成日志流水的，看有没有时间，有时间就做吧
+////            filePath = filePath + IdGenerator.getTimestamp() + fileType;
+//            filePath = filePath + "check" + fileType;
+//            out = new FileOutputStream(filePath);
+//            out.write(file.getBytes());
+//            out.flush();
+//            out.close();
+//            log.info("文件上传成功");
+//            return G.page.returnMap(true, "ok");
+//        } catch (Exception e) {
+//            log.error("文件上传异常", e);
+//            return G.page.returnMap(false, "文件上传异常");
+//        }
+        InputStream in = file.getInputStream();
         try {
-            // 重新自定义文件的名称
-            // 本来打算做成日志流水的，看有没有时间，有时间就做吧
-//            filePath = filePath + IdGenerator.getTimestamp() + fileType;
-            filePath = filePath + "check" + fileType;
-            out = new FileOutputStream(filePath);
-            out.write(file.getBytes());
-            out.flush();
-            out.close();
-            log.info("文件上传成功");
-            return G.page.returnMap(true, "ok");
+            Map<String,Object> relMap = fileBmo.parseExcelFileByUser(in,fileName);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                Map<String,Object> returnMap = G.page.returnMap(false, msg);
+                return returnMap;
+            }
+            Map<String, Object> returnMap = G.page.returnMap(true,"ok");
+            returnMap.put("ExcelStatus", MapTool.getObject(relMap,"ExcelStatus"));
+            return returnMap;
         } catch (Exception e) {
-            log.error("文件上传异常", e);
-            return G.page.returnMap(false, "文件上传异常");
+            log.error("Excel导入异常",e);
+            return G.page.returnMap(false,"Excel导入异常");
+        } finally {
+            if (null != in) {
+                try {
+                    // 释放资源
+                    in.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -74,6 +98,5 @@ public class FileController {
 
         return null;
     }
-
 
 }

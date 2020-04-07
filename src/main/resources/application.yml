@@ -23,8 +23,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 500MB  # 单个上传文件的最大值
-      max-request-size: 500MB  #  多个文件上传的最大值
+      max-file-size: 100MB  # 单个上传文件的最大值
+      max-request-size: 100MB  #  多个文件上传的最大值
 mybatis:
   mapperLocations: classpath:mapper/*.xml  # Mapper 文件路径配置
 logging:
