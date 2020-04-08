@@ -120,18 +120,23 @@
             <a class="btn btn-primary" id="input-batch">批量导入多个用户</a>
         </div>
     </div>
-    <div id="back-select-box" style="display: none">
+    <div id="back-select-box" style="display: none;height: 2rem;">
         <p>
-            <a id="back-select-btn" href="javascript:;" style="float: right;" >返回导入选项 →</a>
+            <a id="back-select-btn" href="javascript:;" style="float: right;">返回导入选项 →</a>
         </p>
     </div>
     <div id="upload-box" style="display: none">
-        <div class="form-inline">
-            <div class="form-group">
+        <div class="row">
+            <div class="col-md-4">
+                <a href="/dtr/user-file/download">👉模板下载</a>
+            </div>
+            <div class="col-md-6">
                 <label class="sr-only" for="userFile">文件输入</label>
                 <input type="file" id="userFile" name="userFile">
             </div>
-            <button id="upload-btn" class="btn btn-primary">提交</button>
+            <div class="col-md-2">
+                <button id="upload-btn" class="btn btn-primary">提交</button>
+            </div>
         </div>
         <div class="progress" id="userFile-icons" style="display: none">
             <div class="progress-bar" role="progressbar" aria-valuenow="60"
@@ -179,20 +184,7 @@
         var bindEvents = function () {
             admin.varMatChart();
             admin.varMyPieChart();
-            admin.el("#back-select-box").off("click").on("click", function () {
-                admin.selectBoxShow();
-            });
-            admin.el("#upload-btn").off("click").on("click", function () {
-                admin.uploadFile();
-            });
-            admin.el("#input-once").off("click").on("click", function () {
-                admin.selectBoxHide();
-                admin.magInputBoxShow();
-            });
-            admin.el("#input-batch").off("click").on("click", function () {
-                admin.selectBoxHide();
-                admin.uploadBoxShow();
-            });
+            admin.panelClick();
         };
         return {
             data: {},
@@ -363,13 +355,54 @@
                 admin.el("#input-select-box").hide();
                 admin.el("#back-select-box").show();
             },
-            uploadBoxShow:function(){
+            uploadBoxShow: function () {
                 admin.el("#upload-box").show();
                 admin.el("#msg-input-box").hide();
             },
-            magInputBoxShow:function () {
+            magInputBoxShow: function () {
                 admin.el("#upload-box").hide();
                 admin.el("#msg-input-box").show();
+            },
+            panelClick:function () {
+                admin.el("#back-select-box").off("click").on("click", function () {
+                    admin.selectBoxShow();
+                });
+                admin.el("#upload-btn").off("click").on("click", function () {
+                    admin.uploadFile();
+                });
+                admin.el("#input-once").off("click").on("click", function () {
+                    admin.selectBoxHide();
+                    admin.magInputBoxShow();
+                });
+                admin.el("#input-batch").off("click").on("click", function () {
+                    admin.selectBoxHide();
+                    admin.uploadBoxShow();
+                });
+                admin.el("#msg-input-btn").off("click").on("click", function () {
+                    var userName = admin.el('#userName').val();
+                    var userType = admin.el('#userType').val();
+                    var userNbr = admin.el('#userNbr').val();
+                    var userSex = admin.el('#userSex').val();
+                    var userPhone = admin.el('#userPhone').val();
+                    $.loadJSON('/dtr/user/addUser', {
+                        userName: userName,
+                        userType: userType,
+                        userNbr: userNbr,
+                        userSex: userSex,
+                        userPhone: userPhone
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            App.alert("提交成功", '', 1, function () {
+                                issue.inputClear();
+                            });
+                            return;
+                        }
+                    });
+
+
+                });
             }
         }
     })();

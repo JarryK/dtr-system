@@ -15,8 +15,38 @@ import java.util.List;
 @Service("cn.edu.mju.ccce.dtrsystem.dao.UserDao")
 public interface UserDao {
 
+    /**
+     * 创建用户
+     * @param user
+     * @return
+     */
     public int createUser(User user);
 
+    /**
+     * 查找用户类别ID
+     * @param typeName
+     * @return
+     */
     public int selectUserTypeID(String typeName);
+
+    /**
+     * 查找用户
+     * @param userNbr
+     * @return
+     */
+    public User selectUser(String userNbr);
+
+    /**
+     * 更新用户
+     * @param user
+     * @return
+     */
+    public int upDataUser(User user);
+
+    /**
+     * 获取所有的用户列表
+     * @return
+     */
+    public List<User> getAllUser();
 
 }
