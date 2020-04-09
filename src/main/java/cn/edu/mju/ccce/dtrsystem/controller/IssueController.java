@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,11 +58,11 @@ public class IssueController {
                 String msg = G.bmo.returnMapMsg(typeMap);
                 return G.page.returnMap(false, msg);
             }
-            List<Map<String,Object>> typeList = (List<Map<String, Object>>) MapTool.getObject(typeMap,"typeList");
-            Map<String,Object> returnMap = G.page.returnMap(true,"ok");
-            returnMap.put("typeList",typeList);
+            List<Map<String, Object>> typeList = (List<Map<String, Object>>) MapTool.getObject(typeMap, "typeList");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("typeList", typeList);
             return returnMap;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("课程类别异常：", e);
             return G.page.returnMap(false, "课程类别异常");
         }
@@ -360,5 +361,93 @@ public class IssueController {
         }
     }
 
+    @RequestMapping("getToday")
+    @ResponseBody
+    public Map<String, Object> getToday(HttpSession httpSession) {
+        try {
+            Map<String, Object> relMap = courseBmo.getTodayCourse();
+            List<Course> courseList = (List<Course>) MapTool.getObject(relMap, "courseList");
+            if (courseList == null) {
+                return G.page.returnMap(false, "查找为空");
+            }
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.page.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("courseList", courseList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查找今天课程异常：", e);
+            return G.page.returnMap(false, "查找今天课程异常");
+        }
+    }
 
+    @RequestMapping("getHistory")
+    @ResponseBody
+    public Map<String, Object> getHistory(HttpSession httpSession) {
+        try {
+            Map<String, Object> relMap = courseBmo.getHistory();
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.page.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Course> pastWeek = (List<Course>) MapTool.getObject(relMap, "pastWeek");
+            List<Course> pastMonth = (List<Course>) MapTool.getObject(relMap, "pastMonth");
+            List<Map<String, Object>> weekList = parseCourseList(pastWeek);
+            List<Map<String, Object>> mapList = parseCourseList(pastMonth);
+            if (weekList.isEmpty() || mapList.isEmpty()){
+                return G.page.returnMap(false, "查找历史课程为空");
+            }
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("pastWeek", weekList);
+            returnMap.put("pastMonth", mapList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查找历史课程异常：", e);
+            return G.page.returnMap(false, "查找历史课程异常");
+        }
+    }
+
+    private List<Map<String, Object>> parseCourseList(List<Course> courseList) throws Exception {
+        List<String> typeList = getCourseTypeList();
+        if (typeList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Map<String, Object> returnMap = new HashMap<>();
+        List<Map<String, Object>> mapList =new ArrayList<>();
+        for (String s : typeList) {
+            List<Course> sl = new ArrayList<>();
+            Map<String, Object> map = new HashMap<>();
+            for (Course c : courseList) {
+                String sc = c.getCOURSE_TYPE_NAME();
+                if (s.equals(sc)) {
+                    sl.add(c);
+                }
+            }
+            map.put("value",sl.size());
+            map.put("courseList",sl);
+            map.put("name",s);
+            map.put("tID",courseBmo.getCourseIDbyName(s));
+            mapList.add(map);
+        }
+        return mapList;
+    }
+
+    private List<String> getCourseTypeList() throws Exception {
+        Map<String, Object> typeMap = courseBmo.getAllCourseType();
+        boolean relMapBoolean = G.bmo.returnMapBool(typeMap);
+        if (!relMapBoolean) {
+            return new ArrayList<>();
+        }
+        List<Map<String, Object>> typeMapList = (List<Map<String, Object>>) MapTool.getObject(typeMap, "typeList");
+        List<String> typeList = new ArrayList<>();
+        for (Map<String, Object> m : typeMapList) {
+            String type = MapTool.getString(m, "COURSE_TYPE_NAME");
+            typeList.add(type);
+        }
+        return typeList;
+    }
 }

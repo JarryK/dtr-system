@@ -99,4 +99,16 @@ public interface CourseBmo {
      * @return map key=typeList
      */
     public Map<String,Object> getAllCourseType();
+
+    /**
+     * 获取今天的课程
+     * @return map key=courseList
+     */
+    public Map<String,Object> getTodayCourse();
+
+    /**
+     * 获取发布历史
+     * @return map key=pastWeek key=pastMonth
+     */
+    public Map<String,Object> getHistory();
 }

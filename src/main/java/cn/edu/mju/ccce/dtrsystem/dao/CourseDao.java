@@ -69,4 +69,29 @@ public interface CourseDao {
      * @return
      */
     public List<Course> selectHistory(String teacherNbr);
+
+    /**
+     * 查找今天的课程
+     * @return
+     */
+    public List<Course> selectCourseToDay();
+
+    /**
+     * 查找一周内的数据
+     * @return
+     */
+    public List<Course> selectCourseBeforePastWeek();
+
+    /**
+     * 查找30天内的数据
+     * @return
+     */
+    public List<Course> selectCourseBefore30Day();
+
+    /**
+     * 查找指定天数内的数据
+     * @return
+     */
+    public List<Course> selectCourseByDay(int day);
+
 }

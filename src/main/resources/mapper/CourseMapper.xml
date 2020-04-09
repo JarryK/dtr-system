@@ -205,6 +205,30 @@
         FROM course
         WHERE COURSE_TEACHER_NBR = #{teacherNbr,jdbcType=VARCHAR} ORDER BY COURSE_TIME
     </select>
-    
+
+    <select id="selectCourseToDay" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
+        SELECT <include refid="sl_Course" />
+        FROM course
+        WHERE to_days(COURSE_TIME) = to_days(now()) AND COURSE_STATUS = 0;
+    </select>
+
+    <select id="selectCourseBeforePastWeek" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
+        SELECT <include refid="sl_Course" />
+        FROM course
+        WHERE YEARWEEK(date_format(COURSE_TIME,'%Y-%m-%d')) = YEARWEEK(now());
+
+    </select>
+
+    <select id="selectCourseBefore30Day" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
+        SELECT <include refid="sl_Course" />
+        FROM course
+        WHERE  date_format(COURSE_TIME,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m');
+    </select>
+
+    <select id="selectCourseByDay" parameterType="java.lang.Integer" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
+        SELECT <include refid="sl_Course" />
+        FROM course
+        WHERE  date(COURSE_TIME) > DATE_SUB(CURDATE(), INTERVAL #{day,jdbcType=NUMERIC} DAY);
+    </select>
 
 </mapper>

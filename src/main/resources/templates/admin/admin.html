@@ -39,55 +39,10 @@
         <div class="col-md-7">
 
             <div class="title">
-                <h2>今日课程发布情况</h2>
+                <h2>过去7天课程发布情况</h2>
             </div>
             <hr class="my-4">
-            <div class="content">
-                <div class="ibox  border shadow" style="background-color: #00a8ff;">
-                    <div class="ibox-title border-bottom">
-                        <!-- <span class="label label-success pull-right">Monthly</span> -->
-                        <h5>语文</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins"><span class="classNumber">12</span></h1>
-                        <!-- <div>约占<span class="">98%</span></div> -->
-                        <!-- <small>Total income</small> -->
-                    </div>
-                </div>
-                <div class="ibox  border shadow" style="background-color: #4cd137;">
-                    <div class="ibox-title border-bottom">
-                        <h5>数学</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins"><span class="classNumber">12</span></h1>
-                    </div>
-                </div>
-                <div class="ibox  border shadow" style="background-color: #ff6b81;">
-                    <div class="ibox-title border-bottom">
-                        <h5>英语</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins"><span class="classNumber">12</span></h1>
-                    </div>
-                </div>
-                <div class="ibox  border shadow" style="background-color: #57606f;">
-                    <div class="ibox-title border-bottom">
-                        <h5>物理</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins"><span class="classNumber">12</span></h1>
-                    </div>
-                </div>
-                <div class="ibox  border shadow" style="background-color: #5352ed;">
-                    <div class="ibox-title border-bottom">
-                        <h5>化学</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins"><span class="classNumber">12</span></h1>
-                    </div>
-                </div>
-
-
+            <div class="content" id="courses-show-box-container">
             </div>
         </div>
         <div class="col-md-5">
@@ -174,7 +129,19 @@
     </div>
 </div>
 </div>
-
+<!--background-color: #4cd137;-->
+<script type="text/html" id="courses-show-box-art">
+    {{ if data && data.length>0 }}{{each data}}
+    <div class="ibox  border shadow courses-show-box">
+        <div class="ibox-title border-bottom">
+            <h5>{{$value.name}}</h5>
+        </div>
+        <div class="ibox-content">
+            <h1 class="no-margins"><span class="classNumber">{{$value.value}}</span></h1>
+        </div>
+    </div>
+    {{/each}}{{/if}}
+</script>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
 <script src="/js/echarts/echarts.min.js"></script>
@@ -183,7 +150,8 @@
     var admin = (function () {
         var bindEvents = function () {
             admin.varMatChart();
-            admin.varMyPieChart();
+            // admin.varMyPieChart();
+            admin.getMsgPast();
             admin.panelClick();
         };
         return {
@@ -270,7 +238,7 @@
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(myChartoption);
             },
-            varMyPieChart: function () {
+            varMyPieChart: function (data) {
                 var myPieChart = echarts.init(document.getElementById('show-pie-chart'));
                 option = {
                     series: [{
@@ -278,27 +246,7 @@
                         type: 'pie',
                         radius: '55%',
                         // roseType: 'angle',
-                        data: [{
-                            value: 12,
-                            name: '英语'
-                        },
-                            {
-                                value: 8,
-                                name: '数学'
-                            },
-                            {
-                                value: 9,
-                                name: '物理'
-                            },
-                            {
-                                value: 1,
-                                name: '语文'
-                            },
-                            {
-                                value: 3,
-                                name: '化学'
-                            }
-                        ]
+                        data: data
                     }]
                 };
                 myPieChart.setOption(option);
@@ -329,6 +277,7 @@
                 }
                 var formData = new FormData();//这里需要实例化一个FormData来进行文件上传
                 formData.append("file", $("#userFile")[0].files[0]);
+                App.loader();
                 $.ajax({
                     type: "post",
                     url: "/dtr/user-file/upload",
@@ -342,6 +291,7 @@
                             App.alert("提交成功");
                             return;
                         }
+                        App.removeLoader();
                     }
                 });
             },
@@ -400,10 +350,27 @@
                             return;
                         }
                     });
-
-
                 });
-            }
+            },
+            getMsgPast:function(){
+                $.loadJSON('/dtr/issue/getHistory').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        var dataPie = data.pastWeek;
+                        admin.paddingShowBox(dataPie)
+                            .then(function () {admin.varMyPieChart(dataPie);return this;})
+                            .then(function () {App.randomBackgroundColor("courses-show-box");return this});
+                        return;
+                    }
+                });
+            },
+            paddingShowBox:function (data) {
+                return $.Deferred(function (defer) {
+                    admin.el("#courses-show-box-container").html(template('courses-show-box-art', {data: data}));
+                    defer.resolve();
+                }).promise();
+            },
         }
     })();
     $(function () {
