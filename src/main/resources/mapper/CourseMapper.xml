@@ -219,10 +219,10 @@
 
     </select>
 
-    <select id="selectCourseBefore30Day" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
-        SELECT <include refid="sl_Course" />
-        FROM course
-        WHERE  date_format(COURSE_TIME,'%Y-%m')=date_format(DATE_SUB(curdate(), INTERVAL 1 MONTH),'%Y-%m');
+    <select id="selectCourseBefore30Day" resultType="java.util.Map">
+        SELECT COURSE_TIME as time,COURSE_TYPE_NAME as name
+        FROM (SELECT COURSE_TIME FROM calendar  where  DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(COURSE_TIME) AND date(COURSE_TIME) &lt;= CURDATE())t2
+        LEFT JOIN (SELECT date(course.COURSE_TIME) time ,COURSE_TYPE_NAME FROM course )t1  on t1.time = t2.COURSE_TIME
     </select>
 
     <select id="selectCourseByDay" parameterType="java.lang.Integer" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">

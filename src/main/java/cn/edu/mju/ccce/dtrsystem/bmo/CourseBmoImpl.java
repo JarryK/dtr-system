@@ -423,7 +423,8 @@ public class CourseBmoImpl implements CourseBmo {
     public Map<String, Object> getHistory() {
         try{
             List<Course> pastWeek = new ArrayList<>();
-            List<Course> pastMonth = new ArrayList<>();
+//            List<Course> pastMonth = new ArrayList<>();
+            List<Map<String, Object>> pastMonth  = new ArrayList<>();
             try {
                 pastWeek = courseDao.selectCourseBeforePastWeek();
                 pastMonth = courseDao.selectCourseBefore30Day();

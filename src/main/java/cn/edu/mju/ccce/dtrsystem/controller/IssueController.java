@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -395,15 +396,16 @@ public class IssueController {
                 return G.page.returnMap(false, msg);
             }
             List<Course> pastWeek = (List<Course>) MapTool.getObject(relMap, "pastWeek");
-            List<Course> pastMonth = (List<Course>) MapTool.getObject(relMap, "pastMonth");
-            List<Map<String, Object>> weekList = parseCourseList(pastWeek);
-            List<Map<String, Object>> mapList = parseCourseList(pastMonth);
-            if (weekList.isEmpty() || mapList.isEmpty()){
+            List<Map<String, Object>> pastMonth = (List<Map<String, Object>>) MapTool.getObject(relMap, "pastMonth");
+            List<Map<String, Object>> weekList = parseWeekCourseList(pastWeek);
+            Map<String, Object> mapList = parseMonthCourseList(pastMonth);
+            if (weekList.isEmpty() || mapList.isEmpty()) {
                 return G.page.returnMap(false, "查找历史课程为空");
             }
             Map<String, Object> returnMap = G.page.returnMap(true, "ok");
             returnMap.put("pastWeek", weekList);
             returnMap.put("pastMonth", mapList);
+            returnMap.put("typeList", getCourseTypeList());
             return returnMap;
         } catch (Exception e) {
             log.error("查找历史课程异常：", e);
@@ -411,13 +413,13 @@ public class IssueController {
         }
     }
 
-    private List<Map<String, Object>> parseCourseList(List<Course> courseList) throws Exception {
+    private List<Map<String, Object>> parseWeekCourseList(List<Course> courseList) throws Exception {
         List<String> typeList = getCourseTypeList();
         if (typeList.isEmpty()) {
             return new ArrayList<>();
         }
         Map<String, Object> returnMap = new HashMap<>();
-        List<Map<String, Object>> mapList =new ArrayList<>();
+        List<Map<String, Object>> mapList = new ArrayList<>();
         for (String s : typeList) {
             List<Course> sl = new ArrayList<>();
             Map<String, Object> map = new HashMap<>();
@@ -427,13 +429,58 @@ public class IssueController {
                     sl.add(c);
                 }
             }
-            map.put("value",sl.size());
-            map.put("courseList",sl);
-            map.put("name",s);
-            map.put("tID",courseBmo.getCourseIDbyName(s));
+            map.put("value", sl.size());
+            map.put("courseList", sl);
+            map.put("name", s);
+            map.put("tID", courseBmo.getCourseIDbyName(s));
             mapList.add(map);
         }
         return mapList;
+    }
+
+    private Map<String, Object> parseMonthCourseList(List<Map<String, Object>> courseList) throws Exception {
+        List<String> typeList = getCourseTypeList();
+        if (typeList.isEmpty()) {
+            return new HashMap<>();
+        }
+        List<Map<String, Object>> sl2 = new ArrayList<>();
+        Map<String, Object> returnMap = new HashMap<>();
+        for (String s : typeList) {
+            List<Integer> sl = new ArrayList<>();
+            Map<String, Object> map = new HashMap<>();
+            String st = "";
+            String lastName = "";
+            int k = 0;
+            for (Map<String, Object> m : courseList) {
+                String mtime = MapTool.getString(m, "time");
+                String cs = MapTool.getString(m, "name");
+                if ("".equals(cs) || cs == null) {
+                    sl.add(0);
+                    k++;
+                } else {
+                    if (st.equals(mtime)) {
+                        if (s.equals(cs)) {
+                            sl.set((k - 1), sl.get(k - 1) + 1);
+                        }
+                    } else {
+                        if (s.equals(cs)) {
+                            sl.add(1);
+                        } else {
+                            sl.add(0);
+                        }
+                        k++;
+                    }
+                }
+                lastName = cs;
+                st = mtime;
+            }
+            map.put("name", s);
+            map.put("type", "line");
+            map.put("data", sl);
+            sl2.add(map);
+        }
+        returnMap.put("courseList", sl2);
+        return returnMap;
     }
 
     private List<String> getCourseTypeList() throws Exception {
@@ -449,5 +496,20 @@ public class IssueController {
             typeList.add(type);
         }
         return typeList;
+    }
+
+    private List<Date> getBetweenDates(Date start, Date end) {
+        List<Date> result = new ArrayList<Date>();
+        Calendar tempStart = Calendar.getInstance();
+        tempStart.setTime(start);
+        tempStart.add(Calendar.DAY_OF_YEAR, 1);
+
+        Calendar tempEnd = Calendar.getInstance();
+        tempEnd.setTime(end);
+        while (tempStart.before(tempEnd)) {
+            result.add(tempStart.getTime());
+            tempStart.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        return result;
     }
 }

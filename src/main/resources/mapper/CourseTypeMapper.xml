@@ -11,6 +11,6 @@
     <select id="selectCourseType" resultType="java.util.Map">
         select COURSE_TYPE_ID,COURSE_TYPE_NAME
         from course_type
-        where COURSE_TYPE_STATUS = 0
+        where COURSE_TYPE_STATUS = 0 ORDER BY COURSE_TYPE_ID
     </select>
 </mapper>

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b>项目名称：</b>dtr-system<br>
@@ -86,7 +87,7 @@ public interface CourseDao {
      * 查找30天内的数据
      * @return
      */
-    public List<Course> selectCourseBefore30Day();
+    public List<Map<String,Object>> selectCourseBefore30Day();
 
     /**
      * 查找指定天数内的数据

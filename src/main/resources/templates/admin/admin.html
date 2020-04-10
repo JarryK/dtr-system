@@ -149,7 +149,7 @@
 <script type="text/javascript">
     var admin = (function () {
         var bindEvents = function () {
-            admin.varMatChart();
+            // admin.varMatChart();
             // admin.varMyPieChart();
             admin.getMsgPast();
             admin.panelClick();
@@ -171,7 +171,7 @@
                 admin.el().hide();
                 return this;
             },
-            varMatChart: function () {
+            varMatChart: function (typeData,courseData) {
                 // 基于准备好的dom，初始化echarts实例
                 var myChart = echarts.init(document.getElementById('show-data-content'));
                 var myChartoption = {
@@ -182,7 +182,7 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data: ['语文', '数学', '英语', '物理', '化学']
+                        data: typeData
                     },
                     grid: {
                         left: '3%',
@@ -203,37 +203,7 @@
                     yAxis: {
                         type: 'value'
                     },
-                    series: [{
-                        name: '语文',
-                        type: 'line',
-                        stack: '总量',
-                        data: [1, 0, 0, 0, 0, 6, 7, 2, 2, 0, 0, 0, 1, 2, 2, 3, 0, 0, 0, 0, 5, 0, 0, 0, 6, 4, 6, 0, 0, 0]
-                    },
-                        {
-                            name: '数学',
-                            type: 'line',
-                            stack: '总量',
-                            data: [2, 2, 2, 0, 0, 0, 0, 3, 4, 0, 0, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 6, 0, 0, 0, 6, 0]
-                        },
-                        {
-                            name: '英语',
-                            type: 'line',
-                            stack: '总量',
-                            data: [0, 2, 1, 0, 0, 0, 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 0, 4, 5, 5, 0, 6]
-                        },
-                        {
-                            name: '物理',
-                            type: 'line',
-                            stack: '总量',
-                            data: [0, 2, 1, 0, 0, 0, 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 0, 4, 5, 5, 0, 6]
-                        },
-                        {
-                            name: '化学',
-                            type: 'line',
-                            stack: '总量',
-                            data: [0, 3, 1, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 2, 0, 0, 3, 1, 1, 0, 1]
-                        }
-                    ]
+                    series:courseData
                 };
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(myChartoption);
@@ -242,7 +212,7 @@
                 var myPieChart = echarts.init(document.getElementById('show-pie-chart'));
                 option = {
                     series: [{
-                        name: '访问来源',
+                        name: '课程比例',
                         type: 'pie',
                         radius: '55%',
                         // roseType: 'angle',
@@ -358,9 +328,14 @@
                         return;
                     } else {
                         var dataPie = data.pastWeek;
+                        var typeData = data.typeList;
+                        var courseData = data.pastMonth.courseList;
+                        console.log(courseData);
                         admin.paddingShowBox(dataPie)
                             .then(function () {admin.varMyPieChart(dataPie);return this;})
+                            .then(function () {admin.varMatChart(typeData,courseData);return this;})
                             .then(function () {App.randomBackgroundColor("courses-show-box");return this});
+                        admin.varMatChart(typeData,courseData);
                         return;
                     }
                 });
