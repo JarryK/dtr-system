@@ -197,9 +197,68 @@
     </div>
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
-
+    <!--  modal -->
+<!--    <div class="modal fade bd-example-modal-sm" id="passbox" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">-->
+<!--        <div class="modal-dialog modal-sm" role="document">-->
+<!--            <div class="modal-content">-->
+<!--                ...-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="modal fade bd-example-modal-lg" id="myselfMsg" tabindex="-1"  data-backdrop="static" role="dialog" aria-labelledby="myselfMsgTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myselfMsgTitle">个人信息</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body row" id="self-msg-box-container" style="padding: 1.2rem">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary input-modal-yes">提交更改</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script type="text/html" id="self-msg-box-art">
+    {{ if data }}
+    <div class="col-md-6">
+        <label for="uid">用户ID：</label>
+        <input class="form-control" id="uid" value="{{data.user_ID}}" readonly="readonly">
+    </div>
+    <div class="col-md-6">
+        <label for="unbr">用户Nbr：</label>
+        <input class="form-control" id="unbr" value="{{data.user_NBR}}" readonly="readonly">
+    </div>
+    <div class="col-md-6">
+        <label for="name">姓名：</label>
+        <input class="form-control" id="name" value="{{data.user_NAME}}" readonly="readonly">
+    </div>
+    <div class="col-md-6">
+        <label for="sex">性别：</label>
+        <select class="form-control" id="sex" value="{{data.user_SEX}}">
+            <option value="男">男</option>
+            <option value="女">女</option>
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="type">用户类别：</label>
+        <input class="form-control" id="type" value="{{data.type_NAME}}" readonly="readonly">
+    </div>
+    <div class="col-md-6">
+        <label for="phone">电话:</label>
+        <input class="form-control" id="phone" value="{{data.user_PHONE}}" >
+    </div>
+    <div class="col-md-12" style="margin-top: 0.8rem">
+        <p><a id="changePass" style="float: right;" href="#">👉更改密码</a></p>
+    </div>
+  {{/if}}
+</script>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
@@ -238,7 +297,27 @@
                 var uNbr = home.el('#userMsg').data('uNbr');
                 App.loginOut(uNbr, uName);
             });
-        };
+            home.el("#goto-myself").off("click").on("click",function () {
+                $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        console.log(data.user);
+                        home.paddingSelfMsgBox(data.user).then(function(){home.el("#myselfMsg").modal('show');return this;});
+                    }
+                })
+            });
+            home.el("#changePass").off("click").on("click",function () {
+                $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        console.log(data.user)
+                        home.el("#passbox").modal('show');
+                    }
+                })
+            });
+    };
         return {
             data: {},
             el: function (expr) {
@@ -250,7 +329,6 @@
                     home.el('.userName').html(uName + "(" + type + ")");
                     home.el('#userMsg').data("uName", uName);
                     home.el('#userMsg').data("type", type);
-
                     if(type === "教师" ){
                         home.el('#reservation-box').hide();
                     }else {
@@ -337,6 +415,12 @@
             },
             pageCssInit: function () {
                 home.clockInit().then(function () {home.swiperAllInit()}).then(function(){home.swiperAboutInit();return this;});
+            },
+            paddingSelfMsgBox:function (data) {
+                return $.Deferred(function (defer) {
+                    home.el("#self-msg-box-container").html(template("self-msg-box-art",{data:data}));
+                    defer.resolve();
+                }).promise();
             }
         }
     })();

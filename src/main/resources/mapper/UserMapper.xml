@@ -10,14 +10,12 @@
         <result property="TYPE_NAME" column="TYPE_NAME"/>
         <result property="USER_PHONE" column="USER_PHONE"/>
         <result property="USER_PASS" column="USER_PASS"/>
-        <result property="EVALUATE_NBR" column="EVALUATE_NBR"/>
         <result property="USER_STATUS" column="USER_STATUS"/>
         <result property="CREAT_TIME" column="CREAT_TIME"/>
         <result property="UPDATE_TIME" column="UPDATE_TIME"/>
     </resultMap>
     <sql id="sl_User">
         <![CDATA[
-
                  USER_ID,
                  USER_NAME,
                  USER_NBR,
@@ -26,11 +24,9 @@
                  TYPE_NAME,
                  USER_PHONE,
                  USER_PASS,
-                 EVALUATE_NBR,
                  USER_STATUS,
                  CREAT_TIME,
                  UPDATE_TIME
-
         ]]>
     </sql>
     <insert id="createUser" useGeneratedKeys="true" keyProperty="USER_ID"
@@ -108,9 +104,9 @@
     </select>
 
     <select id="selectUser" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.User">
-        SELEC <include refid="sl_User"/>
+        SELECT <include refid="sl_User"/>
         FROM user
-        WHERE USER_NBR = #{userNbr,jdbcType=NUMERIC} AND USER_STATUS = 0
+        WHERE USER_NBR = #{userNbr,jdbcType=VARCHAR} AND USER_STATUS = 0
     </select>
     <update id="upDataUser" parameterType="cn.edu.mju.ccce.dtrsystem.bean.User">
         update user

@@ -74,4 +74,29 @@ public class UserController {
             return G.page.returnMap(false, "用户新建异常");
         }
     }
+
+    @RequestMapping("getUserMsg")
+    @ResponseBody
+    public Map<String,Object> getUser(HttpSession httpSession){
+        try{
+            Map<String, Object> uMsg = User.getUserMap(httpSession);
+            if (uMsg.isEmpty()) {
+                return G.page.returnMap(false, "请先登录");
+            }
+            String userNbr = MapTool.getString(uMsg,"USER_NBR");
+            Map<String,Object> relMap = userBmo.selectUserByUserNbr(userNbr);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            User user = (User) MapTool.getObject(relMap,"user");
+            Map<String,Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("user",user);
+            return  returnMap;
+        }catch (Exception e){
+            log.error("用户查找异常", e);
+            return G.page.returnMap(false, "用户查找异常");
+        }
+    }
 }
