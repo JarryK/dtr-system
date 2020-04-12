@@ -114,7 +114,7 @@ public class FileBmoImpl implements FileBmo {
                     user.setTYPE_NAME(type);
                     int typeID = userDao.selectUserTypeID(type);
                     user.setTYPE_ID(typeID);
-                    user.setUSER_NBR(Integer.valueOf(nbr));
+                    user.setUSER_NBR(BigInteger.valueOf(Integer.valueOf(nbr)));
                     user.setCREAT_TIME(new Date());
                     if (!phone.isEmpty()) {
                         user.setUSER_PHONE(new BigInteger(phone));

@@ -112,34 +112,34 @@
         update user
         <set><trim suffixOverrides=",">
             <if test="USER_NAME != null">
-                #{USER_NAME,jdbcType=VARCHAR},
+                USER_NAME=#{USER_NAME,jdbcType=VARCHAR},
             </if>
             <if test="USER_NBR != null">
-                #{USER_NBR,jdbcType=NUMERIC},
+                USER_NBR=#{USER_NBR,jdbcType=NUMERIC},
             </if>
             <if test="USER_SEX != null">
-                #{USER_SEX,jdbcType=VARCHAR},
+                USER_SEX=#{USER_SEX,jdbcType=VARCHAR},
             </if>
             <if test="TYPE_ID != null">
-                #{TYPE_ID,jdbcType=NUMERIC},
+                TYPE_ID=#{TYPE_ID,jdbcType=NUMERIC},
             </if>
             <if test="TYPE_NAME != null">
-                #{TYPE_NAME,jdbcType=VARCHAR},
+                TYPE_NAME=#{TYPE_NAME,jdbcType=VARCHAR},
             </if>
             <if test="USER_PHONE != null">
-                #{USER_PHONE,jdbcType=NUMERIC},
+                USER_PHONE=#{USER_PHONE,jdbcType=NUMERIC},
             </if>
             <if test="USER_PASS != null">
-                #{USER_PASS,jdbcType=VARCHAR},
+                USER_PASS=#{USER_PASS,jdbcType=VARCHAR},
             </if>
             <if test="USER_STATUS != null">
-                #{USER_STATUS,jdbcType=NUMERIC},
+                USER_STATUS=#{USER_STATUS,jdbcType=NUMERIC},
             </if>
             <if test="CREAT_TIME != null">
-                #{CREAT_TIME,jdbcType=TIMESTAMP},
+                CREAT_TIME=#{CREAT_TIME,jdbcType=TIMESTAMP},
             </if>
             <if test="UPDATE_TIME != null">
-                #{UPDATE_TIME,jdbcType=TIMESTAMP},
+                UPDATE_TIME=#{UPDATE_TIME,jdbcType=TIMESTAMP},
             </if>
         </trim></set>
         WHERE  USER_NBR = #{USER_NBR,jdbcType=NUMERIC}

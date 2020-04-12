@@ -198,13 +198,40 @@
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
     <!--  modal -->
-<!--    <div class="modal fade bd-example-modal-sm" id="passbox" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">-->
-<!--        <div class="modal-dialog modal-sm" role="document">-->
-<!--            <div class="modal-content">-->
-<!--                ...-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <div class="modal fade" id="passModel" tabindex="-1" data-backdrop="static" role="dialog"
+         aria-labelledby="passModelLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passModelLabel">修改密码</h5>
+                    <button type="button" class="close pass-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label for="oldPass">旧密码</label>
+                        <a id="checkOldPass" style="float: right;" href="javascript:;">检查旧密码</a>
+                        <input class="form-control" type="password" id="oldPass" >
+                    </div>
+                    <div>
+                        <label for="newPass">新密码</label>
+                        <input class="form-control" type="password" id="newPass" >
+                    </div>
+                    <div>
+                        <label for="newPassCheck">确认密码</label>
+                        <input class="form-control" type="password" id="newPassCheck" >
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary pass-close" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary changePass-yes">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade bd-example-modal-lg" id="myselfMsg" tabindex="-1"  data-backdrop="static" role="dialog" aria-labelledby="myselfMsgTitle"
          aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -255,7 +282,7 @@
         <input class="form-control" id="phone" value="{{data.user_PHONE}}" >
     </div>
     <div class="col-md-12" style="margin-top: 0.8rem">
-        <p><a id="changePass" style="float: right;" href="#">👉更改密码</a></p>
+        <p><a id="changePass" style="float: right;" href="javascript:;">👉更改密码</a></p>
     </div>
   {{/if}}
 </script>
@@ -302,18 +329,11 @@
                     if (!App.checker(data)) {
                         return;
                     } else {
-                        console.log(data.user);
-                        home.paddingSelfMsgBox(data.user).then(function(){home.el("#myselfMsg").modal('show');return this;});
-                    }
-                })
-            });
-            home.el("#changePass").off("click").on("click",function () {
-                $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
-                    if (!App.checker(data)) {
-                        return;
-                    } else {
-                        console.log(data.user)
-                        home.el("#passbox").modal('show');
+                        var userData = data.user;
+                        home.paddingSelfMsgBox(userData)
+                            .then(function(){home.el("#myselfMsg").modal('show');return this;})
+                            .then(function(){home.el("#myselfMsg").data('user',userData);return this;})
+                            .then(function(){home.modelCheck();return this;});
                     }
                 })
             });
@@ -421,6 +441,72 @@
                     home.el("#self-msg-box-container").html(template("self-msg-box-art",{data:data}));
                     defer.resolve();
                 }).promise();
+            },
+            modelCheck:function () {
+                home.el("#changePass").off("click").on("click",function () {
+                    home.el("#passModel").modal('show');
+                });
+                home.el("#checkOldPass").off("click").on("click",function () {
+                    var oldPass = home.el("#oldPass").val();
+                    var user = home.el("#myselfMsg").data('user');
+                    var pass = user.user_PASS;
+                    if (oldPass == pass){
+                        App.topAlert("旧密码正确！",1)
+                    }else {
+                        App.topAlert("旧密码错误！",2)
+                    }
+                });
+                home.el(".changePass-yes").off("click").on("click",function () {
+                    var pass = home.el("#newPass").val();
+                    var passCheck = home.el("#newPassCheck").val();
+                    if (pass != passCheck){
+                        App.topAlert("俩次输入密码不同！",2);
+                        return;
+                    }
+                    if (pass == ''){
+                        App.topAlert("密码不能为空！",2);
+                        return;
+                    }
+                    if (pass.length<6){
+                        App.topAlert("密码不能小于6位！",2);
+                        return;
+                    }
+                    $.loadJSON('/dtr/user/changeSelfMsg',{
+                        pass:pass
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            App.alert("更改成功",'');
+                            home.el("#passModel").modal('hide');
+                            home.passModelClear();
+                        }
+                    })
+                });
+                home.el(".pass-close").off("click").on("click",function () {
+                    home.el("#passModel").modal('hide');
+                    home.passModelClear();
+                });
+                home.el(".input-modal-yes").off('click').on('click',function () {
+                    var sex = home.el('#sex').val();
+                    var phone = home.el('#phone').val();
+                    $.loadJSON('/dtr/user/changeSelfMsg',{
+                        sex:sex,
+                        phone:phone
+                    }).done(function (data) {
+                        if (!App.checker(data)){
+                            return;
+                        }else {
+                            App.alert("更改成功",'');
+                        }
+                    })
+
+                });
+            },
+            passModelClear:function () {
+                home.el("#newPass").val('');
+                home.el("#newPassCheck").val('');
+                home.el("#oldPass").val('')
             }
         }
     })();

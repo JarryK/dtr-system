@@ -19,7 +19,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = -1320367561013449636L;
     private BigInteger USER_ID;
     private String USER_NAME;
-    private int USER_NBR;
+    private BigInteger USER_NBR;
     private String USER_SEX;
     private int TYPE_ID;
     private String TYPE_NAME;
@@ -46,11 +46,11 @@ public class User implements Serializable {
         this.USER_NAME = USER_NAME;
     }
 
-    public int getUSER_NBR() {
+    public BigInteger getUSER_NBR() {
         return USER_NBR;
     }
 
-    public void setUSER_NBR(Integer USER_NBR) {
+    public void setUSER_NBR(BigInteger USER_NBR) {
         this.USER_NBR = USER_NBR;
     }
 
@@ -133,11 +133,11 @@ public class User implements Serializable {
 
         User user = (User) o;
 
-        if (USER_NBR != user.USER_NBR) return false;
         if (TYPE_ID != user.TYPE_ID) return false;
         if (USER_STATUS != user.USER_STATUS) return false;
         if (USER_ID != null ? !USER_ID.equals(user.USER_ID) : user.USER_ID != null) return false;
         if (USER_NAME != null ? !USER_NAME.equals(user.USER_NAME) : user.USER_NAME != null) return false;
+        if (USER_NBR != null ? !USER_NBR.equals(user.USER_NBR) : user.USER_NBR != null) return false;
         if (USER_SEX != null ? !USER_SEX.equals(user.USER_SEX) : user.USER_SEX != null) return false;
         if (TYPE_NAME != null ? !TYPE_NAME.equals(user.TYPE_NAME) : user.TYPE_NAME != null) return false;
         if (USER_PHONE != null ? !USER_PHONE.equals(user.USER_PHONE) : user.USER_PHONE != null) return false;
@@ -151,7 +151,7 @@ public class User implements Serializable {
     public int hashCode() {
         int result = USER_ID != null ? USER_ID.hashCode() : 0;
         result = 31 * result + (USER_NAME != null ? USER_NAME.hashCode() : 0);
-        result = 31 * result + USER_NBR;
+        result = 31 * result + (USER_NBR != null ? USER_NBR.hashCode() : 0);
         result = 31 * result + (USER_SEX != null ? USER_SEX.hashCode() : 0);
         result = 31 * result + TYPE_ID;
         result = 31 * result + (TYPE_NAME != null ? TYPE_NAME.hashCode() : 0);
