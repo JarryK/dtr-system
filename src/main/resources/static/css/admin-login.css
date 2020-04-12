@@ -25,3 +25,8 @@ div#login-box {
 .form-control{
     margin-bottom:0.8rem ;
 }
+
+input.form-control {
+    /* opacity: 0.5; */
+    background: rgba(100%,100%,100%,0.6);
+}

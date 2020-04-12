@@ -23,3 +23,18 @@
         max-width: 1200px !important;
     }
 }
+
+table{
+    margin-top: 1rem;
+}
+tbody{
+    max-height: 400px !important;
+    overflow-y: scroll;
+    display: block;
+    width: 100%;
+}
+tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}

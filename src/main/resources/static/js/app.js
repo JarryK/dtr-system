@@ -168,6 +168,18 @@ var App = function () {
         }).on('hidden.bs.modal', '.modal', function (event) {
             App.setModalsAndBackdropsOrder();
         });
+        $("#user-msg").off("click").on("click",function () {
+            $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+                if (!App.checker(data)) {
+                    return;
+                } else {
+                    var userData = data.user;
+                    App.paddingSelfMsgBox(userData)
+                        .then(function(){$("#myselfMsg").modal('show');return this;})
+                        .then(function(){$("#myselfMsg").data('user',userData);return this;})
+                }
+            });
+        });
         return {
             loginOut: function (uNbr, uName) {
                 App.selectAlert('操作提示', "用户" + uName + "确定退出吗?", 3, function () {
@@ -319,7 +331,13 @@ var App = function () {
                     }
                     defer.resolve();
                 }).promise();
-            }
+            },
+            paddingSelfMsgBox: function(data) {
+                return $.Deferred(function (defer) {
+                    $("#self-msg-box-container").html(template("self-msg-box-art",{data:data}));
+                    defer.resolve();
+                }).promise();
+            },
 
         }
     })();

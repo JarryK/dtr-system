@@ -335,7 +335,21 @@
                             .then(function(){home.el("#myselfMsg").data('user',userData);return this;})
                             .then(function(){home.modelCheck();return this;});
                     }
-                })
+                });
+            });
+            // 偷懒直接给复制一份
+            home.el("#user").off("click").on("click",function () {
+                $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        var userData = data.user;
+                        home.paddingSelfMsgBox(userData)
+                            .then(function(){home.el("#myselfMsg").modal('show');return this;})
+                            .then(function(){home.el("#myselfMsg").data('user',userData);return this;})
+                            .then(function(){home.modelCheck();return this;});
+                    }
+                });
             });
     };
         return {
