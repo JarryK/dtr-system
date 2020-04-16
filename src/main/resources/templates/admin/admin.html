@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>诊辅系统-后台管理</title>
     <link rel="stylesheet" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
     <link rel="stylesheet" href="/css/admin.css">
 </head>
@@ -12,11 +12,7 @@
 <body>
 <nav class="navbar navbar-light" style="background-color: #3498db;">
     <a class="navbar-brand" href="#">诊辅系统-后台管理</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <!-- <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" id="navbarNav" style="float: right">
       <ul class="navbar-nav">
         <li class="nav-item active">
           <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
@@ -31,7 +27,23 @@
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
         </li>
       </ul>
-    </div> -->
+    </div>
+    <div class="form-inline my-2 my-lg-0" id="userBox" style="margin-right: 2rem">
+        <ul>
+            <li class="dropdown  nav-item">
+                <a class="nav-link" id="header-userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user adminName">
+                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...
+                        </span>
+                    <span class="caret"></span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" id="admin-loginOut" href="javascript:;">退出</a>
+                </div>
+            </li>
+            <li><a class="nav-link">使用说明</a></li>
+        </ul>
+    </div>
 </nav>
 <div class="row" id="top-show-box">
         <div class="col-md-6">
@@ -164,10 +176,7 @@
 <script type="text/javascript">
     var admin = (function () {
         var bindEvents = function () {
-            // admin.varMatChart();
-            // admin.varMyPieChart();
-            admin.getMsgPast();
-            admin.panelClick();
+            admin.getAdminMsg();
         };
         return {
             data: {},
@@ -330,12 +339,26 @@
                             return;
                         } else {
                             App.alert("提交成功", '', 1, function () {
-                                issue.inputClear();
+                                admin.inputClear();
                             });
                             return;
                         }
                     });
                 });
+                admin.el("#admin-loginOut").off("click").on("click", function () {
+                    var adminID = admin.el(".adminName").data("adminID");
+                    $.loadJSON('/dtr/admin/adminOut', {
+                        adminID:adminID
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            App.alert("退出成功", '', 1, function () {App.goAdminLoginBySelf()});
+                            return;
+                        }
+                    });
+                });
+
             },
             getMsgPast:function(){
                 $.loadJSON('/dtr/issue/getHistory').done(function (data) {
@@ -361,6 +384,27 @@
                     defer.resolve();
                 }).promise();
             },
+            getAdminMsg:function () {
+                return $.Deferred(function (defer) {
+                    $.loadJSON('/dtr/admin/getAdmin').done(function (data) {
+                        if (!App.checker(data)) {
+                            App.alert("管理员未登录！","",2,function(){
+                               App.goAdminLoginBySelf();
+                            });
+                            return false;
+                        } else {
+                            var adminName = data.admin.name;
+                            var adminID = data.admin.id;
+                            admin.el(".adminName").html(adminName);
+                            admin.el(".adminName").data("adminID",adminID);
+                            admin.getMsgPast();
+                            admin.panelClick();
+                            return true;
+                        }
+                    });
+                    defer.resolve();
+                }).promise();
+            }
         }
     })();
     $(function () {

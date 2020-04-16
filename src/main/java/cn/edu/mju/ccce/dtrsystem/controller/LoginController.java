@@ -78,6 +78,10 @@ public class LoginController {
             if (userMap.isEmpty()) {
                 return G.page.returnMap(false, "用户未登录");
             }
+            String userNbr = MapTool.getString(userMap, "USER_NBR");
+            if("".equals(userNbr) || userNbr == null){
+                return G.page.returnMap(false, "请先登录");
+            }
             Map<String, Object> returnMap = G.page.returnMap(true, "ok");
             returnMap.put("user", userMap);
             return returnMap;

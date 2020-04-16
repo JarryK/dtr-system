@@ -135,6 +135,12 @@ var App = function () {
             goHistoryBySelf: function () {
                 window.open('/dtr/history', "_self");
             },
+            goAdminLoginBySelf:function () {
+                window.open("/dtr/admin-login", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+            },
+            goAdminHomeBySelf:function () {
+                window.open("/dtr/admin", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+            },
             //新窗口打开
             goHomeByNewPage: function () {
                 window.open('/dtr/home', "_blank");
@@ -156,7 +162,13 @@ var App = function () {
             },
             goHistoryByNewPage: function () {
                 window.open('/dtr/history', "_blank");
-            }
+            },
+            goAdminLoginByNewPage:function () {
+                window.open("/dtr/admin-login", "_blank");
+            },
+            goAdminHomeByNewPage:function () {
+                window.open("/dtr/admin", "_blank");
+            },
         }
     })();
     // utils工具函数集

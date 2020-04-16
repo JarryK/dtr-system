@@ -82,6 +82,9 @@ public class UserController {
                 return G.page.returnMap(false, "请先登录");
             }
             String userNbr = MapTool.getString(uMsg, "USER_NBR");
+            if("".equals(userNbr)){
+                return G.page.returnMap(false, "请先登录");
+            }
             Map<String, Object> relMap = userBmo.selectUserByUserNbr(userNbr);
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean) {
