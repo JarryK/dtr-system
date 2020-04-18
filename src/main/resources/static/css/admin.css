@@ -17,6 +17,9 @@ ul {
 p, ul {
     margin-bottom: 0;
 }
+.container{
+    max-width: 1300px;
+}
 
 #userBox li {
     margin-right: 1.5rem;
@@ -107,4 +110,18 @@ div#courses-show-box-container {
 
 div#future-box {
     height: 430px;
+}
+table{
+    margin-top: 1rem;
+}
+#show-history-box-container{
+    max-height: 400px !important;
+    overflow-y: scroll;
+    display: block;
+    width: 100%;
+}
+tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
 }

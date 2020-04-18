@@ -108,7 +108,13 @@ public interface CourseBmo {
 
     /**
      * 获取发布历史
-     * @return map key=pastWeek key=pastMonth
+     * @return map key=pastWeek key=pastMonth key=courseList
      */
     public Map<String,Object> getHistory();
+
+    /**
+     * 获取可预约列表
+     * @return
+     */
+    public Map<String,Object> getIssueList();
 }

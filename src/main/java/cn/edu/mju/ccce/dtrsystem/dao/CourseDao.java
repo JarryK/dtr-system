@@ -78,16 +78,28 @@ public interface CourseDao {
     public List<Course> selectCourseToDay();
 
     /**
-     * 查找一周内的数据
+     * 查找一周前的数据
      * @return
      */
     public List<Course> selectCourseBeforePastWeek();
 
     /**
-     * 查找30天内的数据
+     * 查找30天前的数据
      * @return
      */
     public List<Map<String,Object>> selectCourseBefore30Day();
+
+    /**
+     *  查找30天前的课程列表
+     * @return
+     */
+    public List<Course> selectCourseListMsgBefore30Day();
+
+    /**
+     *  查找未来30天的课程列表
+     * @return
+     */
+    public List<Course> selectCourseListMsg30Day();
 
     /**
      * 查找指定天数内的数据
