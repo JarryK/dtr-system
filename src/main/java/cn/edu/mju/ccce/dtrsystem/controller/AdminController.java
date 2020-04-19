@@ -37,7 +37,6 @@ public class AdminController {
      */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.AdminBmoImpl")
     private AdminBmo adminBmo;
 
@@ -134,7 +133,7 @@ public class AdminController {
     @ResponseBody
     public Map<String, Object> getHistory(HttpSession httpSession) {
         try {
-            if (!isAdmin(httpSession)){
+            if (!adminBmo.isAdmin(httpSession)){
                 return G.page.returnMap(false, "非管理员不可操作！");
             };
             Map<String, Object> relMap = courseBmo.getHistory();
@@ -163,6 +162,31 @@ public class AdminController {
         }
     }
 
+    @RequestMapping("getCouList")
+    @ResponseBody
+    public Map<String, Object> getCouList(HttpSession httpSession) {
+        try {
+            if (!adminBmo.isAdmin(httpSession)){
+                return G.page.returnMap(false, "非管理员不可操作！");
+            };
+            Map<String, Object> relMap = courseBmo.getIssueList();
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.page.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<Course> oneMonth = (List<Course>) MapTool.getObject(relMap, "oneMonth");
+            if (oneMonth.isEmpty() ) {
+                return G.page.returnMap(false, "查找课程为空");
+            }
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("oneMonth",oneMonth);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查找课程异常：", e);
+            return G.page.returnMap(false, "查找课程异常");
+        }
+    }
     private List<Map<String, Object>> parseWeekCourseList(List<Course> courseList) throws Exception {
         List<String> typeList = getCourseTypeList();
         if (typeList.isEmpty()) {
@@ -248,29 +272,4 @@ public class AdminController {
         return typeList;
     }
 
-    private boolean isAdmin(HttpSession session) {
-        String sessionID = session.getId();
-        Map<String, Object> userMsgMap = (Map<String, Object>) session.getAttribute(sessionID);
-        if (userMsgMap.isEmpty()) {
-            return false;
-        }
-        String id = MapTool.getString(userMsgMap, "id");
-        String sex = MapTool.getString(userMsgMap, "sex");
-        String name = MapTool.getString(userMsgMap, "name");
-        String phone = MapTool.getString(userMsgMap, "phone");
-        Map<String, Object> relMap = adminBmo.getAdmin(id);
-        boolean relMapBoolean = G.bmo.returnMapBool(relMap);
-        if (!relMapBoolean) {
-            return false;
-        }
-        Map<String, Object> admin = MapTool.getMap(relMap, "admin");
-        String rel_id = MapTool.getString(admin, "id");
-        String rel_name = MapTool.getString(admin, "name");
-        String rel_sex = MapTool.getString(admin, "sex");
-        String rel_phone = MapTool.getString(admin, "phone");
-        if (id.equals(rel_id) && name.equals(rel_name) && phone.equals(rel_phone) && sex.equals(rel_sex)) {
-            return true;
-        }
-        return false;
-    }
 }

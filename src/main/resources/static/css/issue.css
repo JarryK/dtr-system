@@ -29,13 +29,13 @@ ol.breadcrumb {
 table{
     margin-top: 1rem;
 }
-tbody{
+#issueCourseHistory tbody ,#issueDoneCourseHistory tbody{
     max-height: 400px !important;
     overflow-y: scroll;
     display: block;
     width: 100%;
 }
-tr {
+#issueCourseHistory tr,#issueDoneCourseHistory tr {
     display: table;
     width: 100%;
     table-layout: fixed;

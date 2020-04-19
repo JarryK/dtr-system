@@ -1,5 +1,6 @@
 package cn.edu.mju.ccce.dtrsystem.bmo;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -24,5 +25,12 @@ public interface AdminBmo {
      * @return map key=admin
      */
     Map<String,Object> getAdmin(String adminID);
+
+    /**
+     * 判断是否是管理员
+     * @param session
+     * @return
+     */
+    boolean isAdmin(HttpSession session);
 
 }

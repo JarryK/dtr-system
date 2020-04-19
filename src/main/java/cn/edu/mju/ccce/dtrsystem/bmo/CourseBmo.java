@@ -113,8 +113,8 @@ public interface CourseBmo {
     public Map<String,Object> getHistory();
 
     /**
-     * 获取可预约列表
-     * @return
+     * 获取发布
+     * @return map key=oneMonth
      */
     public Map<String,Object> getIssueList();
 }

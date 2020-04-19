@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>诊辅系统-后台管理</title>
     <link rel="stylesheet" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="/js/bootstrap/datepicker/bootstrap-datetimepicker.min.css">
 </head>
 
 <body>
@@ -56,7 +58,7 @@
                     <div class="content" id="courses-show-box-container">
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-5" style="padding-top: 2rem;">
                     <div id="show-pie-chart"
                          style="height: 330px;width: 100%;  text-align: center;"></div>
                 </div>
@@ -65,17 +67,26 @@
         </div>
         <div class="col-md-6">
             <div class=" border jumbotron show-box row " id="future-box">
-                <div class="col-md-7">
+                <div class="col-md-12">
                     <div class="title">
-                        <h2>未来一个月课程发布情况</h2>
+                        <h2>未来30天课程发布情况</h2>
                     </div>
                     <hr class="my-4">
                     <div class="content" >
+                        <table class="table text-center table-set">
+                            <thead>
+                            <tr>
+                                <th style="width: 100px">序号</th>
+                                <th style="width: 160px">时间</th>
+                                <th style="width: 100px">类别</th>
+                                <th style="width: 100px">老师</th>
+                                <th style="width: 100px">状态</th>
+                                <th style="width: 100px">详细</th>
+                            </tr>
+                            </thead>
+                            <tbody id="show-issue-box-container"></tbody>
+                        </table>
                     </div>
-                </div>
-                <div class="col-md-5">
-                    <div id="show--chart"
-                         style="height: 330px;width: 100%;  text-align: center;"></div>
                 </div>
             </div>
 
@@ -90,13 +101,13 @@
         <div class="content col-md-6" id="show-data-content" style="width: 100%;height:400px;">
         </div>
         <div class="col-md-6">
-            <table class="table text-center">
+            <table class="table text-center table-set">
                 <thead>
                     <tr>
                         <th style="width: 100px">序号</th>
                         <th style="width: 160px">时间</th>
                         <th style="width: 100px">类别</th>
-                        <th style="width: 100px">老师</th>
+                        <th style="width: 90px">老师</th>
                         <th style="width: 100px">详细</th>
                     </tr>
                 </thead>
@@ -183,7 +194,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" style="padding-bottom: 0;">
+            <div class="modal-body table-set" style="padding-bottom: 0;">
                 <table class="table text-center table-striped  shadow">
                     <tbody id="course-msg-container">
                     </tbody>
@@ -195,7 +206,30 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="checkMsgModel" tabindex="-1" data-backdrop="static" role="dialog"
+     aria-labelledby="checkMsgModelLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkMsgModelLabel">修改课程信息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding-bottom: 0;">
+                <table class="table text-center table-striped  shadow ">
+                    <tbody id="check-msg-container">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary courseMsg-yes">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--background-color: #4cd137;-->
 <script type="text/html" id="courses-show-box-art">
     {{ if data && data.length>0 }}{{each data}}
@@ -217,6 +251,18 @@
         <td style="width: 100px">{{$value.COURSE_TYPE_NAME}}</td>
         <td style="width: 100px">{{$value.COURSE_TEACHER_NAME}}</td>
         <td style="width: 100px"><a class="courseDet" href="javascript:;" data-courseid="{{$index}}">点击</a></td>
+    </tr>
+    {{/each}}{{/if}}
+</script>
+<script type="text/html" id="show-issue-box-art">
+    {{ if data && data.length>0 }}{{each data}}
+    <tr>
+        <td style="width: 100px">{{$index + 1}}</td>
+        <td style="width: 180px">{{$value.COURSE_TIME | formatDateString}}</td>
+        <td style="width: 100px">{{$value.COURSE_TYPE_NAME}}</td>
+        <td style="width: 100px;padding-left: 1.2rem;">{{$value.COURSE_TEACHER_NAME}}</td>
+        <td style="width: 100px;padding-left: 2.2rem;padding-right: 0;">{{$value.COURSE_STATUS | caseStatus }}</td>
+        <td style="width: 100px;padding-left: 2.2rem;"><a class="checkBtn" href="javascript:;" data-courseid="{{$index}}">编辑</a></td>
     </tr>
     {{/each}}{{/if}}
 </script>
@@ -252,18 +298,70 @@
     </tr>
     {{/if}}
 </script>
+<script type="text/html" id="check-msg-art">
+    {{ if courseDetail}}
+    <tr>
+        <td class="align-middle">课程名</td>
+        <td class="align-middle"><input class="form-control" id="course_name" type="text"
+                                        value="{{courseDetail.COURSE_NAME}}"/></td>
+    </tr>
+    <tr>
+        <td class="align-middle">课程类型</td>
+        <td class="align-middle"><input class="form-control" type="text" id="course_typeName"
+                                        value="{{courseDetail.COURSE_TYPE_NAME}}" readonly="readonly"></td>
+    </tr>
+    <tr>
+        <td class="align-middle">课程详细内容</td>
+        <td class="align-middle"><input class="form-control" type="text" id="course_detail"
+                                        value="{{courseDetail.COURSE_DETAIL}}"></td>
+    </tr>
+    <tr>
+        <td class="align-middle">课程老师</td>
+        <td class="align-middle"><input class="form-control" type="text" id="course_teacherName"
+                                        value="{{courseDetail.COURSE_TEACHER_NAME}}" readonly="readonly"></td>
+    </tr>
+    <tr>
+        <td class="align-middle">课程时间</td>
+        <td class="align-middle"><input class="form-control" type="text" id="course_time"
+                                        value="{{courseDetail.COURSE_TIME | formatDateString}}"></td>
+    </tr>
+    <tr>
+        <td colspan='2' style='text-align: center'>
+            <p><a href="javascript:;" class="text-decoration-none del-course"
+                  data-courseid="{{courseDetail.COURSE_ID}}">取消课程</a>
+            </p>
+        </td>
+    </tr>
+    {{/if}}
+</script>
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
 <script src="/js/echarts/echarts.min.js"></script>
+<script src="/js/bootstrap/datepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="/js/bootstrap/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="/js/app.js"></script>
 <script type="text/javascript">
     template.helper('formatDateString', function (value) {
         return new Date(value).format('yyyy-MM-dd hh:mm');
     });
+    template.helper('caseStatus', function (value) {
+        switch (value) {
+            case 0:
+                return "可预约";
+            case 1:
+                return "过期";
+            case 2:
+                return "已取消";
+            default:
+                return "异常";
+        }
+    });
     var admin = (function () {
         var bindEvents = function () {
-            admin.getAdminMsg();
+            App.loader();
+            admin.getAdminMsg()
+            .then(function(){App.removeLoader();return this;});
         };
         return {
             data: {},
@@ -366,10 +464,10 @@
                         if (!App.checker(data)) {
                             return;
                         } else {
+                            App.removeLoader();
                             App.alert("提交成功");
                             return;
                         }
-                        App.removeLoader();
                     }
                 });
             },
@@ -448,6 +546,50 @@
                     var dataDet = dataList[courseid];
                     admin.paddingCourseShowModel(dataDet).then(function(){admin.el("#courseMsgModel").modal("show")});
                 });
+                admin.el(".checkBtn").off("click").on("click", function () {
+                    var courseid = $(this).data("courseid");
+                    var dataList = admin.el("#check-msg-container").data("courseList");
+                    var dataDet = dataList[courseid];
+                    admin.paddingCourseCheckShowModel(dataDet).then(function(){admin.el("#checkMsgModel").modal("show")});
+                    admin.panelClick();
+                });
+                admin.el('.courseMsg-yes').off('click').on('click', function () {
+                    var courseID = admin.el('.del-course').data("courseid");
+                    var course_name = admin.el("#course_name").val();
+                    var course_detail = admin.el("#course_detail").val();
+                    var course_time = admin.el("#course_time").val() + ':00';
+                    $.loadJSON('/dtr/issue/updateCourse', {
+                        courseID: courseID,
+                        courseName: course_name,
+                        courseDetail: course_detail,
+                        courseTime: course_time
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            App.alert("修改成功", "", 1, function () {
+                                admin.el("#checkMsgModel").modal("hide");
+                                admin.getCourseList()
+                            });
+                        }
+                    });
+                });
+                admin.el('.del-course').off('click').on('click', function () {
+                    var courseID = $(this).data('courseid');
+                    App.selectAlert("操作提示", "确定取消吗？", 3, function () {
+                        $.loadJSON('/dtr/issue/cancelCourse', {
+                            courseID: courseID
+                        }).done(function (data) {
+                            if (!App.checker(data)) {
+                                return;
+                            } else {
+                                App.alert("取消成功", "", 1, function () {
+                                    admin.getCourseList()
+                                });
+                            }
+                        });
+                    });
+                });
             },
             getMsgPast:function(){
                 $.loadJSON('/dtr/admin/getHistory').done(function (data) {
@@ -459,12 +601,24 @@
                         var courseData = data.pastMonth.courseList;
                         var courseList = data.pastMonthCourseList;
                         admin.el("#show-history-box-container").data("courseList",courseList);
+                        admin.paddingCourseShowBox(courseList);
+                        admin.varMyPieChart(dataPie);
+                        admin.varMatChart(typeData,courseData);
                         admin.paddingShowBox(dataPie)
-                            .then(function () {admin.paddingCourseShowBox(courseList);return this;})
-                            .then(function () {admin.varMyPieChart(dataPie);return this;})
-                            .then(function () {admin.varMatChart(typeData,courseData);return this;})
                             .then(function () {admin.panelClick();return this})
                             .then(function () {App.randomBackgroundColor("courses-show-box");return this});
+                        return;
+                    }
+                });
+            },
+            getCourseList:function(){
+                $.loadJSON('/dtr/admin/getCouList').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        var dataList = data.oneMonth;
+                        admin.el("#check-msg-container").data("courseList",dataList);
+                        admin.paddingIssueBox(dataList).then(function(){admin.panelClick();return this;});
                         return;
                     }
                 });
@@ -472,6 +626,12 @@
             paddingShowBox:function (data) {
                 return $.Deferred(function (defer) {
                     admin.el("#courses-show-box-container").html(template('courses-show-box-art', {data: data}));
+                    defer.resolve();
+                }).promise();
+            },
+            paddingIssueBox:function (data) {
+                return $.Deferred(function (defer) {
+                    admin.el("#show-issue-box-container").html(template('show-issue-box-art', {data: data}));
                     defer.resolve();
                 }).promise();
             },
@@ -487,6 +647,13 @@
                     defer.resolve();
                 }).promise();
             },
+            paddingCourseCheckShowModel:function (data) {
+                return $.Deferred(function (defer) {
+                    admin.el("#check-msg-container").html(template('check-msg-art', {courseDetail: data}));
+                    App.setInputBoxForTime('#course_time');
+                    defer.resolve();
+                }).promise();
+            },
             getAdminMsg:function () {
                 return $.Deferred(function (defer) {
                     $.loadJSON('/dtr/admin/getAdmin').done(function (data) {
@@ -494,15 +661,14 @@
                             App.alert("管理员未登录！","",2,function(){
                                App.goAdminLoginBySelf();
                             });
-                            return false;
                         } else {
                             var adminName = data.admin.name;
                             var adminID = data.admin.id;
                             admin.el(".adminName").html(adminName);
                             admin.el(".adminName").data("adminID",adminID);
                             admin.getMsgPast();
+                            admin.getCourseList();
                             admin.panelClick();
-                            return true;
                         }
                     });
                     defer.resolve();

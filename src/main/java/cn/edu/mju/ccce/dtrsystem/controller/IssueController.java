@@ -1,6 +1,7 @@
 package cn.edu.mju.ccce.dtrsystem.controller;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
+import cn.edu.mju.ccce.dtrsystem.bmo.AdminBmo;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
@@ -42,6 +43,8 @@ public class IssueController {
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.CourseBmoImpl")
     private CourseBmo courseBmo;
 
+    @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.AdminBmoImpl")
+    private AdminBmo adminBmo;
 
     @RequestMapping("getType")
     @ResponseBody
@@ -159,7 +162,7 @@ public class IssueController {
         try {
             Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
             String type_name = MapTool.getString(uMsg, "TYPE_NAME");
-            if (!"教师".equals(type_name)) {
+            if (!"教师".equals(type_name) && !adminBmo.isAdmin(httpSession)) {
                 return G.page.returnMap(false, "非教师用户，不能操作");
             }
             String uNbr = MapTool.getString(uMsg, "USER_NBR");
@@ -294,7 +297,7 @@ public class IssueController {
             Date courseTime = formatTimeStrToDate(courseTimeStr);
             Map<String, Object> uMap = (Map<String, Object>) httpSession.getAttribute(sessionID);
             String type_name = MapTool.getString(uMap, "TYPE_NAME");
-            if (!"教师".equals(type_name)) {
+            if (!"教师".equals(type_name) && !adminBmo.isAdmin(httpSession)) {
                 return G.page.returnMap(false, "非教师用户，不能操作");
             }
             Map<String, Object> relMap = courseBmo.getCourseDetByID(courseID);
@@ -346,7 +349,7 @@ public class IssueController {
         try {
             Map<String, Object> uMap = (Map<String, Object>) httpSession.getAttribute(sessionID);
             String type_name = MapTool.getString(uMap, "TYPE_NAME");
-            if (!"教师".equals(type_name)) {
+            if (!"教师".equals(type_name) && !adminBmo.isAdmin(httpSession)) {
                 return G.page.returnMap(false, "非教师用户，不能操作");
             }
             Map<String, Object> relMap = courseBmo.cancelCourse(courseID);

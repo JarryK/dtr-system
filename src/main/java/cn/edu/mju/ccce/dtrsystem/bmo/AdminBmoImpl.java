@@ -1,6 +1,7 @@
 package cn.edu.mju.ccce.dtrsystem.bmo;
 
 import cn.edu.mju.ccce.dtrsystem.common.G;
+import cn.edu.mju.ccce.dtrsystem.common.MapTool;
 import cn.edu.mju.ccce.dtrsystem.dao.AdminDao;
 import cn.edu.mju.ccce.dtrsystem.dao.LoginDao;
 import org.slf4j.Logger;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,5 +81,30 @@ public class AdminBmoImpl implements AdminBmo {
             log.error("查询错误", e);
             return G.bmo.returnMap(false, "查询错误");
         }
+    }
+
+    @Override
+    public boolean isAdmin(HttpSession session) {
+        String sessionID = session.getId();
+        Map<String, Object> userMsgMap = (Map<String, Object>) session.getAttribute(sessionID);
+        if (userMsgMap.isEmpty()) {
+            return false;
+        }
+
+        String id = MapTool.getString(userMsgMap, "id");
+        String sex = MapTool.getString(userMsgMap, "sex");
+        String name = MapTool.getString(userMsgMap, "name");
+        String phone = MapTool.getString(userMsgMap, "phone");
+        Map<String, Object> relMap = getAdmin(id);
+        boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+        if (!relMapBoolean) {
+            return false;
+        }
+        Map<String, Object> admin = MapTool.getMap(relMap, "admin");
+        String rel_id = MapTool.getString(admin, "id");
+        String rel_name = MapTool.getString(admin, "name");
+        String rel_sex = MapTool.getString(admin, "sex");
+        String rel_phone = MapTool.getString(admin, "phone");
+        return id.equals(rel_id) && name.equals(rel_name) && phone.equals(rel_phone) && sex.equals(rel_sex);
     }
 }

@@ -442,13 +442,27 @@ public class CourseBmoImpl implements CourseBmo {
             return G.bmo.returnMap(false, "查询历史课程异常");
         }
     }
+
     /**
      * 获取发布历史
-     * @return map key=pastWeek key=pastMonth key=courseList
+     * @return map key=oneMonth
      */
     @Override
     public Map<String, Object> getIssueList() {
-        return null;
+        try{
+            List<Course> oneMonth = new ArrayList<>();
+            try {
+                oneMonth = courseDao.selectCourseListMsg30Day();
+            } catch (NullPointerException e) {
+                // ignore
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("oneMonth",oneMonth);
+            return returnMap;
+        }catch (Exception e){
+            log.error("查询历史课程异常：",e);
+            return G.bmo.returnMap(false, "查询历史课程异常");
+        }
     }
 
 }

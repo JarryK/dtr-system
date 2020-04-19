@@ -115,12 +115,18 @@ table{
     margin-top: 1rem;
 }
 #show-history-box-container{
-    max-height: 400px !important;
+    max-height: 300px !important;
     overflow-y: scroll;
     display: block;
     width: 100%;
 }
-tr {
+#show-issue-box-container{
+    height: 180px !important;
+    overflow-y: scroll;
+    display: block;
+    width: 100%;
+}
+.table-set tr{
     display: table;
     width: 100%;
     table-layout: fixed;
