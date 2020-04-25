@@ -68,7 +68,7 @@ p, ul {
 
 .ibox {
     height: 130px;
-    width: 100px;
+    width: 95px;
     padding: 0.9rem;
     text-align: center;
     top: 0.8rem;
@@ -130,4 +130,9 @@ table{
     display: table;
     width: 100%;
     table-layout: fixed;
+}
+#show-tea-list-container,#show-stu-list-container{
+    overflow-y: scroll;
+    display: block;
+    width: 100%;
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -462,6 +463,56 @@ public class CourseBmoImpl implements CourseBmo {
         }catch (Exception e){
             log.error("查询历史课程异常：",e);
             return G.bmo.returnMap(false, "查询历史课程异常");
+        }
+    }
+
+    /**
+     * 删除课程类别
+     * @param name
+     * @return
+     */
+    @Override
+    public Map<String, Object> addCourseType(String name) {
+        try{
+            Map<String,Object> inMap = new HashMap<>();
+            inMap.put("COURSE_TYPE_STATUS",0);
+            inMap.put("COURSE_TYPE_NAME",name);
+            int i = courseTypeDao.creaseCourseType(inMap);
+            if (i>0){
+                return G.bmo.returnMap(true,"ok");
+            }
+            return G.bmo.returnMap(false,"新增失败");
+        }catch (Exception e){
+            log.error("新增异常：",e);
+            return G.bmo.returnMap(false,"新增异常");
+        }
+    }
+
+    /**
+     * 删除课程类别
+     * @param name
+     * @return
+     */
+    @Override
+    public Map<String, Object> delCourseType(String name) {
+        try{
+            String id = "";
+            try{
+                id = courseTypeDao.selectCourseTypeId(name);
+            }catch (Exception e){
+                return G.bmo.returnMap(false,"删除失败");
+            }
+            if ("".equals(id)){
+                return G.bmo.returnMap(false,"删除失败");
+            }
+            int i = courseTypeDao.deleteCourseType(id);
+            if (i>0){
+                return G.bmo.returnMap(true,"ok");
+            }
+            return G.bmo.returnMap(false,"删除失败");
+        }catch (Exception e){
+            log.error("删除异常：",e);
+            return G.bmo.returnMap(false,"删除异常");
         }
     }
 

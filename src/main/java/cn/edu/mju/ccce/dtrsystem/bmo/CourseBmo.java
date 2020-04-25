@@ -117,4 +117,19 @@ public interface CourseBmo {
      * @return map key=oneMonth
      */
     public Map<String,Object> getIssueList();
+
+    /**
+     * 新增课程类别
+     * @param name
+     * @return
+     */
+    Map<String,Object> addCourseType(String name);
+
+    /**
+     * 删除课程类别
+     * @param name
+     * @return
+     */
+    Map<String,Object> delCourseType(String name);
+
 }

@@ -1,8 +1,10 @@
 package cn.edu.mju.ccce.dtrsystem.controller;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
+import cn.edu.mju.ccce.dtrsystem.bean.User;
 import cn.edu.mju.ccce.dtrsystem.bmo.AdminBmo;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
+import cn.edu.mju.ccce.dtrsystem.bmo.UserBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
 import org.slf4j.Logger;
@@ -14,9 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,17 @@ public class AdminController {
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.CourseBmoImpl")
     private CourseBmo courseBmo;
 
-    @RequestMapping("/admin-login")
+    @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.UserBmoImpl")
+    private UserBmo userBmo;
+
+    /**
+     * 管理员登录
+     *
+     * @param inMap
+     * @param session
+     * @return
+     */
+    @RequestMapping("admin-login")
     @ResponseBody
     public Map<String, Object> adminLogin(@RequestBody Map<String, Object> inMap, HttpSession session) {
         if (inMap.isEmpty()) {
@@ -71,7 +82,13 @@ public class AdminController {
         }
     }
 
-    @RequestMapping("/getAdmin")
+    /**
+     * 获取管理员信息
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping("getAdmin")
     @ResponseBody
     public Map<String, Object> getAdmin(HttpSession session) {
         try {
@@ -97,7 +114,7 @@ public class AdminController {
             String rel_phone = MapTool.getString(admin, "phone");
             if (id.equals(rel_id) && name.equals(rel_name) && phone.equals(rel_phone) && sex.equals(rel_sex)) {
                 Map<String, Object> returnMap = G.page.returnMap(true, "ok");
-                returnMap.put("admin",admin);
+                returnMap.put("admin", admin);
                 return returnMap;
             }
             session.removeAttribute(sessionID);
@@ -108,7 +125,14 @@ public class AdminController {
         }
     }
 
-    @RequestMapping("/adminOut")
+    /**
+     * 管理员退出
+     *
+     * @param inMap
+     * @param session
+     * @return
+     */
+    @RequestMapping("adminOut")
     @ResponseBody
     public Map<String, Object> adminOut(@RequestBody Map<String, Object> inMap, HttpSession session) {
         try {
@@ -118,9 +142,9 @@ public class AdminController {
             if (userMsgMap.isEmpty()) {
                 return G.page.returnMap(false, "已退出！");
             }
-            String userNbr = MapTool.getString(userMsgMap,"id");
-            if (!userNbr.equals(loginOutUserNbr)){
-                return G.page.returnMap(false,"退出异常");
+            String userNbr = MapTool.getString(userMsgMap, "id");
+            if (!userNbr.equals(loginOutUserNbr)) {
+                return G.page.returnMap(false, "退出异常");
             }
             session.removeAttribute(sessionID);
             return G.page.returnMap(true, "ok");
@@ -129,13 +153,20 @@ public class AdminController {
         }
     }
 
+    /**
+     * 获取课程发布历史
+     *
+     * @param httpSession
+     * @return
+     */
     @RequestMapping("getHistory")
     @ResponseBody
     public Map<String, Object> getHistory(HttpSession httpSession) {
         try {
-            if (!adminBmo.isAdmin(httpSession)){
+            if (!adminBmo.isAdmin(httpSession)) {
                 return G.page.returnMap(false, "非管理员不可操作！");
-            };
+            }
+            ;
             Map<String, Object> relMap = courseBmo.getHistory();
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean) {
@@ -143,17 +174,17 @@ public class AdminController {
                 return G.page.returnMap(false, msg);
             }
             List<Course> pastWeek = (List<Course>) MapTool.getObject(relMap, "pastWeek");
-            List<Course> courseList = (List<Course>) MapTool.getObject(relMap,"courseList");
+            List<Course> courseList = (List<Course>) MapTool.getObject(relMap, "courseList");
             List<Map<String, Object>> pastMonth = (List<Map<String, Object>>) MapTool.getObject(relMap, "pastMonth");
             List<Map<String, Object>> weekList = parseWeekCourseList(pastWeek);
             Map<String, Object> mapList = parseMonthCourseList(pastMonth);
-            if (weekList.isEmpty() && courseList.isEmpty() ) {
+            if (weekList.isEmpty() && courseList.isEmpty()) {
                 return G.page.returnMap(false, "查找历史课程为空");
             }
             Map<String, Object> returnMap = G.page.returnMap(true, "ok");
             returnMap.put("pastWeek", weekList);
             returnMap.put("pastMonth", mapList);
-            returnMap.put("pastMonthCourseList",courseList);
+            returnMap.put("pastMonthCourseList", courseList);
             returnMap.put("typeList", getCourseTypeList());
             return returnMap;
         } catch (Exception e) {
@@ -162,13 +193,20 @@ public class AdminController {
         }
     }
 
+    /**
+     * 获取可预约课程列表
+     *
+     * @param httpSession
+     * @return
+     */
     @RequestMapping("getCouList")
     @ResponseBody
     public Map<String, Object> getCouList(HttpSession httpSession) {
         try {
-            if (!adminBmo.isAdmin(httpSession)){
+            if (!adminBmo.isAdmin(httpSession)) {
                 return G.page.returnMap(false, "非管理员不可操作！");
-            };
+            }
+            ;
             Map<String, Object> relMap = courseBmo.getIssueList();
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean) {
@@ -176,17 +214,18 @@ public class AdminController {
                 return G.page.returnMap(false, msg);
             }
             List<Course> oneMonth = (List<Course>) MapTool.getObject(relMap, "oneMonth");
-            if (oneMonth.isEmpty() ) {
+            if (oneMonth.isEmpty()) {
                 return G.page.returnMap(false, "查找课程为空");
             }
             Map<String, Object> returnMap = G.page.returnMap(true, "ok");
-            returnMap.put("oneMonth",oneMonth);
+            returnMap.put("oneMonth", oneMonth);
             return returnMap;
         } catch (Exception e) {
             log.error("查找课程异常：", e);
             return G.page.returnMap(false, "查找课程异常");
         }
     }
+
     private List<Map<String, Object>> parseWeekCourseList(List<Course> courseList) throws Exception {
         List<String> typeList = getCourseTypeList();
         if (typeList.isEmpty()) {
@@ -270,6 +309,144 @@ public class AdminController {
             typeList.add(type);
         }
         return typeList;
+    }
+
+    /**
+     * 新增课程类型名
+     *
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("addCType")
+    @ResponseBody
+    public Map<String, Object> addCourseType(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        try {
+            if (!adminBmo.isAdmin(httpSession)) {
+                return G.page.returnMap(false, "非管理员不可操作！");
+            }
+            String CT_name = MapTool.getString(inMap, "ctName");
+            if ("".equals(CT_name)) {
+                return G.page.returnMap(false, "非法输入");
+            }
+            Map<String, Object> relMap = courseBmo.addCourseType(CT_name);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.page.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            return G.page.returnMap(true, "ok");
+        } catch (Exception e) {
+            log.error("新增异常：", e);
+            return G.page.returnMap(false, "新增异常");
+        }
+    }
+
+    /**
+     * 删除课程类型
+     *
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("delCType")
+    @ResponseBody
+    public Map<String, Object> delCourseType(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        try {
+            if (!adminBmo.isAdmin(httpSession)) {
+                return G.page.returnMap(false, "非管理员不可操作！");
+            }
+            String CT_name = MapTool.getString(inMap, "ctName");
+            if ("".equals(CT_name)) {
+                return G.page.returnMap(false, "非法输入");
+            }
+            Map<String, Object> relMap = courseBmo.delCourseType(CT_name);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.page.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            return G.page.returnMap(true, "ok");
+        } catch (Exception e) {
+            log.error("删除异常：", e);
+            return G.page.returnMap(false, "删除异常");
+        }
+    }
+
+    /**
+     * 获取所有用户
+     *
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("getAllUser")
+    @ResponseBody
+    public Map<String, Object> getAllUser(HttpSession httpSession) {
+        try {
+            if (!adminBmo.isAdmin(httpSession)) {
+                return G.page.returnMap(false, "非管理员不可操作！");
+            }
+            Map<String, Object> relMap = userBmo.getAllUser();
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.page.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            List<User> stuList = (List<User>) MapTool.getObject(relMap, "stuList");
+            List<User> teaList = (List<User>) MapTool.getObject(relMap, "teaList");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("stuList", stuList);
+            returnMap.put("teaList", teaList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查找异常：", e);
+            return G.page.returnMap(false, "查找异常");
+        }
+    }
+
+    /**
+     * 新增用户
+     *
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("addUser")
+    @ResponseBody
+    public Map<String, Object> addUser(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String userName = MapTool.getString(inMap, "userName");
+        String userType = MapTool.getString(inMap, "userType");
+        String userNbr = MapTool.getString(inMap, "userNbr");
+        String userSex = MapTool.getString(inMap, "userSex");
+        BigInteger userPhone = (BigInteger) MapTool.getObject(inMap, "evaluateScore");
+        try {
+            userName.substring(1);//探测非空
+            userType.substring(1);
+            userNbr.substring(1);
+            userSex.substring(1);
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空！");
+        }
+        try {
+            User user = new User();
+            user.setUSER_NAME(userName);
+            user.setTYPE_NAME(userType);
+            user.setUSER_SEX(userSex);
+            user.setUSER_NBR(BigInteger.valueOf(Integer.valueOf(userNbr)));
+            if (!("".equals(userPhone))) {
+                user.setUSER_PHONE(userPhone);
+            }
+            Map<String, Object> relMap = userBmo.userAdd(user);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            return G.page.returnMap(true, "ok");
+        } catch (Exception e) {
+            log.error("用户新建异常", e);
+            return G.page.returnMap(false, "用户新建异常");
+        }
     }
 
 }
