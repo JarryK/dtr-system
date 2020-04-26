@@ -144,3 +144,9 @@ button#msg-input-btn {
     width: 120px;
     font-size: 20px;
 }
+#show-courseType-list-container{
+    overflow-y: scroll;
+    display: block;
+    width: 100%;
+    max-height: 150px !important;
+}

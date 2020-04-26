@@ -33,7 +33,7 @@
         </trim>
     </insert>
     <delete id="deleteCourseType" parameterType="java.lang.String">
-        DELETE FROM course_type WHERE    #{COURSE_TYPE_ID,jdbcType=VARCHAR},
+        DELETE FROM course_type WHERE COURSE_TYPE_ID = #{CourseTId,jdbcType=VARCHAR}
     </delete>
 
 </mapper>

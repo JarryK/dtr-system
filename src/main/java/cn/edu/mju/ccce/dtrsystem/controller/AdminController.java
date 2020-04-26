@@ -175,12 +175,19 @@ public class AdminController {
             if (!adminBmo.isAdmin(httpSession)) {
                 return G.page.returnMap(false, "非管理员不可操作！");
             }
-            ;
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            Map<String, Object> typeMap = courseBmo.getAllCourseType();
+            boolean typeMapBoolean = G.bmo.returnMapBool(typeMap);
+            if (!typeMapBoolean) {
+                String msg = G.bmo.returnMapMsg(typeMap);
+                returnMap.put("getAllCourseType失败",msg);
+            }
+            List<Map<String, Object>> typeList = (List<Map<String, Object>>) MapTool.getObject(typeMap,"typeList");
             Map<String, Object> relMap = courseBmo.getHistory();
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean) {
                 String msg = G.page.returnMapMsg(relMap);
-                return G.page.returnMap(false, msg);
+                returnMap.put("getHistory失败",msg);
             }
             List<Course> pastWeek = (List<Course>) MapTool.getObject(relMap, "pastWeek");
             List<Course> courseList = (List<Course>) MapTool.getObject(relMap, "courseList");
@@ -190,11 +197,11 @@ public class AdminController {
             if (weekList.isEmpty() && courseList.isEmpty()) {
                 return G.page.returnMap(false, "查找历史课程为空");
             }
-            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
             returnMap.put("pastWeek", weekList);
             returnMap.put("pastMonth", mapList);
             returnMap.put("pastMonthCourseList", courseList);
             returnMap.put("typeList", getCourseTypeList());
+            returnMap.put("allTypeList",typeList);
             return returnMap;
         } catch (Exception e) {
             log.error("查找历史课程异常：", e);

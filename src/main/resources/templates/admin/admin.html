@@ -260,8 +260,43 @@
                     </div>
                 </div>
         </div>
-        <div class="tab-pane fade  p-2 show " id="courseTypeBox" role="tabpanel"
+        <div class="tab-pane fade  p-2 show container" id="courseTypeBox" role="tabpanel"
              aria-labelledby="courseTypeBox-tab">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class=" border jumbotron show-box row" style="max-height: 600px;;" id="set-coursetType-box">
+                        <div class="col-md-6">
+                            <div class="title col-md-12">
+                                <h3>课程类别</h3>
+                            </div>
+                            <hr class="my-4">
+                            <table class="table text-center table-set col-md-12">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>课程类别</th>
+                                        <th>删除操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="show-courseType-list-container"></tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="title col-md-12">
+                                <h3>新增课程类型</h3>
+                            </div>
+                            <hr class="my-4" >
+                            <div class="col-md-12 row" style="margin-top: 3rem">
+                                <label for="newCourseType">输入新课程类型</label>
+                                <div class="col-md-12">
+                                    <input id="newCourseType" class="form-control" style="display: inline;width: 50%;">
+                                    <button class="btn btn-primary" id="newCourseType-btn">确定</button>
+                                </div>
+                        </div>
+                </div>
+            </div>
+                </div>
+            </div>
         </div>
 </div>
 
@@ -501,7 +536,7 @@
         <td class="align-middle">密码</td>
         <td class="align-middle"><input class="form-control" type="password" id="user_pass"
                                         value="{{data.user_PASS}}" style="display: inherit;width: 90%;" />
-           <span class="seePass">
+            <span class="seePass">
                 <svg class="bi bi-eye-fill " id="cansee" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
             <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" clip-rule="evenodd"/>
@@ -515,6 +550,15 @@
         </td>
     </tr>
     {{/if}}
+</script>
+<script type="text/html" id="show-courseType-list-art">
+    {{ if data && data.length>0 }}{{each data}}
+    <tr>
+        <td>{{$value.COURSE_TYPE_ID}}</td>
+        <td>{{$value.COURSE_TYPE_NAME}}</td>
+        <td><a class="delCourseType" data-ctname="{{$value.COURSE_TYPE_NAME}}" href="javascript:;">删除</a></td>
+    </tr>
+    {{/each}}{{/if}}
 </script>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
@@ -810,24 +854,34 @@
                         $(this).prev().attr("type", "password");
                     }
                 });
-                admin.el('#user-yes').off('click').on('click', function () {
-                    var userNbr = admin.el('#user_nbr').html();
-                    var userName = admin.el('#user_name').val();
-                    var userSex = admin.el('#user_sex').val();
-                    var userPass = admin.el('#user_pass').val();
-                    var userPhone = admin.el('#user_phone').val();
-                    App.selectAlert("操作提示", "确定提交吗？", 3, function () {
-                        $.loadJSON('/dtr/admin/upUserDet', {
-                            userNbr: userNbr,
-                            userName:userName,
-                            userSex:userSex,
-                            userPass:userPass
+                admin.el('.delCourseType').off('click').on('click', function () {
+                    var ctName = $(this).data("ctname");
+                    console.log(ctName);
+                    App.selectAlert("操作提示", "确定删除吗？", 3, function () {
+                        $.loadJSON('/dtr/admin/delCType', {
+                            ctName:ctName
                         }).done(function (data) {
                             if (!App.checker(data)) {
                                 return;
                             } else {
-                                App.alert("更新成功", "", 1, function () {
-                                    admin.getUserList();
+                                App.alert("删除成功", "", 1, function () {
+                                    admin.getMsgPast();
+                                });
+                            }
+                        });
+                    });
+                });
+                admin.el('#newCourseType-btn').off('click').on('click', function () {
+                    var ctName = admin.el('#newCourseType').val();
+                    App.selectAlert("操作提示", "确定提交吗？", 3, function () {
+                        $.loadJSON('/dtr/admin/addCType', {
+                            ctName:ctName
+                        }).done(function (data) {
+                            if (!App.checker(data)) {
+                                return;
+                            } else {
+                                App.alert("新增成功", "", 1, function () {
+                                    admin.getMsgPast();
                                 });
                             }
                         });
@@ -841,6 +895,7 @@
                     } else {
                         var dataPie = data.pastWeek;
                         var typeData = data.typeList;
+                        var allTypeList = data.allTypeList;
                         var courseData = data.pastMonth.courseList;
                         var courseList = data.pastMonthCourseList;
                         admin.el("#show-history-box-container").data("courseList",courseList);
@@ -849,6 +904,8 @@
                         admin.varMatChart(typeData,courseData);
                         admin.paddingData(dataPie,"courses-show-box-art","#courses-show-box-container")
                             .then(function () {admin.panelClick();return this})
+                            .then(function(){admin.paddingData(allTypeList,"show-courseType-list-art","#show-courseType-list-container");return this;})
+                            .then(function(){admin.panelClick();return this;})
                             .then(function () {App.randomBackgroundColor("courses-show-box");return this});
                         return;
                     }
@@ -937,6 +994,27 @@
                         return;
                     }
                 }
+            },
+            getCourseType:function(callback){
+                    $.loadJSON('/dtr/admin/getHistory').done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            var dataPie = data.pastWeek;
+                            var typeData = data.typeList;
+                            var allTypeList = data.allTypeList;
+                            var courseData = data.pastMonth.courseList;
+                            var courseList = data.pastMonthCourseList;
+                            admin.el("#show-history-box-container").data("courseList",courseList);
+                            admin.paddingData(courseList,"show-history-box-art","#show-history-box-container");
+                            admin.varMyPieChart(dataPie);
+                            admin.varMatChart(typeData,courseData);
+                            admin.paddingData(dataPie,"courses-show-box-art","#courses-show-box-container")
+                                .then(function () {admin.panelClick();return this})
+                                .then(function () {App.randomBackgroundColor("courses-show-box");return this});
+                            return;
+                        }
+                    });
             },
             inputClear:function(){
                 admin.el('#userName').val('');
