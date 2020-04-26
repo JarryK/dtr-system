@@ -38,6 +38,8 @@ public class AdminController {
      */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+    private static String ADMIN_PASS = "";
+
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.AdminBmoImpl")
     private AdminBmo adminBmo;
 
@@ -73,6 +75,7 @@ public class AdminController {
                 return G.page.returnMap(false, "用户名或密码错误！");
             }
             session.setAttribute(session.getId(), userMsgMap);
+            ADMIN_PASS = adminPass;
             Map<String, Object> returnMap = G.page.returnMap(true, "ok");
             returnMap.putAll(userMsgMap);
             return returnMap;
@@ -92,10 +95,15 @@ public class AdminController {
     @ResponseBody
     public Map<String, Object> getAdmin(HttpSession session) {
         try {
+            Map<String, Object> userMsgMap = new HashMap<>();
             String sessionID = session.getId();
-            Map<String, Object> userMsgMap = (Map<String, Object>) session.getAttribute(sessionID);
-            if (userMsgMap.isEmpty()) {
-                return G.page.returnMap(false, "请先登录！");
+            try{
+                userMsgMap = (Map<String, Object>) session.getAttribute(sessionID);
+                if (userMsgMap.isEmpty()) {
+                    return G.page.returnMap(false, "请先登录！");
+                }
+            }catch (Exception e){
+                //igron
             }
             String id = MapTool.getString(userMsgMap, "id");
             String sex = MapTool.getString(userMsgMap, "sex");
@@ -113,6 +121,7 @@ public class AdminController {
             String rel_sex = MapTool.getString(admin, "sex");
             String rel_phone = MapTool.getString(admin, "phone");
             if (id.equals(rel_id) && name.equals(rel_name) && phone.equals(rel_phone) && sex.equals(rel_sex)) {
+                admin.put("pass",ADMIN_PASS);
                 Map<String, Object> returnMap = G.page.returnMap(true, "ok");
                 returnMap.put("admin", admin);
                 return returnMap;
@@ -414,6 +423,9 @@ public class AdminController {
     @RequestMapping("addUser")
     @ResponseBody
     public Map<String, Object> addUser(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        if (!adminBmo.isAdmin(httpSession)) {
+            return G.page.returnMap(false, "非管理员不可操作！");
+        }
         String userName = MapTool.getString(inMap, "userName");
         String userType = MapTool.getString(inMap, "userType");
         String userNbr = MapTool.getString(inMap, "userNbr");
@@ -446,6 +458,77 @@ public class AdminController {
         } catch (Exception e) {
             log.error("用户新建异常", e);
             return G.page.returnMap(false, "用户新建异常");
+        }
+    }
+
+    @RequestMapping("getUserDet")
+    @ResponseBody
+    public Map<String, Object> getUserDet(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        if (!adminBmo.isAdmin(httpSession)) {
+            return G.page.returnMap(false, "非管理员不可操作！");
+        }
+        String userNbr = MapTool.getString(inMap, "userNbr");
+        BigInteger userPhone = (BigInteger) MapTool.getObject(inMap, "evaluateScore");
+        try {
+            userNbr.substring(1);
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空！");
+        }
+        try {
+            Map<String, Object> relMap = userBmo.selectUserByUserNbr(userNbr);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            User user = (User) MapTool.getObject(relMap,"user");
+            Map<String,Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("user",user);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("用户查找异常", e);
+            return G.page.returnMap(false, "用户查找异常");
+        }
+    }
+
+    @RequestMapping("upUserDet")
+    @ResponseBody
+    public Map<String, Object> upUserDet(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        if (!adminBmo.isAdmin(httpSession)) {
+            return G.page.returnMap(false, "非管理员不可操作！");
+        }
+        String userName = MapTool.getString(inMap, "userName");
+        String userNbr = MapTool.getString(inMap, "userNbr");
+        String userSex = MapTool.getString(inMap, "userSex");
+        String userPass = MapTool.getString(inMap, "userPass");
+        BigInteger userPhone = (BigInteger) MapTool.getObject(inMap, "userPhone");
+        try {
+            userNbr.substring(1);
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空！");
+        }
+        try {
+            Map<String, Object> relMap = userBmo.selectUserByUserNbr(userNbr);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            User user = (User) MapTool.getObject(relMap,"user");
+            user.setUSER_PHONE(userPhone);
+            user.setUSER_SEX(userSex);
+            user.setUSER_NAME(userName);
+            user.setUSER_PASS(userPass);
+            Map<String, Object> userMap = userBmo.upDataUser(user);
+            boolean userMapBoolean = G.bmo.returnMapBool(userMap);
+            if (!userMapBoolean) {
+                String msg = G.bmo.returnMapMsg(userMap);
+                return G.page.returnMap(false, msg);
+            }
+            return G.page.returnMap(true, "ok");
+        } catch (Exception e) {
+            log.error("用户更新异常", e);
+            return G.page.returnMap(false, "用户更新异常");
         }
     }
 
