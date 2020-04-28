@@ -186,6 +186,31 @@
                         </div>
                     </div>
                     <div class="col-md-12">
+                    <div class=" border jumbotron show-box " style="max-height: 600px;;" id="reset-msg-list">
+                        <div class="title">
+                            <h3>申请重置密码用户</h3>
+                        </div>
+                        <hr class="my-4">
+                        <div>
+                            <table class="table text-center table-set">
+                                <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>申请流水ID</th>
+                                    <th>申请重置用户NBR</th>
+                                    <th>用户姓名</th>
+                                    <th>用户电话</th>
+                                    <th>申请详细信息</th>
+                                    <th>状态</th>
+                                    <th>处理</th>
+                                </tr>
+                                </thead>
+                                <tbody id="show-reset-list-container"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-md-12">
                         <div class=" border jumbotron show-box " id="input-user-msg">
                             <div class="title">
                                 <h3>用户信息导入</h3>
@@ -560,6 +585,27 @@
     </tr>
     {{/each}}{{/if}}
 </script>
+<script type="text/html" id="show-reset-list-art">
+    {{ if data && data.length>0 }}{{each data}}
+    <tr>
+        <td>{{$index + 1}}</td>
+        <td>{{$value.REQUEST_ID}}</td>
+        <td>{{$value.REQUEST_USER_NBR}}</td>
+        <td>{{$value.REQUEST_USER_NAME}}</td>
+        <td>{{$value.REQUEST_USER_IPHONE}}</td>
+        <td>{{$value.REQUEST_DETAIL}}</td>
+        <td>{{$value.REQUEST_STATUS | caseReStatus}}</td>
+        <td>
+            {{ if '0' == $value.REQUEST_STATUS }}
+            <p><a class="consent" data-rid="{{$value.REQUEST_ID}}" href="javascript:;">同意</a></p>
+            <p><a class="noconsent" data-rid="{{$value.REQUEST_ID}}" href="javascript:;">不同意</a></p>
+            {{else}}
+            <p>已处理</p>
+            {{/if}}
+        </td>
+    </tr>
+    {{/each}}{{/if}}
+</script>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
 <script src="/js/echarts/echarts.min.js"></script>
@@ -578,6 +624,18 @@
                 return "过期";
             case 2:
                 return "已取消";
+            default:
+                return "异常";
+        }
+    });
+    template.helper('caseReStatus', function (value) {
+        switch (value) {
+            case 0:
+                return "申请中";
+            case 1:
+                return "已通过";
+            case 2:
+                return "已拒绝";
             default:
                 return "异常";
         }
@@ -887,6 +945,40 @@
                         });
                     });
                 });
+                admin.el('.consent').off('click').on('click', function () {
+                    var id = $(this).data('rid');
+                    App.selectAlert("操作提示", "确定同意吗？", 3, function () {
+                        $.loadJSON('/dtr/admin/resetPass', {
+                            id:id,
+                            status:1
+                        }).done(function (data) {
+                            if (!App.checker(data)) {
+                                return;
+                            } else {
+                                App.alert("操作成功", "", 1, function () {
+                                    admin.getMsgPast();
+                                });
+                            }
+                        });
+                    });
+                });
+                admin.el('.noconsent').off('click').on('click', function () {
+                    var id = $(this).data('rid');
+                    App.selectAlert("操作提示", "确定不同意吗？", 3, function () {
+                        $.loadJSON('/dtr/admin/resetPass', {
+                            id:id,
+                            status:2
+                        }).done(function (data) {
+                            if (!App.checker(data)) {
+                                return;
+                            } else {
+                                App.alert("操作成功", "", 1, function () {
+                                    admin.getMsgPast();
+                                });
+                            }
+                        });
+                    });
+                });
             },
             getMsgPast:function(){
                 $.loadJSON('/dtr/admin/getHistory').done(function (data) {
@@ -898,13 +990,17 @@
                         var allTypeList = data.allTypeList;
                         var courseData = data.pastMonth.courseList;
                         var courseList = data.pastMonthCourseList;
+                        var resetList = data.requestList;
                         admin.el("#show-history-box-container").data("courseList",courseList);
                         admin.paddingData(courseList,"show-history-box-art","#show-history-box-container");
                         admin.varMyPieChart(dataPie);
                         admin.varMatChart(typeData,courseData);
                         admin.paddingData(dataPie,"courses-show-box-art","#courses-show-box-container")
-                            .then(function () {admin.panelClick();return this})
+                            .then(function (){admin.paddingData(resetList,"show-reset-list-art","#show-reset-list-container");return this;})
                             .then(function(){admin.paddingData(allTypeList,"show-courseType-list-art","#show-courseType-list-container");return this;})
+                            .then(function(){admin.panelClick();return this;})
+                            .then(function(){admin.getCourseList();;return this;})
+                            .then(function(){admin.getUserList();return this;})
                             .then(function(){admin.panelClick();return this;})
                             .then(function () {App.randomBackgroundColor("courses-show-box");return this});
                         return;
@@ -966,9 +1062,6 @@
                             admin.el(".adminName").data("adminID",adminID);
                             admin.el(".adminName").data("adminPass",data.admin.pass);
                             admin.getMsgPast();
-                            admin.getCourseList();
-                            admin.getUserList();
-                            admin.panelClick();
                         }
                     });
                     defer.resolve();

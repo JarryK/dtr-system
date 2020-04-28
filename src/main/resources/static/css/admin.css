@@ -131,7 +131,7 @@ table{
     width: 100%;
     table-layout: fixed;
 }
-#show-tea-list-container,#show-stu-list-container{
+#show-tea-list-container,#show-stu-list-container,#show-reset-list-container{
     overflow-y: scroll;
     display: block;
     width: 100%;

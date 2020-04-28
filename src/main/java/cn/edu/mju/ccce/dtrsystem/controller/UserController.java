@@ -1,6 +1,7 @@
 package cn.edu.mju.ccce.dtrsystem.controller;
 
 import cn.edu.mju.ccce.dtrsystem.bean.User;
+import cn.edu.mju.ccce.dtrsystem.bmo.PassForgetRequestBmo;
 import cn.edu.mju.ccce.dtrsystem.bmo.UserBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,6 +37,9 @@ public class UserController {
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.UserBmoImpl")
     private UserBmo userBmo;
 
+    @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.PassForgetRequestBmoImpl")
+    private PassForgetRequestBmo requestBmo;
+
     @RequestMapping("getUserMsg")
     @ResponseBody
     public Map<String, Object> getUser(HttpSession httpSession) {
@@ -44,7 +49,7 @@ public class UserController {
                 return G.page.returnMap(false, "请先登录");
             }
             String userNbr = MapTool.getString(uMsg, "USER_NBR");
-            if("".equals(userNbr)){
+            if ("".equals(userNbr)) {
                 return G.page.returnMap(false, "请先登录");
             }
             Map<String, Object> relMap = userBmo.selectUserByUserNbr(userNbr);
@@ -99,8 +104,57 @@ public class UserController {
             }
             return G.page.returnMap(true, "ok");
         } catch (Exception e) {
-            log.error("用户查找异常", e);
-            return G.page.returnMap(false, "用户查找异常");
+            log.error("申请异常", e);
+            return G.page.returnMap(false, "申请异常");
+        }
+    }
+
+    @RequestMapping("forgetPass")
+    @ResponseBody
+    public Map<String, Object> forgetPass(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        try {
+            String name = MapTool.getString(inMap, "name");
+            String nbr = MapTool.getString(inMap, "nbr");
+            String detail = MapTool.getString(inMap, "detail");
+            String iphone = MapTool.getString(inMap, "iphone");
+            Map<String, Object> map = new HashMap<>();
+            map.put("name", name);
+            map.put("nbr", nbr);
+            map.put("detail", detail);
+            map.put("iphone", iphone);
+            Map<String, Object> relMap = requestBmo.issueForgetRequest(map);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            String msg = G.bmo.returnMapMsg(relMap);
+            if (!relMapBoolean) {
+                return G.page.returnMap(false, msg);
+            }
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("rid",msg);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("申请异常", e);
+            return G.page.returnMap(false, "申请异常");
+        }
+    }
+
+
+    @RequestMapping("getForgetStatus")
+    @ResponseBody
+    public Map<String, Object> getForgetStatus(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        try {
+            String id = MapTool.getString(inMap, "id");
+            Map<String, Object> relMap = requestBmo.getForgetRequest(id);
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.bmo.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.putAll(relMap);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查找异常", e);
+            return G.page.returnMap(false, "查找异常");
         }
     }
 

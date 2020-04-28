@@ -415,3 +415,8 @@ html {
     list-style-type: none;
     outline: none;
 }
+
+
+.InputCheckBox > input{
+    margin-bottom: 0.3rem;
+}

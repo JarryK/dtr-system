@@ -4,6 +4,7 @@ import cn.edu.mju.ccce.dtrsystem.bean.Course;
 import cn.edu.mju.ccce.dtrsystem.bean.User;
 import cn.edu.mju.ccce.dtrsystem.bmo.AdminBmo;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
+import cn.edu.mju.ccce.dtrsystem.bmo.PassForgetRequestBmo;
 import cn.edu.mju.ccce.dtrsystem.bmo.UserBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
@@ -48,6 +49,10 @@ public class AdminController {
 
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.UserBmoImpl")
     private UserBmo userBmo;
+
+
+    @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.PassForgetRequestBmoImpl")
+    private PassForgetRequestBmo requestBmo;
 
     /**
      * 管理员登录
@@ -97,12 +102,12 @@ public class AdminController {
         try {
             Map<String, Object> userMsgMap = new HashMap<>();
             String sessionID = session.getId();
-            try{
+            try {
                 userMsgMap = (Map<String, Object>) session.getAttribute(sessionID);
                 if (userMsgMap.isEmpty()) {
                     return G.page.returnMap(false, "请先登录！");
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 //igron
             }
             String id = MapTool.getString(userMsgMap, "id");
@@ -121,7 +126,7 @@ public class AdminController {
             String rel_sex = MapTool.getString(admin, "sex");
             String rel_phone = MapTool.getString(admin, "phone");
             if (id.equals(rel_id) && name.equals(rel_name) && phone.equals(rel_phone) && sex.equals(rel_sex)) {
-                admin.put("pass",ADMIN_PASS);
+                admin.put("pass", ADMIN_PASS);
                 Map<String, Object> returnMap = G.page.returnMap(true, "ok");
                 returnMap.put("admin", admin);
                 return returnMap;
@@ -156,6 +161,7 @@ public class AdminController {
                 return G.page.returnMap(false, "退出异常");
             }
             session.removeAttribute(sessionID);
+            ADMIN_PASS = "";
             return G.page.returnMap(true, "ok");
         } catch (Exception e) {
             return G.page.returnMap(false, "退出失败");
@@ -180,28 +186,36 @@ public class AdminController {
             boolean typeMapBoolean = G.bmo.returnMapBool(typeMap);
             if (!typeMapBoolean) {
                 String msg = G.bmo.returnMapMsg(typeMap);
-                returnMap.put("getAllCourseType失败",msg);
+                returnMap.put("getAllCourseType失败", msg);
             }
-            List<Map<String, Object>> typeList = (List<Map<String, Object>>) MapTool.getObject(typeMap,"typeList");
+            List<Map<String, Object>> typeList = (List<Map<String, Object>>) MapTool.getObject(typeMap, "typeList");
             Map<String, Object> relMap = courseBmo.getHistory();
             boolean relMapBoolean = G.bmo.returnMapBool(relMap);
             if (!relMapBoolean) {
                 String msg = G.page.returnMapMsg(relMap);
-                returnMap.put("getHistory失败",msg);
+                returnMap.put("getHistory失败", msg);
             }
             List<Course> pastWeek = (List<Course>) MapTool.getObject(relMap, "pastWeek");
             List<Course> courseList = (List<Course>) MapTool.getObject(relMap, "courseList");
             List<Map<String, Object>> pastMonth = (List<Map<String, Object>>) MapTool.getObject(relMap, "pastMonth");
             List<Map<String, Object>> weekList = parseWeekCourseList(pastWeek);
             Map<String, Object> mapList = parseMonthCourseList(pastMonth);
-            if (weekList.isEmpty() && courseList.isEmpty()) {
-                return G.page.returnMap(false, "查找历史课程为空");
+//            if (weekList.isEmpty() && courseList.isEmpty()) {
+//                return G.page.returnMap(false, "查找历史课程为空");
+//            }
+            Map<String, Object> map1 = requestBmo.getForgetRequestList();
+            boolean map1Boolean = G.bmo.returnMapBool(relMap);
+            if (!map1Boolean) {
+                String msg = G.page.returnMapMsg(relMap);
+                returnMap.put("getRequestList失败", msg);
             }
+            List<Map<String, Object>> mapList1 = (List<Map<String, Object>>) MapTool.getObject(map1, "reList");
             returnMap.put("pastWeek", weekList);
             returnMap.put("pastMonth", mapList);
             returnMap.put("pastMonthCourseList", courseList);
             returnMap.put("typeList", getCourseTypeList());
-            returnMap.put("allTypeList",typeList);
+            returnMap.put("allTypeList", typeList);
+            returnMap.put("requestList", mapList1);
             return returnMap;
         } catch (Exception e) {
             log.error("查找历史课程异常：", e);
@@ -488,9 +502,9 @@ public class AdminController {
                 String msg = G.bmo.returnMapMsg(relMap);
                 return G.page.returnMap(false, msg);
             }
-            User user = (User) MapTool.getObject(relMap,"user");
-            Map<String,Object> returnMap = G.page.returnMap(true, "ok");
-            returnMap.put("user",user);
+            User user = (User) MapTool.getObject(relMap, "user");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("user", user);
             return returnMap;
         } catch (Exception e) {
             log.error("用户查找异常", e);
@@ -521,7 +535,7 @@ public class AdminController {
                 String msg = G.bmo.returnMapMsg(relMap);
                 return G.page.returnMap(false, msg);
             }
-            User user = (User) MapTool.getObject(relMap,"user");
+            User user = (User) MapTool.getObject(relMap, "user");
             user.setUSER_PHONE(userPhone);
             user.setUSER_SEX(userSex);
             user.setUSER_NAME(userName);
@@ -539,4 +553,29 @@ public class AdminController {
         }
     }
 
+    @RequestMapping("resetPass")
+    @ResponseBody
+    public Map<String, Object> checkForgetPass(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        if (!adminBmo.isAdmin(httpSession)) {
+            return G.page.returnMap(false, "非管理员不可操作！");
+        }
+        try {
+            String id = MapTool.getString(inMap, "id");
+            String status = MapTool.getString(inMap, "status");
+            Map<String,Object> map = new HashMap<>();
+            map.put("id",id);
+            map.put("status",status);
+            Map<String, Object> relmap = requestBmo.upDataForgetRequest(map);
+            boolean returnMapBool = G.bmo.returnMapBool(relmap);
+            if (!returnMapBool) {
+                String msg = G.bmo.returnMapMsg(relmap);
+                return G.page.returnMap(false, msg);
+            }
+            return G.page.returnMap(true, "ok");
+        } catch (
+                Exception e) {
+            log.error("用户更新异常", e);
+            return G.page.returnMap(false, "用户更新异常");
+        }
+    }
 }
