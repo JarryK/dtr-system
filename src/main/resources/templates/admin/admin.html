@@ -914,70 +914,77 @@
                 });
                 admin.el('.delCourseType').off('click').on('click', function () {
                     var ctName = $(this).data("ctname");
-                    console.log(ctName);
-                    App.selectAlert("操作提示", "确定删除吗？", 3, function () {
-                        $.loadJSON('/dtr/admin/delCType', {
-                            ctName:ctName
-                        }).done(function (data) {
-                            if (!App.checker(data)) {
-                                return;
-                            } else {
-                                App.alert("删除成功", "", 1, function () {
-                                    admin.getMsgPast();
+                        admin.checkPass(function () {
+                            App.selectAlert("操作提示", "确定删除吗？", 3, function () {
+                                $.loadJSON('/dtr/admin/delCType', {
+                                    ctName: ctName
+                                }).done(function (data) {
+                                    if (!App.checker(data)) {
+                                        return;
+                                    } else {
+                                        App.alert("删除成功", "", 1, function () {
+                                            admin.getMsgPast();
+                                        });
+                                    }
                                 });
-                            }
+                            });
                         });
-                    });
                 });
                 admin.el('#newCourseType-btn').off('click').on('click', function () {
                     var ctName = admin.el('#newCourseType').val();
-                    App.selectAlert("操作提示", "确定提交吗？", 3, function () {
-                        $.loadJSON('/dtr/admin/addCType', {
-                            ctName:ctName
-                        }).done(function (data) {
-                            if (!App.checker(data)) {
-                                return;
-                            } else {
-                                App.alert("新增成功", "", 1, function () {
-                                    admin.getMsgPast();
+                        admin.checkPass(function () {
+                            App.selectAlert("操作提示", "确定提交吗？", 3, function () {
+                                $.loadJSON('/dtr/admin/addCType', {
+                                    ctName: ctName
+                                }).done(function (data) {
+                                    if (!App.checker(data)) {
+                                        return;
+                                    } else {
+                                        App.alert("新增成功", "", 1, function () {
+                                            admin.getMsgPast();
+                                        });
+                                    }
                                 });
-                            }
+                            });
                         });
-                    });
                 });
                 admin.el('.consent').off('click').on('click', function () {
                     var id = $(this).data('rid');
-                    App.selectAlert("操作提示", "确定同意吗？", 3, function () {
-                        $.loadJSON('/dtr/admin/resetPass', {
-                            id:id,
-                            status:1
-                        }).done(function (data) {
-                            if (!App.checker(data)) {
-                                return;
-                            } else {
-                                App.alert("操作成功", "", 1, function () {
-                                    admin.getMsgPast();
+                        admin.checkPass(function () {
+                            App.selectAlert("操作提示", "确定同意吗？", 3, function () {
+                                $.loadJSON('/dtr/admin/resetPass', {
+                                    id: id,
+                                    status: 1
+                                }).done(function (data) {
+                                    if (!App.checker(data)) {
+                                        return;
+                                    } else {
+                                        App.alert("操作成功", "", 1, function () {
+                                            admin.getMsgPast();
+                                        });
+                                    }
                                 });
-                            }
+                            });
                         });
-                    });
                 });
                 admin.el('.noconsent').off('click').on('click', function () {
                     var id = $(this).data('rid');
-                    App.selectAlert("操作提示", "确定不同意吗？", 3, function () {
-                        $.loadJSON('/dtr/admin/resetPass', {
-                            id:id,
-                            status:2
-                        }).done(function (data) {
-                            if (!App.checker(data)) {
-                                return;
-                            } else {
-                                App.alert("操作成功", "", 1, function () {
-                                    admin.getMsgPast();
+                        admin.checkPass(function () {
+                            App.selectAlert("操作提示", "确定不同意吗？", 3, function () {
+                                $.loadJSON('/dtr/admin/resetPass', {
+                                    id: id,
+                                    status: 2
+                                }).done(function (data) {
+                                    if (!App.checker(data)) {
+                                        return;
+                                    } else {
+                                        App.alert("操作成功", "", 1, function () {
+                                            admin.getMsgPast();
+                                        });
+                                    }
                                 });
-                            }
+                            });
                         });
-                    });
                 });
             },
             getMsgPast:function(){

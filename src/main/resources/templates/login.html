@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="/css/login.css">
 <link rel="stylesheet" href="/css/base.css">
 <link rel="stylesheet" href="/js/bootstrap/bootstrap-v4.3.1.min.css">
-
+<link rel="stylesheet" href="/js/verify/verify.css">
 <body>
 <div class="main" id="login-box">
     <div class="materialContainer">
@@ -88,11 +88,28 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="checkBox" tabindex="-1" data-backdrop="static" role="dialog"
+     aria-labelledby="checkBoxTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="top: -22%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkBoxTitle">验证码</h5>
+                <button type="button" id="checkBox-close" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="verification-code" >
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/background/quietflow.min.js"></script>
+<script src="/js/verify/verify.min.js"></script>
 <script>
     var login = (function () {
         var bindEvents = function () {
@@ -193,27 +210,56 @@
                     login.el(".alt-2").addClass('material-button');
                 }
             });
-            // login.el(".shape").off('click').on('click',function(){
-            //     login.el(".alt-2").removeClass('material-buton');
-            //     login.el(".alt-2").addClass('material-button');
-            // });
             login.el("#login-btn").off('click').on('click', function () {
                 var uNbr = $.trim(login.el("#userName").val());
                 var uPass = login.el("#userPass").val();
-                // var uType = login.el("#userType").val();
-                $.loadJSON("/dtr/user/check", {
-                    uNbr: uNbr,
-                    uPass: uPass,
-                    // uType: uType
-                }).done(function (response) {
-                    if (!App.checker(response)) {
-                        return;
-                    } else {
-                        App.topAlert('登录成功！',1,1300,function () {
-                            App.goHomeBySelf();
-                        });
-                    }
-                });
+                if (uNbr == "" || uPass == "" ){
+                    App.topAlert('请输入账号和密码',2,1300);
+                }else {
+                    login.el("#checkBox").modal('show');
+                    login.el('#verification-code').slideVerify({
+                        type : 2,		//类型
+                        vOffset : 5,	//误差量，根据需求自行调整
+                        vSpace : 5,	//间隔
+                        imgUrl:'/images/verification-code/',
+                        imgName : ['1.jpg', '2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpg','10.jpg','11.jpg','12.jpg','13.jpg','14.jpg','15.jpg'],
+                        imgSize : {
+                            width: '460px',
+                            height: '200px',
+                        },
+                        blockSize : {
+                            width: '50px',
+                            height: '50px',
+                        },
+                        barSize : {
+                            width : '460px',
+                            height : '40px',
+                        },
+                        ready : function() {
+                        },
+                        success : function() {
+                            // var uType = login.el("#userType").val();
+                            $.loadJSON("/dtr/user/check", {
+                                uNbr: uNbr,
+                                uPass: uPass,
+                                // uType: uType
+                            }).done(function (response) {
+                                if (!App.checker(response)) {
+                                    login.el("#checkBox").modal('hide');
+                                    login.el('#verification-code').html('');
+                                    return;
+                                } else {
+                                    App.topAlert('登录成功！',1,1300,function () {
+                                        App.goHomeBySelf();
+                                    });
+                                }
+                            });
+                        },
+                        error : function() {
+                            App.topAlert('验证失败',2,1300);
+                        }
+                    });
+                }
             });
             login.el("body").quietflow({
                 theme: "bouncingBalls",
@@ -287,7 +333,10 @@
                     }
                 });
             });
-            };
+            login.el("#checkBox-close").off('click').on('click',function (){
+                login.el('#verification-code').html('');
+            });
+        };
         return {
             data: {},
             el: function (expr) {
