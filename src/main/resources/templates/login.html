@@ -104,7 +104,6 @@
         </div>
     </div>
 </div>
-
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
 <script src="/js/app.js"></script>
@@ -214,7 +213,7 @@
                 var uNbr = $.trim(login.el("#userName").val());
                 var uPass = login.el("#userPass").val();
                 if (uNbr == "" || uPass == "" ){
-                    App.topAlert('请输入账号和密码',2,1300);
+                    App.topAlert('请输入账号或密码',2,1300);
                 }else {
                     login.el("#checkBox").modal('show');
                     login.el('#verification-code').slideVerify({

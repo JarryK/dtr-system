@@ -207,6 +207,7 @@ public class CourseBmoImpl implements CourseBmo {
     @Override
     public Map<String, Object> upDateCourse(Course course) {
         try {
+            course.setUPDATE_TIME(new Date());
             int result = courseDao.updateCourse(course);
             if (result > 0) {
                 return G.bmo.returnMap(true, "ok");

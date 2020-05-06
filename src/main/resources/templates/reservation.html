@@ -71,8 +71,7 @@
                     <th scope="col">操作</th>
                 </tr>
                 </thead>
-                <tbody id="rese-class-msg-container">
-                </tbody>
+                <tbody id="rese-class-msg-container"></tbody>
             </table>
         </div>
         <div class="tab-pane fade p-2" id="reservationsHistory" role="tabpanel" aria-labelledby="servationsHistory-tab">
@@ -207,9 +206,11 @@
                         return;
                     } else {
                         if (data.noReservationList != '') {
-                            reservation.el("#rese-class-historyMsg-container").html("<tr><td colspan='6' style='text-align: center'>"+data.noReservationList+"</td></tr>");
+                            reservation.el("#rese-class-historyMsg-container")
+                                .html("<tr><td colspan='6' style='text-align: center'>"+data.noReservationList+"</td></tr>");
                         } else {
-                            reservation.el("#rese-class-historyMsg-container").html(template('rese-class-historyMsg-art', {historyList: data.reservationList}));
+                            reservation.el("#rese-class-historyMsg-container")
+                                .html(template('rese-class-historyMsg-art', {historyList: data.reservationList}));
                             reservation.panelClick();
                         }
                         return;

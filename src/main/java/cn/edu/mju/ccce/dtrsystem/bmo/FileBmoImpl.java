@@ -62,21 +62,16 @@ public class FileBmoImpl implements FileBmo {
         int nodone = 0;
         int done = 0;
         User user = null;
-//            String fileType = getExcelType(fileName);
         for (int numSheet = 0; numSheet < workbook.getNumberOfSheets(); numSheet++) {
-            //HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
             Sheet hssfSheet = workbook.getSheetAt(numSheet);
             if (hssfSheet == null) {
                 continue;
             }
             // 循环行Row
             for (int rowNum = 1; rowNum <= hssfSheet.getLastRowNum(); rowNum++) {
-                //HSSFRow hssfRow = hssfSheet.getRow(rowNum);
                 Row hssfRow = hssfSheet.getRow(rowNum);
                 if (hssfRow != null) {
                     user = new User();
-                    //HSSFCell name = hssfRow.getCell(0);
-                    //HSSFCell pwd = hssfRow.getCell(1);
                     String name = "";
                     String sex = "";
                     String type = "";
@@ -129,7 +124,7 @@ public class FileBmoImpl implements FileBmo {
                     }catch (Exception e){
                         // 此处异常为数据库异常，有插入失败、数据重复等问题，一旦报错便认为此条数据插入失败
                         // ignore
-                        done += 1;
+                        nodone += 1;
                     }
                 }
             }

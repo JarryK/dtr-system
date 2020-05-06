@@ -61,9 +61,7 @@ public class LoginController {
             }
             userMsgMap.put("USER_NBR",unbr);
             session.setAttribute(session.getId(), userMsgMap);
-            returnMap = G.page.returnMap(true, "登录成功！");
-            returnMap.put("userMsg", userMsgMap);
-            return returnMap;
+            return G.page.returnMap(true, "ok");
         } catch (Exception e) {
             log.error("获取用户信息异常", e);
             return G.page.returnMap(false, "登录异常！");

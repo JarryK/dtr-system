@@ -392,7 +392,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                <button type="button" id="user-yes" class="btn btn-primary courseMsg-yes">确定</button>
+                <button type="button" id="user-yes" class="btn btn-primary">确定</button>
             </div>
         </div>
     </div>
@@ -429,39 +429,44 @@
         <td >{{$value.COURSE_TYPE_NAME}}</td>
         <td >{{$value.COURSE_TEACHER_NAME}}</td>
         <td >{{$value.COURSE_STATUS | caseStatus }}</td>
-        <td ><a class="checkBtn" href="javascript:;" data-courseid="{{$index}}">编辑</a></td>
+        <td >{{if '0' == $value.COURSE_STATUS }}
+            <a class="checkBtn" href="javascript:;" data-courseid="{{$index}}">编辑</a>
+            {{else}}
+            <p>已过期</p>
+            {{/if}}
+        </td>
     </tr>
     {{/each}}{{/if}}
 </script>
 <script type="text/html" id="course-msg-art">
-    {{ if courseDetail}}
+    {{ if data}}
     <tr>
         <td class="align-middle">课程ID</td>
-        <td class="align-middle"><p></p>{{courseDetail.COURSE_ID}}</td>
+        <td class="align-middle"><p></p>{{data.COURSE_ID}}</td>
     </tr>
     <tr>
         <td class="align-middle">课程名</td>
-        <td class="align-middle"><p></p>{{courseDetail.COURSE_NAME}}</td>
+        <td class="align-middle"><p></p>{{data.COURSE_NAME}}</td>
     </tr>
     <tr>
         <td class="align-middle">课程类型</td>
-        <td class="align-middle"><p type="text">{{courseDetail.COURSE_TYPE_NAME}}</td>
+        <td class="align-middle"><p type="text">{{data.COURSE_TYPE_NAME}}</td>
     </tr>
     <tr>
         <td class="align-middle">课程详细内容</td>
-        <td class="align-middle"><p>{{courseDetail.COURSE_DETAIL}}</td>
+        <td class="align-middle"><p>{{data.COURSE_DETAIL}}</td>
     </tr>
     <tr>
         <td class="align-middle">课程老师</td>
-        <td class="align-middle"><p>{{courseDetail.COURSE_TEACHER_NAME}}</p></td>
+        <td class="align-middle"><p>{{data.COURSE_TEACHER_NAME}}</p></td>
     </tr>
     <tr>
         <td class="align-middle">课程时间</td>
-        <td class="align-middle"><p>{{courseDetail.COURSE_TIME | formatDateString}}</p></td>
+        <td class="align-middle"><p>{{data.COURSE_TIME | formatDateString}}</p></td>
     </tr>
     <tr>
         <td class="align-middle">课程状态</td>
-        <td class="align-middle"><p>{{courseDetail.COURSE_STATUS}}</p></td>
+        <td class="align-middle"><p>{{data.COURSE_STATUS}}</p></td>
     </tr>
     {{/if}}
 </script>
@@ -537,7 +542,7 @@
     </tr>
     <tr>
         <td class="align-middle">用户NBR</td>
-        <td class="align-middle"><p class="form-control" type="text" id="user_nbr" readonly="readonly" >{{data.user_NBR}}</p></td>
+        <td class="align-middle"><p class="form-control" type="text" data-unbr="{{data.user_NBR}}" id="user_nbr" readonly="readonly" >{{data.user_NBR}}</p></td>
     </tr>
     <tr>
         <td class="align-middle">用户名</td>
@@ -749,7 +754,10 @@
                             return;
                         } else {
                             App.removeLoader();
-                            App.alert("提交成功");
+                            var done = data.ExcelStatus.done;
+                            var nodone = data.ExcelStatus.nodone;
+                            var all = done + nodone;
+                            App.alert("提交成功",'新注册' + all + '人,成功'+ done +',失败' + nodone);
                             return;
                         }
                     }
@@ -911,6 +919,29 @@
                         admin.el("#cansee").css('display','inline');
                         $(this).prev().attr("type", "password");
                     }
+                });
+                admin.el('#user-yes').off('click').on('click', function () {
+                    var userName = admin.el('#user_name').val();
+                    var userNbr = admin.el("#user_nbr").data("unbr");
+                    var userSex = admin.el("#user_sex").val();
+                    var userPass = admin.el("#user_pass").val();
+                    var userPhone = admin.el("#user_phone").val();
+                    $.loadJSON('/dtr/admin/upUserDet', {
+                        userName: userName,
+                        userNbr: userNbr,
+                        userSex: userSex,
+                        userPass: userPass,
+                        userPhone:userPhone
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            App.alert("修改成功", "", 1, function () {
+                                admin.el("#checkMsgModel").modal("hide");
+                                admin.getUserList();
+                            });
+                        }
+                    });
                 });
                 admin.el('.delCourseType').off('click').on('click', function () {
                     var ctName = $(this).data("ctname");

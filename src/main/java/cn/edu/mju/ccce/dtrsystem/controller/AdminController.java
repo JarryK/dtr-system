@@ -522,7 +522,7 @@ public class AdminController {
         String userNbr = MapTool.getString(inMap, "userNbr");
         String userSex = MapTool.getString(inMap, "userSex");
         String userPass = MapTool.getString(inMap, "userPass");
-        BigInteger userPhone = (BigInteger) MapTool.getObject(inMap, "userPhone");
+        String userPhone = (String) MapTool.getObject(inMap, "userPhone");
         try {
             userNbr.substring(1);
         } catch (Exception e) {
@@ -536,7 +536,7 @@ public class AdminController {
                 return G.page.returnMap(false, msg);
             }
             User user = (User) MapTool.getObject(relMap, "user");
-            user.setUSER_PHONE(userPhone);
+            user.setUSER_PHONE(BigInteger.valueOf(Integer.valueOf(userPhone)));
             user.setUSER_SEX(userSex);
             user.setUSER_NAME(userName);
             user.setUSER_PASS(userPass);

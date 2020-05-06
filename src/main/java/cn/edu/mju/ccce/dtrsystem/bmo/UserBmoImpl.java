@@ -101,6 +101,7 @@ public class UserBmoImpl implements UserBmo {
     @Override
     public Map<String, Object> upDataUser(User user) {
         try {
+            user.setUPDATE_TIME(new Date());
             int i = userDao.upDataUser(user);
             if (i > 0) {
                 return G.bmo.returnMap(true, "ok");

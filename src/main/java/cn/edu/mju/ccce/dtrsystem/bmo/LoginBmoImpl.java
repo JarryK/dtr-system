@@ -40,7 +40,7 @@ public class LoginBmoImpl implements LoginBmo {
             } catch (NullPointerException e) {
                 return G.bmo.returnMap(false, "查询为空！");
             }
-            if (relMap.isEmpty()) {
+            if (relMap == null) {
                 return G.bmo.returnMap(false, "查询为空！");
             }
             Map<String, Object> returnMap = G.bmo.returnMap(true, "查询成功");

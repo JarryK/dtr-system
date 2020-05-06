@@ -130,7 +130,7 @@
     <select id="selectAllDoneReservationRecordByCourseID" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
         SELECT <include refid="sl_Reservation" />
         FROM reservation
-        WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(COURSE_TIME) AND RESERVATION_STATUS = '1'
+        WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND RESERVATION_STATUS = '1'
     </select>
     <select id="selectAllReservationRecordByTeacherNbr" parameterType="java.lang.String" resultType="java.util.List" >
         SELECT COURSE_ID
