@@ -61,7 +61,7 @@ public class FileBmoImpl implements FileBmo {
         Workbook workbook = getWorkbook(excelFile, fileName);
         int nodone = 0;
         int done = 0;
-        User user = null;
+//        User user = null;
         for (int numSheet = 0; numSheet < workbook.getNumberOfSheets(); numSheet++) {
             Sheet hssfSheet = workbook.getSheetAt(numSheet);
             if (hssfSheet == null) {
@@ -71,7 +71,7 @@ public class FileBmoImpl implements FileBmo {
             for (int rowNum = 1; rowNum <= hssfSheet.getLastRowNum(); rowNum++) {
                 Row hssfRow = hssfSheet.getRow(rowNum);
                 if (hssfRow != null) {
-                    user = new User();
+                    User user = new User();
                     String name = "";
                     String sex = "";
                     String type = "";

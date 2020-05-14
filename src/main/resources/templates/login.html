@@ -210,55 +210,7 @@
                 }
             });
             login.el("#login-btn").off('click').on('click', function () {
-                var uNbr = $.trim(login.el("#userName").val());
-                var uPass = login.el("#userPass").val();
-                if (uNbr == "" || uPass == "" ){
-                    App.topAlert('请输入账号或密码',2,1300);
-                }else {
-                    login.el("#checkBox").modal('show');
-                    login.el('#verification-code').slideVerify({
-                        type : 2,		//类型
-                        vOffset : 5,	//误差量，根据需求自行调整
-                        vSpace : 5,	//间隔
-                        imgUrl:'/images/verification-code/',
-                        imgName : ['1.jpg', '2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpg','10.jpg','11.jpg','12.jpg','13.jpg','14.jpg','15.jpg'],
-                        imgSize : {
-                            width: '460px',
-                            height: '200px',
-                        },
-                        blockSize : {
-                            width: '50px',
-                            height: '50px',
-                        },
-                        barSize : {
-                            width : '460px',
-                            height : '40px',
-                        },
-                        ready : function() {
-                        },
-                        success : function() {
-                            // var uType = login.el("#userType").val();
-                            $.loadJSON("/dtr/user/check", {
-                                uNbr: uNbr,
-                                uPass: uPass,
-                                // uType: uType
-                            }).done(function (response) {
-                                if (!App.checker(response)) {
-                                    login.el("#checkBox").modal('hide');
-                                    login.el('#verification-code').html('');
-                                    return;
-                                } else {
-                                    App.topAlert('登录成功！',1,1300,function () {
-                                        App.goHomeBySelf();
-                                    });
-                                }
-                            });
-                        },
-                        error : function() {
-                            App.topAlert('验证失败',2,1300);
-                        }
-                    });
-                }
+                login.loginFunction();
             });
             login.el("body").quietflow({
                 theme: "bouncingBalls",
@@ -335,7 +287,14 @@
             login.el("#checkBox-close").off('click').on('click',function (){
                 login.el('#verification-code').html('');
             });
-        };
+            //在全局中绑定回车按下事件
+            document.onkeydown = function(event) {
+                var e = event || window.event || arguments.callee.caller.arguments[0];
+                if (e && e.keyCode == 13) {
+                    login.loginFunction();
+                }
+            };
+            };
         return {
             data: {},
             el: function (expr) {
@@ -354,7 +313,57 @@
                 login.el().hide();
                 return this;
             },
-
+            loginFunction:function (){
+                var uNbr = $.trim(login.el("#userName").val());
+                var uPass = login.el("#userPass").val();
+                if (uNbr == "" || uPass == "" ){
+                    App.topAlert('请输入账号或密码',2,1300);
+                }else {
+                    login.el("#checkBox").modal('show');
+                    login.el('#verification-code').slideVerify({
+                        type : 2,		//类型
+                        vOffset : 5,	//误差量，根据需求自行调整
+                        vSpace : 5,	//间隔
+                        imgUrl:'/images/verification-code/',
+                        imgName : ['1.jpg', '2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.jpg','9.jpg','10.jpg','11.jpg','12.jpg','13.jpg','14.jpg','15.jpg'],
+                        imgSize : {
+                            width: '460px',
+                            height: '200px',
+                        },
+                        blockSize : {
+                            width: '50px',
+                            height: '50px',
+                        },
+                        barSize : {
+                            width : '460px',
+                            height : '40px',
+                        },
+                        ready : function() {
+                        },
+                        success : function() {
+                            // var uType = login.el("#userType").val();
+                            $.loadJSON("/dtr/user/check", {
+                                uNbr: uNbr,
+                                uPass: uPass,
+                                // uType: uType
+                            }).done(function (response) {
+                                if (!App.checker(response)) {
+                                    login.el("#checkBox").modal('hide');
+                                    login.el('#verification-code').html('');
+                                    return;
+                                } else {
+                                    App.topAlert('登录成功！',1,1300,function () {
+                                        App.goHomeBySelf();
+                                    });
+                                }
+                            });
+                        },
+                        error : function() {
+                            App.topAlert('验证失败',2,1300);
+                        }
+                    });
+                }
+            }
         }
     })();
     $(function () {

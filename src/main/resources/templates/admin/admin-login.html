@@ -69,13 +69,39 @@
     var login = (function () {
         var bindEvents = function () {
             login.el("#login-btn").off('click').on('click', function () {
-                console.log("asdasd");
-                login.el('#checkBox').modal('show');
+                login.loginFunction();
+            });
+            document.onkeydown = function(event) {
+                var e = event || window.event || arguments.callee.caller.arguments[0];
+                if (e && e.keyCode == 13) {
+                    login.loginFunction();
+                }
+            };
+        };
+        return {
+            data: {},
+            el: function (expr) {
+                return $(expr ? expr : 'body');
+            },
+            init: function () {
+                bindEvents();
+                return;
+            },
+            show: function () {
+                login.el().show();
+                return this;
+            },
+            hide: function () {
+                login.el().hide();
+                return this;
+            },
+            loginFunction: function () {
                 var adminID = login.el("#name").val();
                 var adminPass = login.el("#pass").val();
                 if (adminID == '' || adminPass == ''){
                     App.topAlert('请输入账号或密码',2,1300);
                 }else {
+                    login.el('#checkBox').modal('show');
                     login.el('#verification-code').slideVerify({
                         type : 2,		//类型
                         vOffset : 5,	//误差量，根据需求自行调整
@@ -130,25 +156,7 @@
                 //         return;
                 //     }
                 // });
-            });
-        };
-        return {
-            data: {},
-            el: function (expr) {
-                return $(expr ? expr : 'body');
-            },
-            init: function () {
-                bindEvents();
-                return;
-            },
-            show: function () {
-                login.el().show();
-                return this;
-            },
-            hide: function () {
-                login.el().hide();
-                return this;
-            },
+            }
 
         }
     })();
