@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -206,6 +207,7 @@ public class CourseBmoImpl implements CourseBmo {
     @Override
     public Map<String, Object> upDateCourse(Course course) {
         try {
+            course.setUPDATE_TIME(new Date());
             int result = courseDao.updateCourse(course);
             if (result > 0) {
                 return G.bmo.returnMap(true, "ok");
@@ -355,9 +357,9 @@ public class CourseBmoImpl implements CourseBmo {
             }
             Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
             returnMap.put("courseList", courseList);
-            returnMap.put("underwayList",underwayList);
-            returnMap.put("doneList",doneList);
-            returnMap.put("cancelList",cancelList);
+            returnMap.put("underwayList", underwayList);
+            returnMap.put("doneList", doneList);
+            returnMap.put("cancelList", cancelList);
             return returnMap;
         } catch (Exception e) {
             log.error("查询课程历史记录异常：", e);
@@ -367,24 +369,151 @@ public class CourseBmoImpl implements CourseBmo {
 
     /**
      * 获取所有的课程类别
+     *
      * @return map key=typeList
      */
     @Override
     public Map<String, Object> getAllCourseType() {
-        try{
-            List<Map<String,Object>> typeList = new ArrayList<>();
-            try{
-             typeList = courseTypeDao.selectCourseType();
+        try {
+            List<Map<String, Object>> typeList = new ArrayList<>();
+            try {
+                typeList = courseTypeDao.selectCourseType();
 
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 return G.bmo.returnMap(false, "空");
             }
-            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
-            returnMap.put("typeList",typeList);
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("typeList", typeList);
             return returnMap;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("查询课程类别异常：", e);
             return G.bmo.returnMap(false, "查询课程类别异常");
+        }
+    }
+
+    /**
+     * 获取今天的课程
+     *
+     * @return map key=courseList
+     */
+    @Override
+    public Map<String, Object> getTodayCourse() {
+        try {
+            List<Course> courseList = new ArrayList<>();
+            try {
+                courseList = courseDao.selectCourseToDay();
+            } catch (NullPointerException e) {
+                return G.bmo.returnMap(false, "查询今天课程为空");
+            }
+            if (courseList.isEmpty()){
+                return G.bmo.returnMap(false, "查询今天课程为空");
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("courseList",courseList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询今天课程异常：",e);
+            return G.bmo.returnMap(false, "查询今天课程异常");
+        }
+    }
+
+    /**
+     * 获取发布历史
+     * @return map key=pastWeek key=pastMonth key=courseList
+     */
+    @Override
+    public Map<String, Object> getHistory() {
+        try{
+            List<Course> pastWeek = new ArrayList<>();
+            List<Course> pastMonthCourseList = new ArrayList<>();
+            List<Map<String, Object>> pastMonth  = new ArrayList<>();
+            try {
+                pastWeek = courseDao.selectCourseBeforePastWeek();
+                pastMonth = courseDao.selectCourseBefore30Day();
+                pastMonthCourseList = courseDao.selectCourseListMsgBefore30Day();
+            } catch (NullPointerException e) {
+                // ignore
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("pastWeek",pastWeek);
+            returnMap.put("pastMonth",pastMonth);
+            returnMap.put("courseList",pastMonthCourseList);
+            return returnMap;
+        }catch (Exception e){
+            log.error("查询历史课程异常：",e);
+            return G.bmo.returnMap(false, "查询历史课程异常");
+        }
+    }
+
+    /**
+     * 获取发布历史
+     * @return map key=oneMonth
+     */
+    @Override
+    public Map<String, Object> getIssueList() {
+        try{
+            List<Course> oneMonth = new ArrayList<>();
+            try {
+                oneMonth = courseDao.selectCourseListMsg30Day();
+            } catch (NullPointerException e) {
+                // ignore
+            }
+            Map<String,Object> returnMap = G.bmo.returnMap(true,"ok");
+            returnMap.put("oneMonth",oneMonth);
+            return returnMap;
+        }catch (Exception e){
+            log.error("查询历史课程异常：",e);
+            return G.bmo.returnMap(false, "查询历史课程异常");
+        }
+    }
+
+    /**
+     * 删除课程类别
+     * @param name
+     * @return
+     */
+    @Override
+    public Map<String, Object> addCourseType(String name) {
+        try{
+            Map<String,Object> inMap = new HashMap<>();
+            inMap.put("COURSE_TYPE_STATUS",0);
+            inMap.put("COURSE_TYPE_NAME",name);
+            int i = courseTypeDao.creaseCourseType(inMap);
+            if (i>0){
+                return G.bmo.returnMap(true,"ok");
+            }
+            return G.bmo.returnMap(false,"新增失败");
+        }catch (Exception e){
+            log.error("新增异常：",e);
+            return G.bmo.returnMap(false,"新增异常");
+        }
+    }
+
+    /**
+     * 删除课程类别
+     * @param name
+     * @return
+     */
+    @Override
+    public Map<String, Object> delCourseType(String name) {
+        try{
+            String id = "";
+            try{
+                id = courseTypeDao.selectCourseTypeId(name);
+            }catch (Exception e){
+                return G.bmo.returnMap(false,"删除失败");
+            }
+            if ("".equals(id)){
+                return G.bmo.returnMap(false,"删除失败");
+            }
+            int i = courseTypeDao.deleteCourseType(id);
+            if (i>0){
+                return G.bmo.returnMap(true,"ok");
+            }
+            return G.bmo.returnMap(false,"删除失败");
+        }catch (Exception e){
+            log.error("删除异常：",e);
+            return G.bmo.returnMap(false,"删除异常");
         }
     }
 

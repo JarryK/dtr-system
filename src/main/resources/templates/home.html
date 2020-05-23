@@ -128,7 +128,7 @@
                             </h4>
                             <div>
                                 <p class="about_txt" style=" text-indent: 2em;">
-                                    诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
+                                    诊辅预约系统的主要功能是老师在有空余的时间的时候，在平台上发布自己所教科目的最近的一些知识点难点的一节课程，然后学生可在平台上查看是否有符合自己学习需求的课程，然后在开课前预约课程。除此之外，每一节课之后，学生和老师都有一个互相评论的功能，学生可以写写这堂课老师上的怎么样，自己学到了什么等等，老师则可以写对学生课堂上的学习情况的一个总结，更好的辅导学生学习。
                                 </p>
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                             </h4>
                             <div>
                                 <p class="about_txt" style=" text-indent: 2em;">
-                                    诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
+                                    老师登录系统后，可根据自己的空余时间发布课程，能够查看自己的课程发布记录，查看某一课程的具体学生名单，修改已经发布课程的信息，取消已发布的课程。
                                 </p>
                             </div>
                         </div>
@@ -152,7 +152,7 @@
                             </h4>
                             <div>
                                 <p class="about_txt" style=" text-indent: 2em;">
-                                    诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
+                                    在系统上查看可预约的课程，根据自己需要选择课程进行预约，能够查看预约课程列表，能够取消预约的课程。
                                 </p>
                             </div>
                         </div>
@@ -164,7 +164,7 @@
                             </h4>
                             <div>
                                 <p class="about_txt" style=" text-indent: 2em;">
-                                    诊辅预约系统和校教务系统对接，学生通过学号密码-登录，老师通过工号-密码等登录方式。系统提供课程发布、课程预约、评价系统、历史系统等主要功能，课程发布根据老师自主安排的时间，设置诊辅课程时间，课程类型、课程内容、上课人数等课程细节并发布到平台上，有需要的学生可在课程预约功能里面查看自己想补习的科目，自主选择老师，时间，实现课程预约；老师在前一天收到上课学生的名单，以便针对辅导；老师和学生上完课后可以相互评价，学生评价这位老师讲学效果，老师对学生学习问题和提供给学生的诊断辅导意见；老师在上课的之前（之后），可以根据学生的历史预约数据和历史诊辅记录可以在复诊时给诊辅教师提供一些参考，以便更好地对症下药。
+                                    用户-学生完成课程后对老师的授课情况打分，并查看老师对自己的课程学习意见，用户-老师完成课程后对学生的上课情况打分给出课程学习意见，并查看学生的对课程的评价。
                                 </p>
                             </div>
                         </div>
@@ -197,9 +197,95 @@
     </div>
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
+    <!--  modal -->
+    <div class="modal fade" id="passModel" tabindex="-1" data-backdrop="static" role="dialog"
+         aria-labelledby="passModelLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passModelLabel">修改密码</h5>
+                    <button type="button" class="close pass-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label for="oldPass">旧密码</label>
+                        <a id="checkOldPass" style="float: right;" href="javascript:;">检查旧密码</a>
+                        <input class="form-control" type="password" id="oldPass" >
+                    </div>
+                    <div>
+                        <label for="newPass">新密码</label>
+                        <input class="form-control" type="password" id="newPass" >
+                    </div>
+                    <div>
+                        <label for="newPassCheck">确认密码</label>
+                        <input class="form-control" type="password" id="newPassCheck" >
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary pass-close" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary changePass-yes">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="modal fade bd-example-modal-lg" id="myselfMsg" tabindex="-1"  data-backdrop="static" role="dialog" aria-labelledby="myselfMsgTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myselfMsgTitle">个人信息</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body row" id="self-msg-box-container" style="padding: 1.2rem">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary input-modal-yes">提交更改</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script type="text/html" id="self-msg-box-art">
+    {{ if data }}
+    <div class="col-md-6">
+        <label for="uid">用户ID：</label>
+        <input class="form-control" id="uid" value="{{data.user_ID}}" readonly="readonly">
+    </div>
+    <div class="col-md-6">
+        <label for="unbr">用户Nbr：</label>
+        <input class="form-control" id="unbr" value="{{data.user_NBR}}" readonly="readonly">
+    </div>
+    <div class="col-md-6">
+        <label for="name">姓名：</label>
+        <input class="form-control" id="name" value="{{data.user_NAME}}" readonly="readonly">
+    </div>
+    <div class="col-md-6">
+        <label for="sex">性别：</label>
+        <select class="form-control" id="sex" value="{{data.user_SEX}}">
+            <option value="男">男</option>
+            <option value="女">女</option>
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="type">用户类别：</label>
+        <input class="form-control" id="type" value="{{data.type_NAME}}" readonly="readonly">
+    </div>
+    <div class="col-md-6">
+        <label for="phone">电话:</label>
+        <input class="form-control" id="phone" value="{{data.user_PHONE}}" >
+    </div>
+    <div class="col-md-12" style="margin-top: 0.8rem">
+        <p><a id="changePass" style="float: right;" href="javascript:;">👉更改密码</a></p>
+    </div>
+  {{/if}}
+</script>
 <script src="/js/jquery-3.1.1.min.js"></script>
 <script src="/js/bootstrap/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap-v4.3.1.min.js"></script>
@@ -238,7 +324,34 @@
                 var uNbr = home.el('#userMsg').data('uNbr');
                 App.loginOut(uNbr, uName);
             });
-        };
+            home.el("#goto-myself").off("click").on("click",function () {
+                $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        var userData = data.user;
+                        home.paddingSelfMsgBox(userData)
+                            .then(function(){home.el("#myselfMsg").modal('show');return this;})
+                            .then(function(){home.el("#myselfMsg").data('user',userData);return this;})
+                            .then(function(){home.modelCheck();return this;});
+                    }
+                });
+            });
+            // 偷懒直接给复制一份
+            home.el("#user").off("click").on("click",function () {
+                $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                        var userData = data.user;
+                        home.paddingSelfMsgBox(userData)
+                            .then(function(){home.el("#myselfMsg").modal('show');return this;})
+                            .then(function(){home.el("#myselfMsg").data('user',userData);return this;})
+                            .then(function(){home.modelCheck();return this;});
+                    }
+                });
+            });
+    };
         return {
             data: {},
             el: function (expr) {
@@ -250,7 +363,6 @@
                     home.el('.userName').html(uName + "(" + type + ")");
                     home.el('#userMsg').data("uName", uName);
                     home.el('#userMsg').data("type", type);
-
                     if(type === "教师" ){
                         home.el('#reservation-box').hide();
                     }else {
@@ -337,6 +449,77 @@
             },
             pageCssInit: function () {
                 home.clockInit().then(function () {home.swiperAllInit()}).then(function(){home.swiperAboutInit();return this;});
+            },
+            paddingSelfMsgBox:function (data) {
+                return $.Deferred(function (defer) {
+                    home.el("#self-msg-box-container").html(template("self-msg-box-art",{data:data}));
+                    defer.resolve();
+                }).promise();
+            },
+            modelCheck:function () {
+                home.el("#changePass").off("click").on("click",function () {
+                    home.el("#passModel").modal('show');
+                });
+                home.el("#checkOldPass").off("click").on("click",function () {
+                    var oldPass = home.el("#oldPass").val();
+                    var user = home.el("#myselfMsg").data('user');
+                    var pass = user.user_PASS;
+                    if (oldPass == pass){
+                        App.topAlert("旧密码正确！",1)
+                    }else {
+                        App.topAlert("旧密码错误！",2)
+                    }
+                });
+                home.el(".changePass-yes").off("click").on("click",function () {
+                    var pass = home.el("#newPass").val();
+                    var passCheck = home.el("#newPassCheck").val();
+                    if (pass != passCheck){
+                        App.topAlert("俩次输入密码不同！",2);
+                        return;
+                    }
+                    if (pass == ''){
+                        App.topAlert("密码不能为空！",2);
+                        return;
+                    }
+                    if (pass.length<6){
+                        App.topAlert("密码不能小于6位！",2);
+                        return;
+                    }
+                    $.loadJSON('/dtr/user/changeSelfMsg',{
+                        pass:pass
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            App.alert("更改成功",'');
+                            home.el("#passModel").modal('hide');
+                            home.passModelClear();
+                        }
+                    })
+                });
+                home.el(".pass-close").off("click").on("click",function () {
+                    home.el("#passModel").modal('hide');
+                    home.passModelClear();
+                });
+                home.el(".input-modal-yes").off('click').on('click',function () {
+                    var sex = home.el('#sex').val();
+                    var phone = home.el('#phone').val();
+                    $.loadJSON('/dtr/user/changeSelfMsg',{
+                        sex:sex,
+                        phone:phone
+                    }).done(function (data) {
+                        if (!App.checker(data)){
+                            return;
+                        }else {
+                            App.alert("更改成功",'');
+                        }
+                    })
+                });
+            },
+            passModelClear:function () {
+                home.el("#newPass").val('');
+                home.el("#newPassCheck").val('');
+                home.el("#oldPass").val('')
             }
         }
     })();

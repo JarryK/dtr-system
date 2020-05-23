@@ -29,4 +29,18 @@ public interface CourseTypeDao {
      */
     public List<Map<String,Object>> selectCourseType();
 
+    /**
+     * 删除课程类别
+     * @param CourseTId
+     * @return
+     */
+    public int deleteCourseType (String CourseTId);
+
+    /**
+     * 新增课程类别
+     * @param map
+     * @return
+     */
+    public int creaseCourseType (Map<String,Object> map);
+
 }

@@ -114,12 +114,12 @@
     <select id="selectAllReservationRecordByStuNbr" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
         SELECT <include refid="sl_Reservation" />
         FROM reservation
-        WHERE USER_NBR = #{StuNbr,jdbcType=VARCHAR} AND RESERVATION_STATUS = '0'
+        WHERE USER_NBR = #{StuNbr,jdbcType=VARCHAR} AND DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(COURSE_TIME) AND RESERVATION_STATUS = '0'
     </select>
     <select id="selectAllReservationDoneRecordByStuNbr" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
         SELECT <include refid="sl_Reservation" />
         FROM reservation
-        WHERE USER_NBR = #{StuNbr,jdbcType=VARCHAR} AND RESERVATION_STATUS = '1'
+        WHERE USER_NBR = #{StuNbr,jdbcType=VARCHAR} AND DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(COURSE_TIME) AND RESERVATION_STATUS = '1'
     </select>
 
     <select id="selectAllReservationRecordByCourseID" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
@@ -152,7 +152,7 @@
     <select id="selectReservationHistory" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Reservation">
         SELECT <include refid="sl_Reservation" />
         FROM reservation
-        WHERE USER_NBR = #{userNbr,jdbcType=NUMERIC}  ORDER BY COURSE_TIME
+        WHERE USER_NBR = #{userNbr,jdbcType=NUMERIC} AND DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(COURSE_TIME) ORDER BY COURSE_TIME
     </select>
 
 </mapper>

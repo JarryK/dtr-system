@@ -27,38 +27,38 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade  p-2 show active" id="reservationsClass" role="tabpanel"
              aria-labelledby="reservationsClass-tab">
-            <div class="search-box card">
-                <div class="row card-body">
-                    <div class="col-md-6">
-                        <h5 style="display: inline-block;">
-                            按条件搜索
-                        </h5>
-                    </div>
-                    <div class="col-md-6 text-right">
-                        <button class="btn btn-primary p-1">搜索</button>
-                    </div>
-                    <hr class="col-md-12">
-                    <div class="row col-md-12">
-                        <div class="col-md-3">
-                            <p>按时间</p>
-                            <input class="form-control" type="date">
-                        </div>
-                        <div class="col-md-3">
-                            <p>按课程类型</p>
-                            <input class="form-control" type="text">
-                        </div>
-                        <div class="col-md-3">
-                            <p>按课程名</p>
-                            <input class="form-control" type="text">
-                        </div>
-                        <div class="col-md-3">
-                            <p>按老师名</p>
-                            <input class="form-control" type="text">
-                        </div>
-                    </div>
+<!--            <div class="search-box card">-->
+<!--                <div class="row card-body">-->
+<!--                    <div class="col-md-6">-->
+<!--                        <h5 style="display: inline-block;">-->
+<!--                            按条件搜索-->
+<!--                        </h5>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-6 text-right">-->
+<!--                        <button class="btn btn-primary p-1">搜索</button>-->
+<!--                    </div>-->
+<!--                    <hr class="col-md-12">-->
+<!--                    <div class="row col-md-12">-->
+<!--                        <div class="col-md-3">-->
+<!--                            <p>按时间</p>-->
+<!--                            <input class="form-control" type="date">-->
+<!--                        </div>-->
+<!--                        <div class="col-md-3">-->
+<!--                            <p>按课程类型</p>-->
+<!--                            <input class="form-control" type="text">-->
+<!--                        </div>-->
+<!--                        <div class="col-md-3">-->
+<!--                            <p>按课程名</p>-->
+<!--                            <input class="form-control" type="text">-->
+<!--                        </div>-->
+<!--                        <div class="col-md-3">-->
+<!--                            <p>按老师名</p>-->
+<!--                            <input class="form-control" type="text">-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                </div>
-            </div>
+<!--                </div>-->
+<!--            </div>-->
             <table class="table text-center table-striped  shadow">
                 <thead class="thead-dark">
                 <tr>
@@ -71,8 +71,7 @@
                     <th scope="col">操作</th>
                 </tr>
                 </thead>
-                <tbody id="rese-class-msg-container">
-                </tbody>
+                <tbody id="rese-class-msg-container"></tbody>
             </table>
         </div>
         <div class="tab-pane fade p-2" id="reservationsHistory" role="tabpanel" aria-labelledby="servationsHistory-tab">
@@ -207,9 +206,11 @@
                         return;
                     } else {
                         if (data.noReservationList != '') {
-                            reservation.el("#rese-class-historyMsg-container").html("<tr><td colspan='6' style='text-align: center'>"+data.noReservationList+"</td></tr>");
+                            reservation.el("#rese-class-historyMsg-container")
+                                .html("<tr><td colspan='6' style='text-align: center'>"+data.noReservationList+"</td></tr>");
                         } else {
-                            reservation.el("#rese-class-historyMsg-container").html(template('rese-class-historyMsg-art', {historyList: data.reservationList}));
+                            reservation.el("#rese-class-historyMsg-container")
+                                .html(template('rese-class-historyMsg-art', {historyList: data.reservationList}));
                             reservation.panelClick();
                         }
                         return;

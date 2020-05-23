@@ -135,6 +135,12 @@ var App = function () {
             goHistoryBySelf: function () {
                 window.open('/dtr/history', "_self");
             },
+            goAdminLoginBySelf:function () {
+                window.open("/dtr/admin-login", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+            },
+            goAdminHomeBySelf:function () {
+                window.open("/dtr/admin", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+            },
             //新窗口打开
             goHomeByNewPage: function () {
                 window.open('/dtr/home', "_blank");
@@ -156,7 +162,13 @@ var App = function () {
             },
             goHistoryByNewPage: function () {
                 window.open('/dtr/history', "_blank");
-            }
+            },
+            goAdminLoginByNewPage:function () {
+                window.open("/dtr/admin-login", "_blank");
+            },
+            goAdminHomeByNewPage:function () {
+                window.open("/dtr/admin", "_blank");
+            },
         }
     })();
     // utils工具函数集
@@ -167,6 +179,18 @@ var App = function () {
             App.setModalsAndBackdropsOrder();
         }).on('hidden.bs.modal', '.modal', function (event) {
             App.setModalsAndBackdropsOrder();
+        });
+        $("#user-msg").off("click").on("click",function () {
+            $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+                if (!App.checker(data)) {
+                    return;
+                } else {
+                    var userData = data.user;
+                    App.paddingSelfMsgBox(userData)
+                        .then(function(){$("#myselfMsg").modal('show');return this;})
+                        .then(function(){$("#myselfMsg").data('user',userData);return this;})
+                }
+            });
         });
         return {
             loginOut: function (uNbr, uName) {
@@ -189,7 +213,10 @@ var App = function () {
                 return $.Deferred(function (defer) {
                     $.loadJSON('/dtr/user/getUser').done(function (data) {
                         if (!App.checker(data)) {
-                            App.alert('访问失败', '请先登录', 2, function () {App.goLoginBySelf();defer.resolve();});
+                            App.alert('访问失败', '请先登录', 2, function () {
+                                App.goLoginBySelf();
+                                defer.resolve();
+                            });
                         } else {
                             $('.header-userName').html(data.user.USER_NAME + "(" + data.user.TYPE_NAME + ")");
                             $('#header-userDropdown').data("uNbr", data.user.USER_NBR);
@@ -242,7 +269,88 @@ var App = function () {
             },
             getWhere: function () {
                 return $('#where').data('where');
-            }
+            },
+            // 生成两数之间的随机整数
+            randomNum: function (minNum, maxNum) {
+                switch (arguments.length) {
+                    case 1:
+                        return parseInt(Math.random() * minNum + 1, 10);
+                        break;
+                    case 2:
+                        return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+                        break;
+                    default:
+                        return 0;
+                        break;
+                }
+            },
+            //rgb颜色随机
+            rgb: function () {
+                var r = Math.floor(Math.random() * 256);
+                var g = Math.floor(Math.random() * 256);
+                var b = Math.floor(Math.random() * 256);
+                var rgb = '(' + r + ',' + g + ',' + b + ')';
+                return rgb;
+            },
+            //十六进制颜色随机
+            color16: function () {
+                var r = Math.floor(Math.random() * 256);
+                var g = Math.floor(Math.random() * 256);
+                var b = Math.floor(Math.random() * 256);
+                var color = '#' + r.toString(16) + g.toString(16) + b.toString(16) +"";
+                return color;
+            },
+            // 深色随机
+            shengColor: function(){
+                return '#' +
+                    (function(color) {
+                        return(color += '5678956789defdef' [Math.floor(Math.random() * 16)]) &&
+                        (color.length == 6) ? color : arguments.callee(color);
+                    })('');
+            },
+            // 浅色随机
+            qianColor: function(){
+                return '#' +
+                    (function(color) {
+                        return(color += '0123401234abcabc' [Math.floor(Math.random() * 16)]) &&
+                        (color.length == 6) ? color : arguments.callee(color);
+                    })('');
+            },
+            randomBackgroundColor:function (_classname) {
+                return $.Deferred(function (defer) {
+                    var itme = document.getElementsByClassName(_classname);
+                    for (var i=0;i<=itme.length;i++){
+                        switch (i) {
+                            case 0:
+                                itme[i].style.backgroundColor= "#00a8ff";
+                                break;
+                            case 1:
+                                itme[i].style.backgroundColor= "#4cd137";
+                                break;
+                            case 2:
+                                itme[i].style.backgroundColor= "#ff6b81";
+                                break;
+                            case 3:
+                                itme[i].style.backgroundColor= "#57606f";
+                                break;
+                            case 4:
+                                itme[i].style.backgroundColor= "#5352ed";
+                                break;
+                            default:
+                                itme[i].style.backgroundColor=App.shengColor();
+                                break;
+                        }
+                    }
+                    defer.resolve();
+                }).promise();
+            },
+            paddingSelfMsgBox: function(data) {
+                return $.Deferred(function (defer) {
+                    $("#self-msg-box-container").html(template("self-msg-box-art",{data:data}));
+                    defer.resolve();
+                }).promise();
+            },
+
         }
     })();
     // utils常用ui函数集
@@ -376,33 +484,26 @@ var App = function () {
                 })
 
             },
-            // inputAlert: function () {
-            //     Swal.mixin({
-            //         input: 'text',
-            //         confirmButtonText: 'Next &rarr;',
-            //         showCancelButton: true,
-            //         progressSteps: ['1', '2', '3']
-            //     }).queue([{
-            //         title: 'Question 1',
-            //         text: 'Chaining swal2 modals is easy'
-            //     }, {
-            //         title: 'Question 1',
-            //         text: 'Chaining swal2 modals is easy'
-            //
-            //     }, {
-            //         title: 'Question 1',
-            //         text: 'Chaining swal2 modals is easy'
-            //     }]).then(function(result){
-            //         if (result.value) {
-            //             const answers = JSON.stringify(result.value);
-            //             Swal.fire({
-            //                 title: 'All done!',
-            //                 html: `Your answers:<pre><code>${answers}</code></pre>`,
-            //                 confirmButtonText: 'Lovely!'
-            //             })
-            //         }
-            //     })
-            // },
+            inputAlert: function (input = 'text',title = '操作提示', text =  '请输入',  callback) {
+                Swal.mixin({
+                    input: input,
+                    confirmButtonColor: '#3085d6', // 确定按钮的 颜色
+                    confirmButtonText: '确定', // 确定按钮的 文字
+                    showCancelButton: true, // 是否显示取消按钮
+                    cancelButtonColor: '#d33', // 取消按钮的 颜色
+                    cancelButtonText: "取消", // 取消按钮的 文字
+                }).queue([{
+                    title: title,
+                    text: text
+                }]).then(function(result){
+                    if (result.value) {
+                        if ($.isFunction(callback)) {
+                            callback(result.value);
+                            return;
+                        }
+                    }
+                })
+            },
             // 检验后端返回的数据成功or失败，并可以控制在屏幕顶部提示
             // 设置时间输入框
             setInputBoxForTime: function (_id_or_class) {
@@ -414,10 +515,21 @@ var App = function () {
                     autoClose: true,
                     Integer: 1,
                     startDate: new Date(),
-                    // endDate
+                    // endDate:App.getAfterTwoMonth(),
                     language: 'zh-CN'
                 });
             },
+            //
+            // getAfterTwoMonth:function () {
+            //     var now = new Date();
+            //     var year = now.getFullYear();
+            //     var month = now.getMonth() + 1;
+            //     var day = now.getDay();
+            //     if (month === 2){
+            //         if ()
+            //             }
+            //     return newDate
+            // }
         }
     })();
     // utils检验函数集

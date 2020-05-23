@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <b>项目名称：</b>dtr-system<br>
@@ -69,4 +70,41 @@ public interface CourseDao {
      * @return
      */
     public List<Course> selectHistory(String teacherNbr);
+
+    /**
+     * 查找今天的课程
+     * @return
+     */
+    public List<Course> selectCourseToDay();
+
+    /**
+     * 查找一周前的数据
+     * @return
+     */
+    public List<Course> selectCourseBeforePastWeek();
+
+    /**
+     * 查找30天前的数据
+     * @return
+     */
+    public List<Map<String,Object>> selectCourseBefore30Day();
+
+    /**
+     *  查找30天前的课程列表
+     * @return
+     */
+    public List<Course> selectCourseListMsgBefore30Day();
+
+    /**
+     *  查找未来30天的课程列表
+     * @return
+     */
+    public List<Course> selectCourseListMsg30Day();
+
+    /**
+     * 查找指定天数内的数据
+     * @return
+     */
+    public List<Course> selectCourseByDay(int day);
+
 }

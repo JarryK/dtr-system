@@ -322,6 +322,10 @@
                     App.alert('错误', '课程最大人数不能为空！', 2);
                     return;
                 }
+                if (nbr > 10) {
+                    App.alert('错误', '课程最大人数不能超过10人！', 2);
+                    return;
+                }
                 var cont = issue.el('#classContent').val();
                 if (cont == '') {
                     App.alert('错误', '课程内容不能为空！', 2);

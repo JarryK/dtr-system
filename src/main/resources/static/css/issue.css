@@ -26,4 +26,19 @@ ol.breadcrumb {
 .table p{
     margin: 0 !important;
 }
+table{
+    margin-top: 1rem;
+}
+#issueCourseHistory tbody ,#issueDoneCourseHistory tbody{
+    max-height: 400px !important;
+    overflow-y: scroll;
+    display: block;
+    width: 100%;
+}
+#issueCourseHistory tr,#issueDoneCourseHistory tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
 /* 功能区结束 */

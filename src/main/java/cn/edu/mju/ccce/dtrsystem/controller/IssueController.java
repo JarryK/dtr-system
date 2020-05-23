@@ -1,6 +1,7 @@
 package cn.edu.mju.ccce.dtrsystem.controller;
 
 import cn.edu.mju.ccce.dtrsystem.bean.Course;
+import cn.edu.mju.ccce.dtrsystem.bmo.AdminBmo;
 import cn.edu.mju.ccce.dtrsystem.bmo.CourseBmo;
 import cn.edu.mju.ccce.dtrsystem.common.G;
 import cn.edu.mju.ccce.dtrsystem.common.MapTool;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpSession;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +43,8 @@ public class IssueController {
     @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.CourseBmoImpl")
     private CourseBmo courseBmo;
 
+    @Resource(name = "cn.edu.mju.ccce.dtrsystem.bmo.AdminBmoImpl")
+    private AdminBmo adminBmo;
 
     @RequestMapping("getType")
     @ResponseBody
@@ -57,11 +62,11 @@ public class IssueController {
                 String msg = G.bmo.returnMapMsg(typeMap);
                 return G.page.returnMap(false, msg);
             }
-            List<Map<String,Object>> typeList = (List<Map<String, Object>>) MapTool.getObject(typeMap,"typeList");
-            Map<String,Object> returnMap = G.page.returnMap(true,"ok");
-            returnMap.put("typeList",typeList);
+            List<Map<String, Object>> typeList = (List<Map<String, Object>>) MapTool.getObject(typeMap, "typeList");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("typeList", typeList);
             return returnMap;
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("课程类别异常：", e);
             return G.page.returnMap(false, "课程类别异常");
         }
@@ -157,7 +162,7 @@ public class IssueController {
         try {
             Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
             String type_name = MapTool.getString(uMsg, "TYPE_NAME");
-            if (!"教师".equals(type_name)) {
+            if (!"教师".equals(type_name) && !adminBmo.isAdmin(httpSession)) {
                 return G.page.returnMap(false, "非教师用户，不能操作");
             }
             String uNbr = MapTool.getString(uMsg, "USER_NBR");
@@ -292,7 +297,7 @@ public class IssueController {
             Date courseTime = formatTimeStrToDate(courseTimeStr);
             Map<String, Object> uMap = (Map<String, Object>) httpSession.getAttribute(sessionID);
             String type_name = MapTool.getString(uMap, "TYPE_NAME");
-            if (!"教师".equals(type_name)) {
+            if (!"教师".equals(type_name) && !adminBmo.isAdmin(httpSession)) {
                 return G.page.returnMap(false, "非教师用户，不能操作");
             }
             Map<String, Object> relMap = courseBmo.getCourseDetByID(courseID);
@@ -344,7 +349,7 @@ public class IssueController {
         try {
             Map<String, Object> uMap = (Map<String, Object>) httpSession.getAttribute(sessionID);
             String type_name = MapTool.getString(uMap, "TYPE_NAME");
-            if (!"教师".equals(type_name)) {
+            if (!"教师".equals(type_name) && !adminBmo.isAdmin(httpSession)) {
                 return G.page.returnMap(false, "非教师用户，不能操作");
             }
             Map<String, Object> relMap = courseBmo.cancelCourse(courseID);
@@ -360,5 +365,27 @@ public class IssueController {
         }
     }
 
+    @RequestMapping("getToday")
+    @ResponseBody
+    public Map<String, Object> getToday(HttpSession httpSession) {
+        try {
+            Map<String, Object> relMap = courseBmo.getTodayCourse();
+            List<Course> courseList = (List<Course>) MapTool.getObject(relMap, "courseList");
+            if (courseList == null) {
+                return G.page.returnMap(false, "查找为空");
+            }
+            boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+            if (!relMapBoolean) {
+                String msg = G.page.returnMapMsg(relMap);
+                return G.page.returnMap(false, msg);
+            }
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("courseList", courseList);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查找今天课程异常：", e);
+            return G.page.returnMap(false, "查找今天课程异常");
+        }
+    }
 
 }
