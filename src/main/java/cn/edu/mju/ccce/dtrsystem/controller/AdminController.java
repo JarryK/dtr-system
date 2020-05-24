@@ -287,7 +287,6 @@ public class AdminController {
             return new HashMap<>();
         }
         List<Map<String, Object>> sl2 = new ArrayList<>();
-        Map<String, Object> returnMap = new HashMap<>();
         for (String s : typeList) {
             List<Integer> sl = new ArrayList<>();
             Map<String, Object> map = new HashMap<>();
@@ -322,6 +321,7 @@ public class AdminController {
             map.put("data", sl);
             sl2.add(map);
         }
+        Map<String, Object> returnMap = new HashMap<>();
         returnMap.put("courseList", sl2);
         return returnMap;
     }
@@ -522,7 +522,7 @@ public class AdminController {
         String userNbr = MapTool.getString(inMap, "userNbr");
         String userSex = MapTool.getString(inMap, "userSex");
         String userPass = MapTool.getString(inMap, "userPass");
-        String userPhone = (String) MapTool.getObject(inMap, "userPhone");
+        String userPhone = MapTool.getString(inMap, "userPhone");
         try {
             userNbr.substring(1);
         } catch (Exception e) {
@@ -536,7 +536,7 @@ public class AdminController {
                 return G.page.returnMap(false, msg);
             }
             User user = (User) MapTool.getObject(relMap, "user");
-            user.setUSER_PHONE(BigInteger.valueOf(Integer.valueOf(userPhone)));
+            user.setUSER_PHONE(BigInteger.valueOf(Long.parseLong(userPhone)));
             user.setUSER_SEX(userSex);
             user.setUSER_NAME(userName);
             user.setUSER_PASS(userPass);

@@ -240,3 +240,13 @@ footer p {
 #homeBackground{
     position: fixed;
 }
+#title > h1 {
+    font-size: 3.7rem;
+    /* font-style: oblique; */
+    letter-spacing: 0.5rem;
+}
+#title > h3 {
+    font-size: 1.2rem;
+    font-family: SimHei !important;
+}
+h
