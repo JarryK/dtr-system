@@ -32,7 +32,7 @@
     </div>
     <div class="form-inline my-2 my-lg-0" id="userBox" style="margin-right: 2rem">
         <ul>
-            <li class="dropdown  nav-item">
+            <li class="dropdown  nav-item" style="cursor:pointer;">
                 <a class="nav-link" id="header-userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="glyphicon glyphicon-user adminName">
                              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...
@@ -43,7 +43,8 @@
                     <a class="dropdown-item" id="admin-loginOut" href="javascript:;">退出</a>
                 </div>
             </li>
-            <li><a class="nav-link">使用说明</a></li>
+            <li><a id="update" class="nav-link" style="cursor:pointer;">刷新</a></li>
+            <li><a class="nav-link" style="cursor:pointer;">使用说明</a></li>
         </ul>
     </div>
 </nav>
@@ -64,7 +65,7 @@
              aria-labelledby="showData-tab">
             <div class="row" id="top-show-box">
                 <div class="col-md-6">
-                    <div class=" border jumbotron show-box row " id="number-show-box">
+                    <div class=" border jumbotron show-box row " id="number-show-box" style="padding-right: 0">
                         <div class="col-md-7">
                             <div class="title">
                                 <h3>过去7天课程类别占比情况</h3>
@@ -651,6 +652,9 @@
             App.loader();
             admin.getAdminMsg()
             .then(function(){App.removeLoader();return this;});
+            admin.el('#update').off('click').on('click',function(){
+               admin.getMsgPast();
+            });
         };
         return {
             data: {},

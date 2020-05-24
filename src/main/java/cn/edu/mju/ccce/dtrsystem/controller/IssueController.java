@@ -88,6 +88,11 @@ public class IssueController {
         } catch (Exception e) {
             return G.page.returnMap(false, "请先登录");
         }
+        Map<String, Object> uMsg = (Map<String, Object>) httpSession.getAttribute(sessionID);
+        String type_name = MapTool.getString(uMsg, "TYPE_NAME");
+        if (!"教师".equals(type_name) && !adminBmo.isAdmin(httpSession)) {
+            return G.page.returnMap(false, "非教师用户，不能操作");
+        }
         String courseName = MapTool.getString(inMap, "courseName");
         String typeName = MapTool.getString(inMap, "typeName");
         String courseDetail = MapTool.getString(inMap, "courseDetail");
@@ -105,10 +110,10 @@ public class IssueController {
         try {
             int typeId = courseBmo.getCourseIDbyName(typeName);
             Date courseTime = formatTimeStrToDate(courseTimeStr);
-            Map<String, Object> uMgs = (Map<String, Object>) httpSession.getAttribute(sessionID);
+//            Map<String, Object> uMgs = (Map<String, Object>) httpSession.getAttribute(sessionID);
             //session里面最好改成用户类,不过比较懒  先放着
-            String uName = MapTool.getString(uMgs, "USER_NAME");
-            String userNbr = MapTool.getString(uMgs, "USER_NBR");
+            String uName = MapTool.getString(uMsg, "USER_NAME");
+            String userNbr = MapTool.getString(uMsg, "USER_NBR");
             Course course = new Course();
             course.setCOURSE_NAME(courseName);
             course.setCOURSE_TYPE_ID(typeId);

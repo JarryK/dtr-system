@@ -230,16 +230,16 @@
                         return;
                     } else {
                         var doneList = data.reservationDoneList;
-                        if (doneList == null){
-                            evaluate.el("#stuTable").html('<h4 style="text-align: center;">暂无记录</h4>');
-                            App.topAlert("暂无记录",4);
-                            return;
-                        }
                         evaluate.paddingStuTable(doneList)
                             .then(function () {
                                 evaluate.panelClick();
                                 return this;
                             });
+                        if (doneList == null || doneList == ''){
+                            // evaluate.el("#ud-tr-undefined").html('<h4 style="text-align: center;">暂无记录</h4>');
+                            App.topAlert("暂无记录",4);
+                            return this;
+                        }
                         return;
                     }
                 });
