@@ -73,7 +73,7 @@
     <select id="getRequestList" resultType="java.util.Map">
         SELECT *
         FROM passforget_request
-        WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(CREAT_TIME) ORDER BY CREAT_TIME
+        WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(CREAT_TIME) ORDER BY CREAT_TIME DESC
     </select>
 
     <update id="upDataRequest" parameterType="java.util.Map">
