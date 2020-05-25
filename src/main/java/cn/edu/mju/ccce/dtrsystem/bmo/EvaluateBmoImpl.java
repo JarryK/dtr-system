@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -180,6 +183,29 @@ public class EvaluateBmoImpl implements EvaluateBmo {
             }
             Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
             returnMap.put("EvaluateTea", e);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询评价记录异常：", e);
+            return G.bmo.returnMap(false, "查询评价记录异常");
+        }
+    }
+
+    /**
+     * 获取最近10条对该学生的评价记录
+     * @param stuNbr
+     * @return map key=stuHistory
+     */
+    @Override
+    public Map<String, Object> getStuHistoryEvaluate(String stuNbr) {
+        try {
+            List<Map<String,Object>> e = new ArrayList<>();
+            try {
+                e = evaluateTeaDao.selectStuEvaluate(stuNbr);
+            } catch (NullPointerException ex) {
+                return G.bmo.returnMap(true, "查询为空！");
+            }
+            Map<String, Object> returnMap = G.bmo.returnMap(true, "ok");
+            returnMap.put("stuHistory", e);
             return returnMap;
         } catch (Exception e) {
             log.error("查询评价记录异常：", e);

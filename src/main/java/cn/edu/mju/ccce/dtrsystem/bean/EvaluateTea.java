@@ -2,6 +2,7 @@ package cn.edu.mju.ccce.dtrsystem.bean;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Date;
  * <b>类描述：</b><br>
  * <b>创建时间：</b>2020-03-16 12:31<br>
  */
-public class EvaluateTea implements Serializable {
+public class EvaluateTea extends ArrayList<EvaluateTea> implements Serializable {
     private static final long serialVersionUID = -2795081444631160059L;
     private long EVALUATE_ID;// int(16) NOT NULL AUTO_INCREMENT COMMENT '表ID，自增',
     private long COURSE_ID;// bigint(17) DEFAULT NULL COMMENT '表ID',

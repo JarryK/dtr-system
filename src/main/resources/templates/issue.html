@@ -238,7 +238,7 @@
         <td class="align-middle">{{$value.USER_NAME}}</td>
         <td class="align-middle">
             <p><a href="javascript:;" class="detailed text-decoration-none student-detMsg"
-                  data-courseid="{{$value.course_ID}}">详情</a>
+                  data-stunbr="{{$value.USER_NBR}}">诊断历史</a>
             </p>
         </td>
     </tr>
@@ -471,7 +471,39 @@
                     });
                 });
                 issue.el('.student-detMsg').off('click').on('click', function () {
-                    App.topAlert("暂不支持此功能", 4)
+                    var stuNbr = $(this).data('stunbr');
+                    $.loadJSON('/dtr/eval/view-stu-history', {
+                        stuNbr: stuNbr
+                    }).done(function (data) {
+                        if (!App.checker(data)) {
+                            return;
+                        } else {
+                            var stuHistory = data.stuHistory;
+                            if (stuHistory == '' || stuHistory == null){
+                                return  App.topAlert("历史为空", 4);
+                            }
+                            var h_html = "<table id='stu-history' class=\"table text-center table-striped  shadow\">\n" +
+                                "                <thead class=\"thead-dark\">\n" +
+                                "                <tr>\n" +
+                                "                    <th scope=\"col\">课程名</th>\n" +
+                                "                    <th scope=\"col\">老师名</th>\n" +
+                                "                    <th scope=\"col\">评语</th>\n" +
+                                "                </tr>\n" +
+                                "                </thead>\n" +
+                                "                <tbody>\n";
+                            var b_html = "</tbody></table>";
+                            for (let i = 0; i < stuHistory.length; i++) {
+                                h_html = h_html +  '<tr><td>'+ stuHistory[i].COURSE_NAME + '</td><td>' + stuHistory[i].COURSE_TEACHER_NAME + '</td><td>' + stuHistory[i].EVALUATE_DETAIL+'</td></tr>';
+                            }
+                            Swal.fire({
+                                title: '<strong>诊断历史</strong>',
+                                html:h_html + b_html,
+                                showCloseButton: false,
+                                showCancelButton: false,
+                                width: 900,
+                            })
+                        }
+                    });
                 });
                 issue.el('.compile-btn').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
