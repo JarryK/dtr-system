@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -205,6 +207,49 @@ public class EvaluateController {
         } catch (Exception e) {
             log.error("查询评价异常", e);
             return G.page.returnMap(false, "查询评价异常");
+        }
+    }
+
+    /**
+     * 查看老师评价
+     * @param inMap
+     * @param httpSession
+     * @return
+     */
+    @RequestMapping("/view-stu-history")
+    @ResponseBody
+    public Map<String, Object> viewStuHistry(@RequestBody Map<String, Object> inMap, HttpSession httpSession) {
+        String stuNbr = MapTool.getString(inMap, "stuNbr");
+        try {
+            stuNbr.substring(1);//探测非空
+        } catch (Exception e) {
+            return G.page.returnMap(false, "输入为空！");
+        }
+        try {
+            Map<String, Object> uMsg = User.getUserMap(httpSession);
+            if (uMsg.isEmpty()) {
+                return G.page.returnMap(false, "请先登录");
+            }
+            String userNbr = MapTool.getString(uMsg, "USER_NBR");
+            String userType = MapTool.getString(uMsg, "TYPE_NAME");
+            Map<String, Object> relMap = new HashMap<>();
+            if ("教师".equals(userType)) {
+                relMap = evaluateBmo.getStuHistoryEvaluate(stuNbr);
+                boolean relMapBoolean = G.bmo.returnMapBool(relMap);
+                if (!relMapBoolean) {
+                    String msg = G.bmo.returnMapMsg(relMap);
+                    return G.page.returnMap(false, msg);
+                }
+            } else {
+                return G.page.returnMap(false, "用户权限错误！查询失败");
+            }
+            List<Map<String,Object>> e = (List<Map<String,Object>>) MapTool.getObject(relMap, "stuHistory");
+            Map<String, Object> returnMap = G.page.returnMap(true, "ok");
+            returnMap.put("stuHistory", e);
+            return returnMap;
+        } catch (Exception e) {
+            log.error("查询历史异常", e);
+            return G.page.returnMap(false, "查询历史异常");
         }
     }
 

@@ -308,16 +308,16 @@
                 }
             });
             home.el("#goto-issue").off('click').on('click', function () {
-                App.goIssueByNewPage();
+                App.goIssueBySelf();
             });
             home.el("#goto-reservation").off('click').on('click', function () {
-                App.goReservationByNewPage();
+                App.goReservationBySelf();
             });
             home.el("#goto-evaluate").off('click').on('click', function () {
-                App.goEvaluateByNewPage();
+                App.goEvaluateBySelf();
             });
             home.el("#goto-history").off('click').on('click', function () {
-                App.goHistoryByNewPage();
+                App.goHistoryBySelf();
             });
             home.el("#userLoginOut").off('click').on('click', function () {
                 var uName = home.el('#userMsg').data('uName');

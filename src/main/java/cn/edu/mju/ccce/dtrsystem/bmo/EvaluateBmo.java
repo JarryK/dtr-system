@@ -43,4 +43,12 @@ public interface EvaluateBmo {
      * @return map key=EvaluateTea
      */
     public Map<String,Object> getTeacherEvaluate(String courseID,String studentNbr);
+
+    /**
+     * 获取最近10条对该学生的评价记录
+     * @param stuNbr
+     * @return map key=stuHistory
+     */
+    public Map<String,Object> getStuHistoryEvaluate(String stuNbr);
+
 }

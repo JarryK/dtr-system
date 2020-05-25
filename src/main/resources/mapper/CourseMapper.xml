@@ -148,7 +148,7 @@
     <select id="selectCourseListByTeacherNbr" parameterType="java.lang.String" resultType="cn.edu.mju.ccce.dtrsystem.bean.Course">
         SELECT <include refid="sl_Course" />
         FROM course
-        WHERE COURSE_TEACHER_NBR = #{courseTeacherNbr,jdbcType=VARCHAR} AND DATE_SUB(CURDATE(), INTERVAL 90 DAY) &lt;= date(COURSE_TIME) AND COURSE_STATUS = #{courseStatus,jdbcType=VARCHAR}  ORDER BY COURSE_TIME
+        WHERE COURSE_TEACHER_NBR = #{courseTeacherNbr,jdbcType=VARCHAR} AND DATE_SUB(CURDATE(), INTERVAL 90 DAY) &lt;= date(COURSE_TIME) AND COURSE_STATUS = #{courseStatus,jdbcType=VARCHAR}  ORDER BY COURSE_TIME DESC
     </select>
 
     <update id="updateCourse" parameterType="cn.edu.mju.ccce.dtrsystem.bean.Course">

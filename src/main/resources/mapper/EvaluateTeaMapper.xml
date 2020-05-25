@@ -108,6 +108,13 @@
         FROM evaluate_tea
         WHERE COURSE_ID = #{courseID,jdbcType=VARCHAR} AND USER_NBR = #{userNbr,jdbcType=VARCHAR}
     </select>
+
+    <select id="selectStuEvaluate" parameterType="java.lang.String" resultType="java.util.Map">
+        select <include refid="sl_EvaluateTea" />
+        FROM evaluate_tea
+        WHERE USER_NBR = #{stuNbr,jdbcType=VARCHAR}  limit 10
+    </select>
+
     <update id="updateCourse" parameterType="cn.edu.mju.ccce.dtrsystem.bean.Course">
         UPDATE course
         <set><trim suffixOverrides=",">
