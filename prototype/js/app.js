@@ -125,7 +125,7 @@ var App = function () {
                 //         App.alert('错误', '没有权限', 2);
                 //     }
                 // });
-                window.open("/htmll/issue.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+                window.open("/html/issue.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
 
             },
             goReservationBySelf: function () {
@@ -138,10 +138,10 @@ var App = function () {
                 window.open('/html/history.html', "_self");
             },
             goAdminLoginBySelf:function () {
-                window.open("/html/admin-login.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+                window.open("/html/admin/admin-login.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
             },
             goAdminHomeBySelf:function () {
-                window.open("/html/admin.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+                window.open("/html/admin/admin.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
             },
             //新窗口打开
             goHomeByNewPage: function () {
@@ -158,19 +158,19 @@ var App = function () {
                 window.open('/html/issue.html', "_blank");
             },
             goReservationByNewPage: function () {
-                window.open('/html/reservation', "_blank");
+                window.open('/html/reservation.html', "_blank");
             },
             goEvaluateByNewPage: function () {
-                window.open('/html/evaluate', "_blank");
+                window.open('/html/evaluate.html', "_blank");
             },
             goHistoryByNewPage: function () {
-                window.open('/html/history', "_blank");
+                window.open('/html/history.html', "_blank");
             },
             goAdminLoginByNewPage:function () {
-                window.open("/html/admin-login", "_blank");
+                window.open("/html/admin/admin-login.html", "_blank");
             },
             goAdminHomeByNewPage:function () {
-                window.open("/html/admin", "_blank");
+                window.open("/html/admin/admin.html", "_blank");
             },
         }
     })();
@@ -184,53 +184,58 @@ var App = function () {
             App.setModalsAndBackdropsOrder();
         });
         $("#user-msg").off("click").on("click",function () {
-            $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
-                if (!App.checker(data)) {
-                    return;
-                } else {
-                    var userData = data.user;
-                    App.paddingSelfMsgBox(userData)
-                        .then(function(){$("#myselfMsg").modal('show');return this;})
-                        .then(function(){$("#myselfMsg").data('user',userData);return this;})
-                }
-            });
+            // $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+            //     if (!App.checker(data)) {
+            //         return;
+            //     } else {
+                   
+            //     }
+            // });
+            var userData ={USER_SEX: "男", USER_NAME: "测试教师", TYPE_NAME: "教师", USER_NBR: "1"};
+            App.paddingSelfMsgBox(userData)
+                .then(function(){$("#myselfMsg").modal('show');return this;})
+                .then(function(){$("#myselfMsg").data('user',userData);return this;})
         });
         return {
             loginOut: function (uNbr, uName) {
                 App.selectAlert('操作提示', "用户" + uName + "确定退出吗?", 3, function () {
-                    $.loadJSON('/dtr/user/loginOut', {
-                        uNbr: uNbr
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            App.topAlert("退出成功！", 1, 1300, function () {
-                                window.open("/html/login", "_self");
-                            });
-                            return;
-                        }
+                    // $.loadJSON('/dtr/user/loginOut', {
+                    //     uNbr: uNbr
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                           
+                    //         return;
+                    //     }
+                    // });
+                    App.topAlert("退出成功！", 1, 1300, function () {
+                        window.open("/html/login", "_self");
                     });
                 })
             },
             getUserMsg: function (callback) {
                 return $.Deferred(function (defer) {
-                    $.loadJSON('/dtr/user/getUser').done(function (data) {
-                        if (!App.checker(data)) {
-                            App.alert('访问失败', '请先登录', 2, function () {
-                                App.goLoginBySelf();
-                                defer.resolve();
-                            });
-                        } else {
-                            $('.header-userName').html(data.user.USER_NAME + "(" + data.user.TYPE_NAME + ")");
-                            $('#header-userDropdown').data("uNbr", data.user.USER_NBR);
-                            $('#header-userDropdown').data("uName", data.user.USER_NAME);
-                            $('#header-userDropdown').data("uType", data.user.TYPE_NAME);
-                            if ($.isFunction(callback)) {
-                                callback(data.user.USER_NBR, data.user.USER_NAME, data.user.TYPE_NAME);
-                            }
-                            defer.resolve();
-                        }
-                    });
+                    data = {user:{creat_TIME: "2020-04-30T09:21:04.000+0000"
+                    ,evaluate_NBR: null
+                    ,type_ID: 2,type_NAME: "教师"
+                    ,update_TIME: "2020-05-12T08:10:29.000+0000"
+                    ,user_ID: 6
+                    ,user_NAME: "测试教师"
+                    ,user_NBR: 1
+                    ,user_PASS: "654321"
+                    ,user_PHONE: null
+                    ,user_SEX: "男"
+                    ,user_STATUS: 0}}
+                    console.log(data);
+                    $('.header-userName').html(data.user.user_NAME + "(" + data.user.type_NAME + ")");
+                    $('#header-userDropdown').data("uNbr", data.user.user_NBR);
+                    $('#header-userDropdown').data("uName", data.user.user_NAME);
+                    $('#header-userDropdown').data("uType", data.user.type_NAME);
+                    if ($.isFunction(callback)) {
+                        callback(data.user.user_NBR, data.user.user_NAME, data.user.type_NAME);
+                    }
+                    defer.resolve();
                 }).promise();
             },
             formatDateString: function (value) {

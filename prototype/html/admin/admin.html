@@ -810,35 +810,37 @@
                     var userNbr = admin.el('#userNbr').val();
                     var userSex = admin.el('#userSex').val();
                     var userPhone = admin.el('#userPhone').val();
-                    $.loadJSON('/dtr/admin/addUser', {
-                        userName: userName,
-                        userType: userType,
-                        userNbr: userNbr,
-                        userSex: userSex,
-                        userPhone: userPhone
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            App.alert("提交成功", '', 1, function () {
+                    App.alert("提交成功", '', 1, function () {
                                 admin.inputClear();
                             });
-                            return;
-                        }
-                    });
+                    // $.loadJSON('/dtr/admin/addUser', {
+                    //     userName: userName,
+                    //     userType: userType,
+                    //     userNbr: userNbr,
+                    //     userSex: userSex,
+                    //     userPhone: userPhone
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                           
+                    //         return;
+                    //     }
+                    // });
                 });
                 admin.el("#admin-loginOut").off("click").on("click", function () {
-                    var adminID = admin.el(".adminName").data("adminID");
-                    $.loadJSON('/dtr/admin/adminOut', {
-                        adminID:adminID
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            App.alert("退出成功", '', 1, function () {App.goAdminLoginBySelf()});
-                            return;
-                        }
-                    });
+                    App.alert("退出成功", '', 1, function () {App.goAdminLoginBySelf()});
+                    // var adminID = admin.el(".adminName").data("adminID");
+                    // $.loadJSON('/dtr/admin/adminOut', {
+                    //     adminID:adminID
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                          
+                    //         return;
+                    //     }
+                    // });
                 });
                 admin.el(".courseDet").off("click").on("click", function () {
                     var courseid = $(this).data("courseid");
@@ -858,36 +860,36 @@
                     var course_name = admin.el("#course_name").val();
                     var course_detail = admin.el("#course_detail").val();
                     var course_time = admin.el("#course_time").val() + ':00';
-                    $.loadJSON('/dtr/issue/updateCourse', {
-                        courseID: courseID,
-                        courseName: course_name,
-                        courseDetail: course_detail,
-                        courseTime: course_time
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            App.alert("修改成功", "", 1, function () {
-                                admin.el("#checkMsgModel").modal("hide");
-                                admin.getCourseList()
-                            });
-                        }
-                    });
+                    // $.loadJSON('/dtr/issue/updateCourse', {
+                    //     courseID: courseID,
+                    //     courseName: course_name,
+                    //     courseDetail: course_detail,
+                    //     courseTime: course_time
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                    //         App.alert("修改成功", "", 1, function () {
+                    //             admin.el("#checkMsgModel").modal("hide");
+                    //             admin.getCourseList()
+                    //         });
+                    //     }
+                    // });
                 });
                 admin.el('.del-course').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
                     App.selectAlert("操作提示", "确定取消吗？", 3, function () {
-                        $.loadJSON('/dtr/issue/cancelCourse', {
-                            courseID: courseID
-                        }).done(function (data) {
-                            if (!App.checker(data)) {
-                                return;
-                            } else {
-                                App.alert("取消成功", "", 1, function () {
-                                    admin.getCourseList()
-                                });
-                            }
-                        });
+                        // $.loadJSON('/dtr/issue/cancelCourse', {
+                        //     courseID: courseID
+                        // }).done(function (data) {
+                        //     if (!App.checker(data)) {
+                        //         return;
+                        //     } else {
+                        //         App.alert("取消成功", "", 1, function () {
+                        //             admin.getCourseList()
+                        //         });
+                        //     }
+                        // });
                     });
                 });
                 admin.el('.stu-compile').off('click').on('click', function () {
@@ -930,38 +932,40 @@
                     var userSex = admin.el("#user_sex").val();
                     var userPass = admin.el("#user_pass").val();
                     var userPhone = admin.el("#user_phone").val();
-                    $.loadJSON('/dtr/admin/upUserDet', {
-                        userName: userName,
-                        userNbr: userNbr,
-                        userSex: userSex,
-                        userPass: userPass,
-                        userPhone:userPhone
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            App.alert("修改成功", "", 1, function () {
-                                admin.el("#checkMsgModel").modal("hide");
-                                admin.getUserList();
-                            });
-                        }
-                    });
+                    App.alert("修改成功", "", 1, function () {
+                                admin.el("#checkMsgModel").modal("hide");})
+                    // $.loadJSON('/dtr/admin/upUserDet', {
+                    //     userName: userName,
+                    //     userNbr: userNbr,
+                    //     userSex: userSex,
+                    //     userPass: userPass,
+                    //     userPhone:userPhone
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                           
+                    //             admin.getUserList();
+                    //         });
+                    //     }
+                    // });
                 });
                 admin.el('.delCourseType').off('click').on('click', function () {
                     var ctName = $(this).data("ctname");
                         admin.checkPass(function () {
                             App.selectAlert("操作提示", "确定删除吗？", 3, function () {
-                                $.loadJSON('/dtr/admin/delCType', {
-                                    ctName: ctName
-                                }).done(function (data) {
-                                    if (!App.checker(data)) {
-                                        return;
-                                    } else {
-                                        App.alert("删除成功", "", 1, function () {
+                                App.alert("删除成功", "", 1, function () {
                                             admin.getMsgPast();
                                         });
-                                    }
-                                });
+                                // $.loadJSON('/dtr/admin/delCType', {
+                                //     ctName: ctName
+                                // }).done(function (data) {
+                                //     if (!App.checker(data)) {
+                                //         return;
+                                //     } else {
+                                        
+                                //     }
+                                // });
                             });
                         });
                 });
@@ -969,17 +973,18 @@
                     var ctName = admin.el('#newCourseType').val();
                         admin.checkPass(function () {
                             App.selectAlert("操作提示", "确定提交吗？", 3, function () {
-                                $.loadJSON('/dtr/admin/addCType', {
-                                    ctName: ctName
-                                }).done(function (data) {
-                                    if (!App.checker(data)) {
-                                        return;
-                                    } else {
-                                        App.alert("新增成功", "", 1, function () {
+                                App.alert("新增成功", "", 1, function () {
                                             admin.getMsgPast();
                                         });
-                                    }
-                                });
+                                // $.loadJSON('/dtr/admin/addCType', {
+                                //     ctName: ctName
+                                // }).done(function (data) {
+                                //     if (!App.checker(data)) {
+                                //         return;
+                                //     } else {
+                                       
+                                //     }
+                                // });
                             });
                         });
                 });
@@ -987,18 +992,19 @@
                     var id = $(this).data('rid');
                         admin.checkPass(function () {
                             App.selectAlert("操作提示", "确定同意吗？", 3, function () {
-                                $.loadJSON('/dtr/admin/resetPass', {
-                                    id: id,
-                                    status: 1
-                                }).done(function (data) {
-                                    if (!App.checker(data)) {
-                                        return;
-                                    } else {
-                                        App.alert("操作成功", "", 1, function () {
+                                App.alert("操作成功", "", 1, function () {
                                             admin.getMsgPast();
                                         });
-                                    }
-                                });
+                                // $.loadJSON('/dtr/admin/resetPass', {
+                                //     id: id,
+                                //     status: 1
+                                // }).done(function (data) {
+                                //     if (!App.checker(data)) {
+                                //         return;
+                                //     } else {
+                                       
+                                //     }
+                                // });
                             });
                         });
                 });
@@ -1006,28 +1012,26 @@
                     var id = $(this).data('rid');
                         admin.checkPass(function () {
                             App.selectAlert("操作提示", "确定不同意吗？", 3, function () {
-                                $.loadJSON('/dtr/admin/resetPass', {
-                                    id: id,
-                                    status: 2
-                                }).done(function (data) {
-                                    if (!App.checker(data)) {
-                                        return;
-                                    } else {
-                                        App.alert("操作成功", "", 1, function () {
+                                App.alert("操作成功", "", 1, function () {
                                             admin.getMsgPast();
                                         });
-                                    }
-                                });
+                                // $.loadJSON('/dtr/admin/resetPass', {
+                                //     id: id,
+                                //     status: 2
+                                // }).done(function (data) {
+                                //     if (!App.checker(data)) {
+                                //         return;
+                                //     } else {
+                                       
+                                //     }
+                                // });
                             });
                         });
                 });
             },
             getMsgPast:function(){
-                $.loadJSON('/dtr/admin/getHistory').done(function (data) {
-                    if (!App.checker(data)) {
-                        return;
-                    } else {
-                        var dataPie = data.pastWeek;
+                var data ={"allTypeList":[{"COURSE_TYPE_ID":1,"COURSE_TYPE_NAME":"语文"},{"COURSE_TYPE_ID":2,"COURSE_TYPE_NAME":"数学"},{"COURSE_TYPE_ID":3,"COURSE_TYPE_NAME":"英语"},{"COURSE_TYPE_ID":4,"COURSE_TYPE_NAME":"物理"},{"COURSE_TYPE_ID":5,"COURSE_TYPE_NAME":"化学"},{"COURSE_TYPE_ID":6,"COURSE_TYPE_NAME":"生物"},{"COURSE_TYPE_ID":7,"COURSE_TYPE_NAME":"政治"}],"typeList":["语文","数学","英语","物理","化学","生物","政治"],"requestList":[],"health":{"code":"0","message":"ok"},"pastMonth":{"courseList":[{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0],"name":"语文","type":"line"},{"data":[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"数学","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3,0,0,0,0,0,0,0,0,0],"name":"英语","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0],"name":"物理","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],"name":"化学","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"生物","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"政治","type":"line"}]},"pastMonthCourseList":[{"COURSE_TYPE_ID":7,"CREAT_TIME":"2020-04-12T13:44:16.000+0000","COURSE_TYPE_NAME":"政治","COURSE_ID":2004122144158768,"UPDATE_TIME":"2020-04-19T06:43:44.000+0000","EVALUATE_NBR":2004122144155468,"COURSE_NAME":"马克思主义的诞生","COURSE_STU_NBR":3,"COURSE_TIME":"2020-05-23T01:45:00.000+0000","COURSE_STATUS":2,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"123132","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-04-12T13:44:30.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2004122144299378,"UPDATE_TIME":"2020-04-12T13:45:00.000+0000","EVALUATE_NBR":2004122144296006,"COURSE_NAME":"123","COURSE_STU_NBR":2,"COURSE_TIME":"2020-05-29T13:44:00.000+0000","COURSE_STATUS":1,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"131","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":4,"CREAT_TIME":"2020-04-19T07:39:19.000+0000","COURSE_TYPE_NAME":"物理","COURSE_ID":2004191539194508,"UPDATE_TIME":"2020-04-30T08:09:06.000+0000","EVALUATE_NBR":2004191539199476,"COURSE_NAME":"qwe","COURSE_STU_NBR":2,"COURSE_TIME":"2020-06-05T06:30:00.000+0000","COURSE_STATUS":2,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"qwe","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-04-29T05:57:16.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2004291357159571,"UPDATE_TIME":"2020-04-30T05:48:00.000+0000","EVALUATE_NBR":2004291357153728,"COURSE_NAME":"唐诗鉴赏","COURSE_STU_NBR":3,"COURSE_TIME":"2020-06-04T05:50:00.000+0000","COURSE_STATUS":1,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-04-29T05:58:23.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2004291358221627,"UPDATE_TIME":"2020-05-12T07:56:01.000+0000","EVALUATE_NBR":2004291358228010,"COURSE_NAME":"七言律诗","COURSE_STU_NBR":3,"COURSE_TIME":"2020-05-24T06:50:00.000+0000","COURSE_STATUS":1,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"12312313","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":2,"CREAT_TIME":"2020-04-29T06:03:03.000+0000","COURSE_TYPE_NAME":"数学","COURSE_ID":2004291403038581,"UPDATE_TIME":"2020-05-12T07:56:01.000+0000","EVALUATE_NBR":2004291403032649,"COURSE_NAME":"期中试卷讲解","COURSE_STU_NBR":4,"COURSE_TIME":"2020-05-16T05:00:00.000+0000","COURSE_STATUS":1,"COURSE_TEACHER_NBR":1234567891,"COURSE_DETAIL":"最后两道大题","COURSE_DONE_STU_NBR":1,"COURSE_TEACHER_NAME":"李四"},{"COURSE_TYPE_ID":4,"CREAT_TIME":"2020-04-29T06:04:22.000+0000","COURSE_TYPE_NAME":"英语","COURSE_ID":2004291404213803,"UPDATE_TIME":"2020-05-12T07:56:01.000+0000","EVALUATE_NBR":2004291404216736,"COURSE_NAME":"受力分析讲解","COURSE_STU_NBR":5,"COURSE_TIME":"2020-05-30T06:00:00.000+0000","COURSE_STATUS":1,"COURSE_TEACHER_NBR":1234567891,"COURSE_DETAIL":"123123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"李四"},{"COURSE_TYPE_ID":5,"CREAT_TIME":"2020-04-29T06:05:02.000+0000","COURSE_TYPE_NAME":"化学","COURSE_ID":2004291405017061,"UPDATE_TIME":"2020-06-09T09:50:00.000+0000","EVALUATE_NBR":2004291405013517,"COURSE_NAME":"化学方程式解答","COURSE_STU_NBR":5,"COURSE_TIME":"2020-05-31T06:04:00.000+0000","COURSE_STATUS":1,"COURSE_TEACHER_NBR":1234567891,"COURSE_DETAIL":"13231231","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"李四"},{"COURSE_TYPE_ID":3,"CREAT_TIME":"2020-04-29T06:07:17.000+0000","COURSE_TYPE_NAME":"英语","COURSE_ID":2004291407175393,"UPDATE_TIME":"2020-05-02T05:50:00.000+0000","EVALUATE_NBR":2004291407176389,"COURSE_NAME":"第三单元单词辅导","COURSE_STU_NBR":5,"COURSE_TIME":"2020-05-31T06:00:00.000+0000","COURSE_STATUS":1,"COURSE_TEACHER_NBR":654321,"COURSE_DETAIL":"312","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":3,"CREAT_TIME":"2020-04-29T06:08:59.000+0000","COURSE_TYPE_NAME":"英语","COURSE_ID":2004291408592734,"UPDATE_TIME":"2020-05-02T07:50:00.000+0000","EVALUATE_NBR":2004291408594082,"COURSE_NAME":"第三单元课文朗读辅导","COURSE_STU_NBR":5,"COURSE_TIME":"2020-05-31T08:00:00.000+0000","COURSE_STATUS":1,"COURSE_TEACHER_NBR":654321,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":3,"CREAT_TIME":"2020-04-29T06:09:28.000+0000","COURSE_TYPE_NAME":"英语","COURSE_ID":2004291409289297,"UPDATE_TIME":"2020-05-12T07:56:01.000+0000","EVALUATE_NBR":2004291409286854,"COURSE_NAME":"期中试卷答疑","COURSE_STU_NBR":8,"COURSE_TIME":"2020-05-31T06:00:00.000+0000","COURSE_STATUS":1,"COURSE_TEACHER_NBR":654321,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-05-02T06:43:26.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2005021443255711,"UPDATE_TIME":"2020-05-02T06:45:30.000+0000","EVALUATE_NBR":2005021443256661,"COURSE_NAME":"唐诗鉴赏","COURSE_STU_NBR":3,"COURSE_TIME":"2020-05-25T06:40:00.000+0000","COURSE_STATUS":2,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"李白唐诗鉴赏","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"}],"pastWeek":[{"name":"语文","courseList":[{"course_DETAIL":"123","update_TIME":"2020-04-30T05:48:00.000+0000","creat_TIME":"2020-04-29T05:57:16.000+0000","course_ID":2004291357159571,"evaluate_NBR":2004291357153728,"course_STATUS":1,"course_NAME":"唐诗鉴赏","course_TIME":"2020-06-04T05:50:00.000+0000","course_TEACHER_NAME":"测试教师","course_TEACHER_NBR":1,"course_TYPE_NAME":"语文","course_STU_NBR":3,"course_DONE_STU_NBR":0,"course_TYPE_ID":1}],"value":1,"tID":1},{"name":"数学","courseList":[],"value":0,"tID":2},{"name":"英语","courseList":[],"value":0,"tID":3},{"name":"物理","courseList":[{"course_DETAIL":"qwe","update_TIME":"2020-04-30T08:09:06.000+0000","creat_TIME":"2020-04-19T07:39:19.000+0000","course_ID":2004191539194508,"evaluate_NBR":2004191539199476,"course_STATUS":2,"course_NAME":"qwe","course_TIME":"2020-06-05T06:30:00.000+0000","course_TEACHER_NAME":"测试教师","course_TEACHER_NBR":1,"course_TYPE_NAME":"物理","course_STU_NBR":2,"course_DONE_STU_NBR":0,"course_TYPE_ID":4}],"value":1,"tID":4},{"name":"化学","courseList":[],"value":0,"tID":5},{"name":"生物","courseList":[],"value":0,"tID":6},{"name":"政治","courseList":[],"value":0,"tID":7}]};
+                 var dataPie = data.pastWeek;
                         var typeData = data.typeList;
                         var allTypeList = data.allTypeList;
                         var courseData = data.pastMonth.courseList;
@@ -1046,27 +1050,25 @@
                             .then(function(){admin.panelClick();return this;})
                             .then(function () {App.randomBackgroundColor("courses-show-box");return this});
                         return;
-                    }
-                });
+            
             },
             getCourseList:function(){
-                $.loadJSON('/dtr/admin/getCouList').done(function (data) {
-                    if (!App.checker(data)) {
-                        return;
-                    } else {
-                        var dataList = data.oneMonth;
+                var data ={"oneMonth":[{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-06-09T09:14:07.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2006091714071582,"UPDATE_TIME":"2020-06-09T09:14:07.000+0000","EVALUATE_NBR":2006091714075804,"COURSE_NAME":"123","COURSE_STU_NBR":1,"COURSE_TIME":"2020-06-10T09:10:00.000+0000","COURSE_STATUS":0,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-06-09T09:14:07.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2006091714071582,"UPDATE_TIME":"2020-06-09T09:14:07.000+0000","EVALUATE_NBR":2006091714075804,"COURSE_NAME":"123","COURSE_STU_NBR":1,"COURSE_TIME":"2020-06-10T09:10:00.000+0000","COURSE_STATUS":0,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-06-09T09:14:07.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2006091714071582,"UPDATE_TIME":"2020-06-09T09:14:07.000+0000","EVALUATE_NBR":2006091714075804,"COURSE_NAME":"123","COURSE_STU_NBR":1,"COURSE_TIME":"2020-06-10T09:10:00.000+0000","COURSE_STATUS":0,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-06-09T09:14:07.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2006091714071582,"UPDATE_TIME":"2020-06-09T09:14:07.000+0000","EVALUATE_NBR":2006091714075804,"COURSE_NAME":"123","COURSE_STU_NBR":1,"COURSE_TIME":"2020-06-10T09:10:00.000+0000","COURSE_STATUS":0,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-06-09T09:14:07.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2006091714071582,"UPDATE_TIME":"2020-06-09T09:14:07.000+0000","EVALUATE_NBR":2006091714075804,"COURSE_NAME":"123","COURSE_STU_NBR":1,"COURSE_TIME":"2020-06-10T09:10:00.000+0000","COURSE_STATUS":0,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-06-09T09:14:07.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2006091714071582,"UPDATE_TIME":"2020-06-09T09:14:07.000+0000","EVALUATE_NBR":2006091714075804,"COURSE_NAME":"123","COURSE_STU_NBR":1,"COURSE_TIME":"2020-06-10T09:10:00.000+0000","COURSE_STATUS":0,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"},{"COURSE_TYPE_ID":1,"CREAT_TIME":"2020-06-09T09:14:07.000+0000","COURSE_TYPE_NAME":"语文","COURSE_ID":2006091714071582,"UPDATE_TIME":"2020-06-09T09:14:07.000+0000","EVALUATE_NBR":2006091714075804,"COURSE_NAME":"123","COURSE_STU_NBR":1,"COURSE_TIME":"2020-06-10T09:10:00.000+0000","COURSE_STATUS":0,"COURSE_TEACHER_NBR":1,"COURSE_DETAIL":"123","COURSE_DONE_STU_NBR":0,"COURSE_TEACHER_NAME":"测试教师"}],"health":{"code":"0","message":"ok"}};
+                var dataList = data.oneMonth;
                         admin.el("#check-msg-container").data("courseList",dataList);
                         admin.paddingData(dataList,"show-issue-box-art","#show-issue-box-container").then(function(){admin.panelClick();return this;});
                         return;
+                        $.loadJSON('/dtr/admin/getCouList').done(function (data) {
+                    if (!App.checker(data)) {
+                        return;
+                    } else {
+                       
                     }
                 });
             },
             getUserList:function(){
-                $.loadJSON('/dtr/admin/getAllUser').done(function (data) {
-                    if (!App.checker(data)) {
-                        return;
-                    } else {
-                        var stuList = data.stuList;
+                var data = {"stuList":[{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":81,"user_SEX":"男","user_NAME":"测试学生1","user_STATUS":0,"user_PASS":"123456","user_PHONE":15033334444,"evaluate_NBR":null,"user_NBR":1234567890,"type_ID":1,"type_NAME":"学生"},{"update_TIME":"2020-04-30T09:18:12.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":82,"user_SEX":"男","user_NAME":"测试学生2","user_STATUS":0,"user_PASS":"123456","user_PHONE":1312312,"evaluate_NBR":null,"user_NBR":1234567891,"type_ID":1,"type_NAME":"学生"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":83,"user_SEX":"男","user_NAME":"测试学生3","user_STATUS":0,"user_PASS":"123456","user_PHONE":13577777777,"evaluate_NBR":null,"user_NBR":1234567892,"type_ID":1,"type_NAME":"学生"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":84,"user_SEX":"女","user_NAME":"测试学生4","user_STATUS":0,"user_PASS":"123456","user_PHONE":13677777777,"evaluate_NBR":null,"user_NBR":1234567893,"type_ID":1,"type_NAME":"学生"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":85,"user_SEX":"女","user_NAME":"测试学生5","user_STATUS":0,"user_PASS":"123456","user_PHONE":15899999999,"evaluate_NBR":null,"user_NBR":1234567894,"type_ID":1,"type_NAME":"学生"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":86,"user_SEX":"女","user_NAME":"测试学生6","user_STATUS":0,"user_PASS":"123456","user_PHONE":18200005555,"evaluate_NBR":null,"user_NBR":1234567895,"type_ID":1,"type_NAME":"学生"}],"health":{"code":"0","message":"ok"},"teaList":[{"update_TIME":"2020-05-12T08:10:29.000+0000","creat_TIME":"2020-04-30T09:21:04.000+0000","user_ID":6,"user_SEX":"男","user_NAME":"测试教师","user_STATUS":0,"user_PASS":"654321","user_PHONE":null,"evaluate_NBR":null,"user_NBR":1,"type_ID":2,"type_NAME":"教师"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":87,"user_SEX":"男","user_NAME":"测试教师1","user_STATUS":0,"user_PASS":"123456","user_PHONE":19146546545,"evaluate_NBR":null,"user_NBR":1234567896,"type_ID":2,"type_NAME":"教师"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":88,"user_SEX":"男","user_NAME":"测试教师2","user_STATUS":0,"user_PASS":"123456","user_PHONE":13254545454,"evaluate_NBR":null,"user_NBR":1234567897,"type_ID":2,"type_NAME":"教师"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":89,"user_SEX":"男","user_NAME":"测试教师3","user_STATUS":0,"user_PASS":"123456","user_PHONE":19888888888,"evaluate_NBR":null,"user_NBR":1234567898,"type_ID":2,"type_NAME":"教师"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":90,"user_SEX":"女","user_NAME":"测试教师4","user_STATUS":0,"user_PASS":"123456","user_PHONE":19008787888,"evaluate_NBR":null,"user_NBR":1234567899,"type_ID":2,"type_NAME":"教师"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":91,"user_SEX":"女","user_NAME":"测试教师5","user_STATUS":0,"user_PASS":"123456","user_PHONE":14500000066,"evaluate_NBR":null,"user_NBR":1234567900,"type_ID":2,"type_NAME":"教师"},{"update_TIME":"2020-04-29T15:01:36.000+0000","creat_TIME":"2020-04-29T15:01:36.000+0000","user_ID":92,"user_SEX":"女","user_NAME":"测试教师6","user_STATUS":0,"user_PASS":"123456","user_PHONE":19568868888,"evaluate_NBR":null,"user_NBR":1234567901,"type_ID":2,"type_NAME":"教师"}]};
+                var stuList = data.stuList;
                         var teaList = data.teaList;
                         admin.el("#show-stu-list-container").data("data",stuList);
                         admin.el("#show-tea-list-container").data("data",teaList);
@@ -1074,8 +1076,6 @@
                             .then(function(){admin.paddingData(teaList,"show-tea-list-art","#show-tea-list-container");return this})
                             .then(function(){admin.panelClick();return this;});
                             return;
-                    }
-                });
             },
             paddingCourseCheckShowModel:function (data) {
                 return $.Deferred(function (defer) {
@@ -1092,20 +1092,13 @@
             },
             getAdminMsg:function () {
                 return $.Deferred(function (defer) {
-                    $.loadJSON('/dtr/admin/getAdmin').done(function (data) {
-                        if (!App.checker(data)) {
-                            App.alert("管理员未登录！","",2,function(){
-                               App.goAdminLoginBySelf();
-                            });
-                        } else {
+                    var data = {"health":{"code":"0","message":"ok"},"admin":{"phone":123123123,"pass":"123456","sex":"男","name":"余","id":"admin"}};
                             var adminName = data.admin.name;
                             var adminID = data.admin.id;
                             admin.el(".adminName").html(adminName);
                             admin.el(".adminName").data("adminID",adminID);
                             admin.el(".adminName").data("adminPass",data.admin.pass);
                             admin.getMsgPast();
-                        }
-                    });
                     defer.resolve();
                 }).promise();
             },
@@ -1131,11 +1124,8 @@
                 }
             },
             getCourseType:function(callback){
-                    $.loadJSON('/dtr/admin/getHistory').done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            var dataPie = data.pastWeek;
+                var data = {"allTypeList":[{"COURSE_TYPE_ID":1,"COURSE_TYPE_NAME":"语文"},{"COURSE_TYPE_ID":2,"COURSE_TYPE_NAME":"数学"},{"COURSE_TYPE_ID":3,"COURSE_TYPE_NAME":"英语"},{"COURSE_TYPE_ID":4,"COURSE_TYPE_NAME":"物理"},{"COURSE_TYPE_ID":5,"COURSE_TYPE_NAME":"化学"},{"COURSE_TYPE_ID":6,"COURSE_TYPE_NAME":"生物"},{"COURSE_TYPE_ID":7,"COURSE_TYPE_NAME":"政治"}],"typeList":["语文","数学","英语","物理","化学","生物","政治"],"requestList":[],"health":{"code":"0","message":"ok"},"pastMonth":{"courseList":[{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"语文","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"数学","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"英语","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"物理","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"化学","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"生物","type":"line"},{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"name":"政治","type":"line"}]},"pastMonthCourseList":[],"pastWeek":[{"name":"语文","courseList":[],"value":0,"tID":1},{"name":"数学","courseList":[],"value":0,"tID":2},{"name":"英语","courseList":[],"value":0,"tID":3},{"name":"物理","courseList":[],"value":0,"tID":4},{"name":"化学","courseList":[],"value":0,"tID":5},{"name":"生物","courseList":[],"value":0,"tID":6},{"name":"政治","courseList":[],"value":0,"tID":7}]};
+                var dataPie = data.pastWeek;
                             var typeData = data.typeList;
                             var allTypeList = data.allTypeList;
                             var courseData = data.pastMonth.courseList;
@@ -1148,8 +1138,6 @@
                                 .then(function () {admin.panelClick();return this})
                                 .then(function () {App.randomBackgroundColor("courses-show-box");return this});
                             return;
-                        }
-                    });
             },
             inputClear:function(){
                 admin.el('#userName').val('');

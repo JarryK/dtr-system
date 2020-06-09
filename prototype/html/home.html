@@ -14,7 +14,7 @@
 
 <body>
 
-<iframe id="homeBackground" height="100%" width="100%" src="/dtr/animate/homeBackground"></iframe>
+<iframe id="homeBackground" height="100%" width="100%" src="/html/animate/homeBackground.html"></iframe>
 <div class="swiper-container" style=" width: 100%;height: 100%;">
     <header class="header shadow-sm rounded">
         <div class="top-menu">
@@ -103,7 +103,7 @@
                         <!--grey box -->
                     </div>
                     <!--/span3-->
-                    <div class="col-md-3">
+                    <div class="col-md-3" style="display: none;">
                         <div class="grey-box-icon">
                             <div class="icon-box-top grey-box-icon-pos">
                                 <img src="/images/guide/history.png" alt="">
@@ -311,13 +311,17 @@
                 App.goIssueBySelf();
             });
             home.el("#goto-reservation").off('click').on('click', function () {
-                App.goReservationBySelf();
+                // App.goReservationBySelf();
+                App.topAlert("暂不提供预览",3);
             });
             home.el("#goto-evaluate").off('click').on('click', function () {
-                App.goEvaluateBySelf();
+                // App.goEvaluateBySelf();
+                App.topAlert("暂不提供预览",3);
+
             });
             home.el("#goto-history").off('click').on('click', function () {
-                App.goHistoryBySelf();
+                // App.goHistoryBySelf();
+                App.topAlert("暂不提供预览",3);
             });
             home.el("#userLoginOut").off('click').on('click', function () {
                 var uName = home.el('#userMsg').data('uName');
@@ -325,31 +329,63 @@
                 App.loginOut(uNbr, uName);
             });
             home.el("#goto-myself").off("click").on("click",function () {
-                $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
-                    if (!App.checker(data)) {
-                        return;
-                    } else {
-                        var userData = data.user;
+                // $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+                //     if (!App.checker(data)) {
+                //         return;
+                //     } else {
+                //         var userData = data.user;
+                //         home.paddingSelfMsgBox(userData)
+                //             .then(function(){home.el("#myselfMsg").modal('show');return this;})
+                //             .then(function(){home.el("#myselfMsg").data('user',userData);return this;})
+                //             .then(function(){home.modelCheck();return this;});
+                //     }
+                // });
+                data = {user:{creat_TIME: "2020-04-30T09:21:04.000+0000"
+                    ,evaluate_NBR: null
+                    ,type_ID: 2,type_NAME: "教师"
+                    ,update_TIME: "2020-05-12T08:10:29.000+0000"
+                    ,user_ID: 6
+                    ,user_NAME: "测试教师"
+                    ,user_NBR: 1
+                    ,user_PASS: "654321"
+                    ,user_PHONE: null
+                    ,user_SEX: "男"
+                    ,user_STATUS: 0}}
+                    var userData = data.user;
                         home.paddingSelfMsgBox(userData)
                             .then(function(){home.el("#myselfMsg").modal('show');return this;})
                             .then(function(){home.el("#myselfMsg").data('user',userData);return this;})
                             .then(function(){home.modelCheck();return this;});
-                    }
-                });
             });
             // 偷懒直接给复制一份
             home.el("#user").off("click").on("click",function () {
-                $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
-                    if (!App.checker(data)) {
-                        return;
-                    } else {
-                        var userData = data.user;
+                // $.loadJSON('/dtr/user/getUserMsg').done(function (data) {
+                //     if (!App.checker(data)) {
+                //         return;
+                //     } else {
+                //         var userData = data.user;
+                //         home.paddingSelfMsgBox(userData)
+                //             .then(function(){home.el("#myselfMsg").modal('show');return this;})
+                //             .then(function(){home.el("#myselfMsg").data('user',userData);return this;})
+                //             .then(function(){home.modelCheck();return this;});
+                //     }
+                // });
+                data = {user:{creat_TIME: "2020-04-30T09:21:04.000+0000"
+                    ,evaluate_NBR: null
+                    ,type_ID: 2,type_NAME: "教师"
+                    ,update_TIME: "2020-05-12T08:10:29.000+0000"
+                    ,user_ID: 6
+                    ,user_NAME: "测试教师"
+                    ,user_NBR: 1
+                    ,user_PASS: "654321"
+                    ,user_PHONE: null
+                    ,user_SEX: "男"
+                    ,user_STATUS: 0}}
+                    var userData = data.user;
                         home.paddingSelfMsgBox(userData)
                             .then(function(){home.el("#myselfMsg").modal('show');return this;})
                             .then(function(){home.el("#myselfMsg").data('user',userData);return this;})
                             .then(function(){home.modelCheck();return this;});
-                    }
-                });
             });
     };
         return {
@@ -363,11 +399,11 @@
                     home.el('.userName').html(uName + "(" + type + ")");
                     home.el('#userMsg').data("uName", uName);
                     home.el('#userMsg').data("type", type);
-                    if(type === "教师" ){
-                        home.el('#reservation-box').hide();
-                    }else {
-                        home.el('#issue-box').hide();
-                    }
+                    // if(type === "教师" ){
+                    //     home.el('#reservation-box').hide();
+                    // }else {
+                    //     home.el('#issue-box').hide();
+                    // }
                 }).then(function () {App.setWhere('home');return this}).then(function () { home.pageCssInit();return this}).then(function () { bindEvents();return this});
                 return this
             },
@@ -424,9 +460,7 @@
                 }).promise();
             },
             clockInit:function (){
-                var type = home.el('#userMsg').data("type");
-                if (type !== "教师"){
-                    return $.Deferred(function (defer) {
+                return $.Deferred(function (defer) {
                         $("#clock").drawClock(
                             //{
                             // hCol: 'xxx',// 时针颜色
@@ -439,13 +473,14 @@
                         );
                         defer.resolve();
                     }).promise();
-                }else {
-                    return $.Deferred(function (defer) {
-                        defer.resolve();
-                    }).promise();
-                }
-
-
+                // var type = home.el('#userMsg').data("type");
+                // if (type !== "教师"){
+                   
+                // }else {
+                //     return $.Deferred(function (defer) {
+                //         defer.resolve();
+                //     }).promise();
+                // }
             },
             pageCssInit: function () {
                 home.clockInit().then(function () {home.swiperAllInit()}).then(function(){home.swiperAboutInit();return this;});
@@ -484,36 +519,39 @@
                     if (pass.length<6){
                         App.topAlert("密码不能小于6位！",2);
                         return;
-                    }
-                    $.loadJSON('/dtr/user/changeSelfMsg',{
-                        pass:pass
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            App.alert("更改成功",'');
+                    }else{
+                        App.alert("更改成功",'');
                             home.el("#passModel").modal('hide');
                             home.passModelClear();
-                        }
-                    })
+                    }
+                    // $.loadJSON('/dtr/user/changeSelfMsg',{
+                    //     pass:pass
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                           
+                    //     }
+                    // })
                 });
                 home.el(".pass-close").off("click").on("click",function () {
                     home.el("#passModel").modal('hide');
                     home.passModelClear();
                 });
                 home.el(".input-modal-yes").off('click').on('click',function () {
-                    var sex = home.el('#sex').val();
-                    var phone = home.el('#phone').val();
-                    $.loadJSON('/dtr/user/changeSelfMsg',{
-                        sex:sex,
-                        phone:phone
-                    }).done(function (data) {
-                        if (!App.checker(data)){
-                            return;
-                        }else {
-                            App.alert("更改成功",'');
-                        }
-                    })
+                    App.alert("更改成功",'');
+                    // var sex = home.el('#sex').val();
+                    // var phone = home.el('#phone').val();
+                    // $.loadJSON('/dtr/user/changeSelfMsg',{
+                    //     sex:sex,
+                    //     phone:phone
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)){
+                    //         return;
+                    //     }else {
+                            
+                    //     }
+                    // })
                 });
             },
             passModelClear:function () {

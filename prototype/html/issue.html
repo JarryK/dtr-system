@@ -344,22 +344,7 @@
                 var className = issue.el('#className').val();
                 var stuNbr = issue.el('#stuNbr').val();
                 var classContent = issue.el('#classContent').val();
-                $.loadJSON('/dtr/issue/insert', {
-                    courseName: className,
-                    typeName: classType,
-                    courseDetail: classContent,
-                    courseStuNbr: stuNbr,
-                    courseTime: classTime
-                }).done(function (data) {
-                    if (!App.checker(data)) {
-                        return;
-                    } else {
-                        App.alert("提交成功", '', 1, function () {
-                            issue.inputClear();
-                        });
-                        return;
-                    }
-                });
+                App.alert("提交成功", '', 1, function () {issue.inputClear();});
                 $('#checkInput').modal('hide');
                 issue.el('.modal-in').html('');
             });
@@ -397,12 +382,121 @@
                 issue.el('.inputContent').html('');
             },
             getCourseList: function () {
-                $.loadJSON('/dtr/issue/getSelfIssue').done(function (data) {
-                    if (!App.checker(data)) {
-                        return;
-                    } else {
-                        var courseList = data.courseList;
-                        var courseDoneList = data.courseDoneList;
+                // $.loadJSON('/dtr/issue/getSelfIssue').done(function (data) {
+                //     if (!App.checker(data)) {
+                //         return;
+                //     } else {
+                     
+                //     }
+                // });
+                var courseList = [{
+                            course_DETAIL: "123",
+                            course_DONE_STU_NBR: 0,
+                            course_ID: 2006091714071582,
+                            course_NAME: "123",
+                            course_STATUS: 0,
+                            course_STU_NBR: 1,
+                            course_TEACHER_NAME: "测试教师",
+                            course_TEACHER_NBR: 1,
+                            course_TIME: "2020-06-10T09:10:00.000+0000",
+                            course_TYPE_ID: 1,
+                            course_TYPE_NAME: "语文",
+                            creat_TIME: "2020-06-09T09:14:07.000+0000",
+                            evaluate_NBR: 2006091714075804,
+                            update_TIME: "2020-06-09T09:14:07.000+0000",
+                        },{
+                            course_DETAIL: "123",
+                            course_DONE_STU_NBR: 0,
+                            course_ID: 2006091714071582,
+                            course_NAME: "123",
+                            course_STATUS: 0,
+                            course_STU_NBR: 1,
+                            course_TEACHER_NAME: "测试教师",
+                            course_TEACHER_NBR: 1,
+                            course_TIME: "2020-06-10T09:10:00.000+0000",
+                            course_TYPE_ID: 1,
+                            course_TYPE_NAME: "语文",
+                            creat_TIME: "2020-06-09T09:14:07.000+0000",
+                            evaluate_NBR: 2006091714075804,
+                            update_TIME: "2020-06-09T09:14:07.000+0000",
+                        }
+                    ,{
+                            course_DETAIL: "123",
+                            course_DONE_STU_NBR: 0,
+                            course_ID: 2006091714071582,
+                            course_NAME: "123",
+                            course_STATUS: 0,
+                            course_STU_NBR: 1,
+                            course_TEACHER_NAME: "测试教师",
+                            course_TEACHER_NBR: 1,
+                            course_TIME: "2020-06-10T09:10:00.000+0000",
+                            course_TYPE_ID: 1,
+                            course_TYPE_NAME: "语文",
+                            creat_TIME: "2020-06-09T09:14:07.000+0000",
+                            evaluate_NBR: 2006091714075804,
+                            update_TIME: "2020-06-09T09:14:07.000+0000",
+                        }];
+                        var courseDoneList = [{
+                            course_DETAIL: "123",
+                            course_DONE_STU_NBR: 0,
+                            course_ID: 2006091714071582,
+                            course_NAME: "123",
+                            course_STATUS: 0,
+                            course_STU_NBR: 1,
+                            course_TEACHER_NAME: "测试教师",
+                            course_TEACHER_NBR: 1,
+                            course_TIME: "2020-06-10T09:10:00.000+0000",
+                            course_TYPE_ID: 1,
+                            course_TYPE_NAME: "语文",
+                            creat_TIME: "2020-06-09T09:14:07.000+0000",
+                            evaluate_NBR: 2006091714075804,
+                            update_TIME: "2020-06-09T09:14:07.000+0000",
+                        },{
+                            course_DETAIL: "123",
+                            course_DONE_STU_NBR: 0,
+                            course_ID: 2006091714071582,
+                            course_NAME: "123",
+                            course_STATUS: 0,
+                            course_STU_NBR: 1,
+                            course_TEACHER_NAME: "测试教师",
+                            course_TEACHER_NBR: 1,
+                            course_TIME: "2020-06-10T09:10:00.000+0000",
+                            course_TYPE_ID: 1,
+                            course_TYPE_NAME: "语文",
+                            creat_TIME: "2020-06-09T09:14:07.000+0000",
+                            evaluate_NBR: 2006091714075804,
+                            update_TIME: "2020-06-09T09:14:07.000+0000",
+                        },{
+                            course_DETAIL: "123",
+                            course_DONE_STU_NBR: 0,
+                            course_ID: 2006091714071582,
+                            course_NAME: "123",
+                            course_STATUS: 0,
+                            course_STU_NBR: 1,
+                            course_TEACHER_NAME: "测试教师",
+                            course_TEACHER_NBR: 1,
+                            course_TIME: "2020-06-10T09:10:00.000+0000",
+                            course_TYPE_ID: 1,
+                            course_TYPE_NAME: "语文",
+                            creat_TIME: "2020-06-09T09:14:07.000+0000",
+                            evaluate_NBR: 2006091714075804,
+                            update_TIME: "2020-06-09T09:14:07.000+0000",
+                        },{
+                            course_DETAIL: "123",
+                            course_DONE_STU_NBR: 0,
+                            course_ID: 2006091714071582,
+                            course_NAME: "123",
+                            course_STATUS: 0,
+                            course_STU_NBR: 1,
+                            course_TEACHER_NAME: "测试教师",
+                            course_TEACHER_NBR: 1,
+                            course_TIME: "2020-06-10T09:10:00.000+0000",
+                            course_TYPE_ID: 1,
+                            course_TYPE_NAME: "语文",
+                            creat_TIME: "2020-06-09T09:14:07.000+0000",
+                            evaluate_NBR: 2006091714075804,
+                            update_TIME: "2020-06-09T09:14:07.000+0000",
+                        }];
                         if (!data.noIssueList == '') {
                             issue.el("#issue-class-msg-container").html("<tr><td colspan='6' style='text-align: center'>" + data.noIssueList + "</td></tr>")
                         } else {
@@ -414,152 +508,145 @@
                             issue.el("#issue-done-class-msg-container").html(template('issue-done-class-msg-art', {courseDoneList: courseDoneList}))
                         }
                         issue.panelClick();
-                    }
-                });
             },
             panelClick: function () {
                 issue.el('.student-det-btn').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
-                    $.loadJSON('/dtr/issue/getCourseStu', {
-                        courseID: courseID
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            var stuNameList = data.userList;
-                            if (stuNameList.length === 0) {
-                                App.topAlert("暂无预约", 4);
+                    App.topAlert("暂无预约", 4);
                                 return;
-                            }
-                            // 先填充数据
-                            issue.paddingStuNameList(stuNameList)
-                                .then(function () {
-                                    issue.el('#stuNameListModel').modal('show');
-                                    return this;
-                                })
-                                .then(function () {
-                                    issue.panelClick();
-                                    return this;
-                                }); //后置触发
-                        }
-                    });
+                    // $.loadJSON('/dtr/issue/getCourseStu', {
+                    //     courseID: courseID
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                    //         var stuNameList = data.userList;
+                    //         if (stuNameList.length === 0) {
+                               
+                    //         }
+                    //         // 先填充数据
+                    //         issue.paddingStuNameList(stuNameList)
+                    //             .then(function () {
+                    //                 issue.el('#stuNameListModel').modal('show');
+                    //                 return this;
+                    //             })
+                    //             .then(function () {
+                    //                 issue.panelClick();
+                    //                 return this;
+                    //             }); //后置触发
+                    //     }
+                    // });
                 });
                 issue.el('.student-done-det-btn').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
-                    $.loadJSON('/dtr/issue/getDoneCourseStu', {
-                        courseID: courseID
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            var stuNameList = data.userList;
-                            if (stuNameList.length === 0) {
-                                App.topAlert("暂无记录", 4);
+                    App.topAlert("暂无记录", 4);
                                 return;
-                            }
-                            // 先填充数据
-                            issue.paddingStuNameList(stuNameList)
-                                .then(function () {
-                                    issue.el('#stuNameListModel').modal('show');
-                                    return this;
-                                })
-                                .then(function () {
-                                    issue.panelClick();
-                                    return this;
-                                }); //后置触发
-                        }
-                    });
+                    // $.loadJSON('/dtr/issue/getDoneCourseStu', {
+                    //     courseID: courseID
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                    //         var stuNameList = data.userList;
+                    //         if (stuNameList.length === 0) {
+                              
+                    //         }
+                    //         // 先填充数据
+                    //         issue.paddingStuNameList(stuNameList)
+                    //             .then(function () {
+                    //                 issue.el('#stuNameListModel').modal('show');
+                    //                 return this;
+                    //             })
+                    //             .then(function () {
+                    //                 issue.panelClick();
+                    //                 return this;
+                    //             }); //后置触发
+                    //     }
+                    // });
                 });
                 issue.el('.student-detMsg').off('click').on('click', function () {
+                    return  App.topAlert("历史为空", 4);
                     var stuNbr = $(this).data('stunbr');
-                    $.loadJSON('/dtr/eval/view-stu-history', {
-                        stuNbr: stuNbr
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            var stuHistory = data.stuHistory;
-                            if (stuHistory == '' || stuHistory == null){
-                                return  App.topAlert("历史为空", 4);
-                            }
-                            var h_html = "<table id='stu-history' class=\"table text-center table-striped  shadow\">\n" +
-                                "                <thead class=\"thead-dark\">\n" +
-                                "                <tr>\n" +
-                                "                    <th scope=\"col\">课程名</th>\n" +
-                                "                    <th scope=\"col\">老师名</th>\n" +
-                                "                    <th scope=\"col\">评语</th>\n" +
-                                "                </tr>\n" +
-                                "                </thead>\n" +
-                                "                <tbody>\n";
-                            var b_html = "</tbody></table>";
-                            for (let i = 0; i < stuHistory.length; i++) {
-                                h_html = h_html +  '<tr><td>'+ stuHistory[i].COURSE_NAME + '</td><td>' + stuHistory[i].COURSE_TEACHER_NAME + '</td><td>' + stuHistory[i].EVALUATE_DETAIL+'</td></tr>';
-                            }
-                            Swal.fire({
-                                title: '<strong>诊断历史</strong>',
-                                html:h_html + b_html,
-                                showCloseButton: false,
-                                showCancelButton: false,
-                                width: 900,
-                            })
-                        }
-                    });
+                    // $.loadJSON('/dtr/eval/view-stu-history', {
+                    //     stuNbr: stuNbr
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                    //         var stuHistory =[];
+                    //         if (stuHistory == '' || stuHistory == null){
+                    //             return  App.topAlert("历史为空", 4);
+                    //         }
+                    //         var h_html = "<table id='stu-history' class=\"table text-center table-striped  shadow\">\n" +
+                    //             "                <thead class=\"thead-dark\">\n" +
+                    //             "                <tr>\n" +
+                    //             "                    <th scope=\"col\">课程名</th>\n" +
+                    //             "                    <th scope=\"col\">老师名</th>\n" +
+                    //             "                    <th scope=\"col\">评语</th>\n" +
+                    //             "                </tr>\n" +
+                    //             "                </thead>\n" +
+                    //             "                <tbody>\n";
+                    //         var b_html = "</tbody></table>";
+                    //         for (let i = 0; i < stuHistory.length; i++) {
+                    //             h_html = h_html +  '<tr><td>'+ stuHistory[i].COURSE_NAME + '</td><td>' + stuHistory[i].COURSE_TEACHER_NAME + '</td><td>' + stuHistory[i].EVALUATE_DETAIL+'</td></tr>';
+                    //         }
+                    //         Swal.fire({
+                    //             title: '<strong>诊断历史</strong>',
+                    //             html:h_html + b_html,
+                    //             showCloseButton: false,
+                    //             showCancelButton: false,
+                    //             width: 900,
+                    //         })
+                    //     }
+                    // });
                 });
                 issue.el('.compile-btn').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
-                    $.loadJSON('/dtr/rese/getCourseDet', {
-                        courseID: courseID
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            // 先填充数据
-                            issue.paddingCourseDetail(data.courseDet)
-                                .then(function () {
-                                    issue.el('#courseMsgModel').modal('show');
-                                    return this
-                                })
-                                .then(function () {
-                                    issue.panelClick();
-                                    return this;
-                                }); //后置触发
-                        }
-                    });
+                    App.topAlert("暂不支持此功能", 4);
+                    // $.loadJSON('/dtr/rese/getCourseDet', {
+                    //     courseID: courseID
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                    //         // 先填充数据
+                    //         issue.paddingCourseDetail(data.courseDet)
+                    //             .then(function () {
+                    //                 issue.el('#courseMsgModel').modal('show');
+                    //                 return this
+                    //             })
+                    //             .then(function () {
+                    //                 issue.panelClick();
+                    //                 return this;
+                    //             }); //后置触发
+                    //     }
+                    // });
                 });
                 issue.el('.courseMsg-yes').off('click').on('click', function () {
                     var courseID = issue.el('.del-course').data("courseid");
                     var course_name = issue.el("#course_name").val();
                     var course_detail = issue.el("#course_detail").val();
                     var course_time = issue.el("#course_time").val() + ':00';
-                    $.loadJSON('/dtr/issue/updateCourse', {
-                        courseID: courseID,
-                        courseName: course_name,
-                        courseDetail: course_detail,
-                        courseTime: course_time
-                    }).done(function (data) {
-                        if (!App.checker(data)) {
-                            return;
-                        } else {
-                            App.alert("修改成功", "", 1, function () {
-                                issue.getCourseList()
-                            });
-                        }
-                    });
+                    App.alert("修改成功", "", 1);
+                    // $.loadJSON('/dtr/issue/updateCourse', {
+                    //     courseID: courseID,
+                    //     courseName: course_name,
+                    //     courseDetail: course_detail,
+                    //     courseTime: course_time
+                    // }).done(function (data) {
+                    //     if (!App.checker(data)) {
+                    //         return;
+                    //     } else {
+                            
+                    //     }
+                    // });
                 });
                 issue.el('.del-course').off('click').on('click', function () {
                     var courseID = $(this).data('courseid');
                     App.selectAlert("操作提示", "确定取消吗？", 3, function () {
-                        $.loadJSON('/dtr/issue/cancelCourse', {
-                            courseID: courseID
-                        }).done(function (data) {
-                            if (!App.checker(data)) {
-                                return;
-                            } else {
-                                App.alert("取消成功", "", 1, function () {
+                        App.alert("取消成功", "", 1, function () {
                                     issue.getCourseList()
                                 });
-                            }
-                        });
                     });
                 });
             },
@@ -578,17 +665,25 @@
                 }).promise();
             },
             getCourseType: function () {
-                $.loadJSON('/dtr/issue/getType').done(function (data) {
-                    if (!App.checker(data)) {
-                        return;
-                    } else {
-                        var typeList = data.typeList;
+                var typeList =[{COURSE_TYPE_ID: 1, COURSE_TYPE_NAME: "语文"},
+                                        {COURSE_TYPE_ID: 2, COURSE_TYPE_NAME: "数学"},
+                                        {COURSE_TYPE_ID: 3, COURSE_TYPE_NAME: "英语"},
+                                        {COURSE_TYPE_ID: 4, COURSE_TYPE_NAME: "物理"},
+                                        {COURSE_TYPE_ID: 5, COURSE_TYPE_NAME: "化学"},
+                                        {COURSE_TYPE_ID: 6, COURSE_TYPE_NAME: "生物"},
+                                        {COURSE_TYPE_ID: 7, COURSE_TYPE_NAME: "政治"}];
                         if (typeList === undefined || typeList === null) {
                             App.topAlert("初始化异常！请重新刷新！");
                         }
                         issue.el("#classType").html(template('course-type-art',{typeList:typeList}))
-                    }
-                });
+                // $.loadJSON('/dtr/issue/getType').done(function (data) {
+                    
+                //     if (!App.checker(data)) {
+                //         return;
+                //     } else {
+                       
+                //     }
+                // });
             }
         }
     })();

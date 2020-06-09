@@ -129,20 +129,21 @@
                         ready : function() {
                         },
                         success : function() {
-                            $.loadJSON("/dtr/admin/admin-login", {
-                                adminID:adminID,
-                                adminPass:adminPass
-                            }).done(function (response) {
-                                if (!App.checker(response)) {
-                                    login.el("#checkBox").modal('hide');
-                                    login.el('#verification-code').html('');
-                                    return;
-                                } else {
-                                    App.topAlert('登录成功！',1,1300,function () {
-                                        App.goAdminHomeBySelf();
-                                    });
-                                }
-                            });
+                            // $.loadJSON("/dtr/admin/admin-login", {
+                            //     adminID:adminID,
+                            //     adminPass:adminPass
+                            // }).done(function (response) {
+                            //     if (!App.checker(response)) {
+                            //         login.el("#checkBox").modal('hide');
+                            //         login.el('#verification-code').html('');
+                            //         return;
+                            //     } else {
+                            //         App.topAlert('登录成功！',1,1300,function () {
+                            //             App.goAdminHomeBySelf();
+                            //         });
+                            //     }
+                            // });
+                            App.goAdminHomeBySelf();
                         },
                         error : function() {
                             App.topAlert('验证失败',2,1300);
