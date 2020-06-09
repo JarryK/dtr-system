@@ -1,7 +1,7 @@
-document.write("<script src='/js/SweetAlert2.js'></script>");
-document.write("<script src='/js/template.js'></script>");
-document.write("<link href='/js/star/jquery.raty.css' />");
-document.write("<script src='/js/star/jquery.raty.js'></script>");
+document.write("<script src='../js/SweetAlert2.js'></script>");
+document.write("<script src='../js/template.js'></script>");
+document.write("<link href='../js/star/jquery.raty.css' />");
+document.write("<script src='../js/star/jquery.raty.js'></script>");
 document.write("<dic id='where' style='display: none'></dic>");
 var App = function () {
     // 全局设置
@@ -112,65 +112,65 @@ var App = function () {
         return {
             //在自身窗口打开
             goLoginBySelf: function () {
-                window.open("/html/login.html", "_self");
+                window.open("../html/login.html", "_self");
             },
             goHomeBySelf: function () {
-                window.open("/html/home.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+                window.open("../html/home.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
             },
             goIssueBySelf: function () {
                 // App.getUserMsg(function (uNbr, uName, uType) {
                 //     if (App.isTeacher(uType)) {
-                //         window.open('/html/issue', "_self");
+                //         window.open('../html/issue', "_self");
                 //     } else {
                 //         App.alert('错误', '没有权限', 2);
                 //     }
                 // });
-                window.open("/html/issue.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+                window.open("../html/issue.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
 
             },
             goReservationBySelf: function () {
-                window.open('/html/reservation.html', "_self");
+                window.open('../html/reservation.html', "_self");
             },
             goEvaluateBySelf: function () {
-                window.open('/html/evaluate.html', "_self");
+                window.open('../html/evaluate.html', "_self");
             },
             goHistoryBySelf: function () {
-                window.open('/html/history.html', "_self");
+                window.open('../html/history.html', "_self");
             },
             goAdminLoginBySelf:function () {
-                window.open("/html/admin/admin-login.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+                window.open("../html/admin/admin-login.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
             },
             goAdminHomeBySelf:function () {
-                window.open("/html/admin/admin.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
+                window.open("../html/admin/admin.html", "_self", "scrollbars=yes,resizable=1,modal=false,alwaysRaised=yes");
             },
             //新窗口打开
             goHomeByNewPage: function () {
-                window.open('/html/home.html', "_blank");
+                window.open('../html/home.html', "_blank");
             },
             goIssueByNewPage: function () {
                 // App.getUserMsg(function (uNbr, uName, uType) {
                 //     if (App.isTeacher(uType)) {
-                //         window.open('/html/issue.html', "_blank");
+                //         window.open('../html/issue.html', "_blank");
                 //     } else {
                 //         App.alert('错误', '没有权限', 2);
                 //     }
                 // });
-                window.open('/html/issue.html', "_blank");
+                window.open('../html/issue.html', "_blank");
             },
             goReservationByNewPage: function () {
-                window.open('/html/reservation.html', "_blank");
+                window.open('../html/reservation.html', "_blank");
             },
             goEvaluateByNewPage: function () {
-                window.open('/html/evaluate.html', "_blank");
+                window.open('../html/evaluate.html', "_blank");
             },
             goHistoryByNewPage: function () {
-                window.open('/html/history.html', "_blank");
+                window.open('../html/history.html', "_blank");
             },
             goAdminLoginByNewPage:function () {
-                window.open("/html/admin/admin-login.html", "_blank");
+                window.open("../html/admin/admin-login.html", "_blank");
             },
             goAdminHomeByNewPage:function () {
-                window.open("/html/admin/admin.html", "_blank");
+                window.open("../html/admin/admin.html", "_blank");
             },
         }
     })();
@@ -210,7 +210,7 @@ var App = function () {
                     //     }
                     // });
                     App.topAlert("退出成功！", 1, 1300, function () {
-                        window.open("/html/login", "_self");
+                        window.open("../html/login", "_self");
                     });
                 })
             },
